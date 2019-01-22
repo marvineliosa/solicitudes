@@ -179,6 +179,19 @@ table tr th { color: #688a7e;}
   background-size: cover;
 
 }
+.login-buap-body{
+
+  background: url('../img/escudo.png') no-repeat center center fixed;
+
+  -webkit-background-size: cover;
+
+  -moz-background-size: cover;
+
+  -o-background-size: cover;
+
+  background-size: cover;
+
+}
 
 
 

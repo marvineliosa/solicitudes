@@ -3,11 +3,19 @@
       <div id="sidebar" class="nav-collapse ">
         <!-- sidebar menu start-->
         <ul class="sidebar-menu">
-          <li class="">
-            <a class="" href="index.html">
-              <i class="icon_house_alt"></i>
-              <span>Dashboard</span>
+          <li class="sub-menu">
+            <a href="javascript:;" class="">
+              <i class="icon_table"></i>
+              <span>Listados</span>
+              <span class="menu-arrow arrow_carrot-right"></span>
             </a>
+            <ul class="sub">
+              <li><a class="" href="/listado/completo">Listado Completo</a></li>
+              <li><a class="" href="/listado/contratacion">Contratación</a></li>
+              <li><a class="" href="/listado/contratacion_sustitucion">Sustitución</a></li>
+              <li><a class="" href="/listado/promocion">Promoción</a></li>
+              <li><a class="" href="/listado/cambio_adscripcion">Cambio de Adscripción</a></li>
+            </ul>
           </li>
           <li class="sub-menu">
             <a href="javascript:;" class="">
@@ -16,14 +24,16 @@
               <span class="menu-arrow arrow_carrot-right"></span>
             </a>
             <ul class="sub">
-              <li><a class="" href="form_component.html">Form Elements</a></li>
-              <li><a class="" href="form_validation.html">Form Validation</a></li>
+              <li><a class="" href="/solicitudes/contratacion">Contratación</a></li>
+              <li><a class="" href="/solicitudes/sustitucion">Sustitución</a></li>
+              <li><a class="" href="/solicitudes/promocion">Promoción</a></li>
+              <li><a class="" href="/solicitudes/cambio_adscripcion">Cambio de Adscripción</a></li>
             </ul>
           </li>
           <li class="">
-            <a class="" href="/solicitudes/crear">
-              <i class="icon_plus"></i>
-              <span>Crear Solicitud</span>
+            <a class="" href="/">
+              <i class=""></i>
+              <span>Salir</span>
             </a>
           </li>
         </ul>

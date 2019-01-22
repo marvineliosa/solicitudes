@@ -37,7 +37,7 @@
     ======================================================= -->
 </head>
 
-<body class="login-img3-body">
+<body class="login-buap-body">
 
   <div class="container">
 
@@ -87,6 +87,6 @@
 
 <script type="text/javascript">
   function ingresar(){
-    location.href = '/solicitudes';
+    location.href = '/listado/completo';
   }
 </script>

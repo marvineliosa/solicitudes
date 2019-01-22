@@ -15,9 +15,24 @@
 Route::get('/', function () {
     return view('login');
 });
-Route::get('/solicitudes', function () {
-    return view('solicitudes_mostrar');
+Route::get('/solicitudes/contratacion', function () {
+    return view('nuevo_contratacion');
 });
-Route::get('/solicitudes/crear', function () {
-    return view('solicitudes_nuevo');
+Route::get('/solicitudes/sustitucion', function () {
+    return view('nuevo_sustitucion');
+});
+Route::get('/solicitudes/promocion', function () {
+    return view('nuevo_promocion');
+});
+Route::get('/solicitudes/cambio_adscripcion', function () {
+    return view('nuevo_cambio_adscripcion');
+});
+Route::get('/listado/completo', function () {
+    return view('listado_completo');
+});
+Route::get('/salir', function () {
+    return view('login');
+});
+Route::get('/solicitud/contratacion/1', function () {
+    return view('edicion_contratacion');
 });
