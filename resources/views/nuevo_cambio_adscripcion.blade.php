@@ -27,19 +27,19 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Categoría</label>
+            <label class="col-sm-2 control-label">Categoría actual</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Categoría solicitada">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Puesto</label>
+            <label class="col-sm-2 control-label">Puesto actual</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Puesto del Candidato">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Actividades</label>
+            <label class="col-sm-2 control-label">Actividades actuales</label>
             <div class="col-sm-6">
               <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeña"></textarea>
             </div>
@@ -54,15 +54,48 @@
             </div>
           </div>-->
           <div class="form-group">
-            <label class="col-sm-2 control-label">Salario</label>
+            <label class="col-sm-2 control-label">Salario actual</label>
             <div class="col-sm-6">
               <input type="number" class="form-control" placeholder="Puesto del Candidato" value="0.00">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Descripción</label>
+            <label class="col-sm-2 control-label">Nueva categoría</label>
             <div class="col-sm-6">
-              <textarea class="form-control ckeditor" name="editor1" rows="6" placeholder="Descripción se la solicitud del cambio de adscripción"></textarea>
+              <input type="text" class="form-control" placeholder="Categoría solicitada">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Nuevo puesto</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" placeholder="Puesto del Candidato">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Nuevas actividades</label>
+            <div class="col-sm-6">
+              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeña"></textarea>
+            </div>
+          </div>
+          <!--<div class="form-group">
+            <label class="col-sm-2 control-label">Nómina</label>
+            <div class="col-sm-6">
+              <select class="form-control m-bot15">
+                  <option>Prestación de Servicios</option>
+                  <option>Institucional</option>
+              </select>
+            </div>
+          </div>-->
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Nuevo salario</label>
+            <div class="col-sm-6">
+              <input type="number" class="form-control" placeholder="Puesto del Candidato" value="0.00">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Justificación</label>
+            <div class="col-sm-6">
+              <textarea class="form-control ckeditor" name="editor1" rows="6" placeholder="Justificación de la solicitud del cambio de adscripción"></textarea>
             </div>
           </div>
           <div class="form-group">

@@ -84,7 +84,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Descripción</label>
+            <label class="col-sm-2 control-label">Justificación</label>
             <div class="col-sm-6">
               <textarea class="form-control ckeditor" name="editor1" rows="6" placeholder="Descripción se la solicitud del personal">Ya que en el departamento existe una gran demanda de sofware para laborar, se solicita la contratación del C. Marvin Gabriel Eliosa Abaroa por un periodo de 6 meses</textarea>
             </div>
@@ -98,7 +98,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label"></label>
             <div class="col-sm-2">
-              <button type="submit" class="btn btn-primary">Registrar</button>
+              <button type="submit" class="btn btn-primary">Guardar</button>
             </div>
           </div>
         </form>

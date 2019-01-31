@@ -27,13 +27,13 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Candidato</label>
+            <label class="col-sm-2 control-label">Candidato propuesto</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Nombre del Candidato">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Categoría</label>
+            <label class="col-sm-2 control-label">Categoría solicitada</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Categoría solicitada">
             </div>
@@ -60,15 +60,15 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Salario</label>
+            <label class="col-sm-2 control-label">Salario solicitado</label>
             <div class="col-sm-6">
-              <input type="number" class="form-control" placeholder="Puesto del Candidato" value="0.00">
+              <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" value="0.00">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Descripción</label>
+            <label class="col-sm-2 control-label">Justificación</label>
             <div class="col-sm-6">
-              <textarea class="form-control ckeditor" name="editor1" rows="6" placeholder="Descripción se la solicitud del personal"></textarea>
+              <textarea class="form-control ckeditor" name="editor1" rows="6" placeholder="Justificación de la solicitud del personal"></textarea>
             </div>
           </div>
           <div class="form-group">
