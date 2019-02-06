@@ -30,6 +30,18 @@ Route::get('/solicitudes/cambio_adscripcion', function () {
 Route::get('/listado/completo', function () {
     return view('listado_completo');
 });
+Route::get('/listado/contratacion_sustitucion', function () {
+    return view('listado_contratacion_sustitucion');
+});
+Route::get('/listado/contratacion', function () {
+    return view('listado_contratacion');
+});
+Route::get('/listado/promocion', function () {
+    return view('listado_promocion');
+});
+Route::get('/listado/cambio_adscripcion', function () {
+    return view('listado_cambio_adscripcion');
+});
 Route::get('/salir', function () {
     return view('login');
 });

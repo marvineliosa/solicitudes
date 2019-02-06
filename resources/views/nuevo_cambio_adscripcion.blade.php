@@ -87,7 +87,7 @@
             </div>
           </div>-->
           <div class="form-group">
-            <label class="col-sm-2 control-label">Nuevo salario</label>
+            <label class="col-sm-2 control-label">Salario neto solicitado</label>
             <div class="col-sm-6">
               <input type="number" class="form-control" placeholder="Puesto del Candidato" value="0.00">
             </div>

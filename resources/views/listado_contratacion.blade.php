@@ -4,7 +4,7 @@
 <div class="col-lg-12">
 	<section class="panel">
 	  <header class="panel-heading">
-	    Listado Completo
+	    Listado Contratación
 	  </header>
 	  <div class="table-responsive">
 	    <table class="table">
@@ -33,66 +33,6 @@
 	                <a class="btn btn-success" href="http://localhost:8000/solicitud/contratacion/1"><i class="icon_pencil"></i></a>
 	                <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#ModalConfiguraciones"><i class="icon_adjust-vert"></i></a>
 	              </div>
-	          </td>
-	        </tr>
-	        <tr>
-	          <td>SOL/2/2018</td>
-	          <td>Javier Sánchez Vázquez</td>
-	          <td>Facultad de Ciencias de la Computación</td>
-	          <td>13/12/2018</td>
-	          <td>Contratación por Sustitución</td>
-	          <td>Análisis</td>
-	          <td>
-	              <div class="btn-group">
-	                <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#ModalDetalle"><i class="icon_info_alt"></i></a>
-	                <a class="btn btn-success" href="http://localhost:8000/solicitud/contratacion/1"><i class="icon_pencil"></i></a>
-	                <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#ModalConfiguraciones"><i class="icon_adjust-vert"></i></a>
-	              </div>
-	          </td>
-	        </tr>
-	        <tr>
-	          <td>SOL/3/2018</td>
-	          <td>Isaac Lemus Tetzopa</td>
-	          <td>Fundación BUAP</td>
-	          <td>15/12/2018</td>
-	          <td>Promoción</td>
-	          <td>Firmas</td>
-	          <td>
-	              <div class="btn-group">
-	                <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#ModalDetalle"><i class="icon_info_alt"></i></a>
-	                <a class="btn btn-success" href="http://localhost:8000/solicitud/contratacion/1"><i class="icon_pencil"></i></a>
-	                <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#ModalConfiguraciones"><i class="icon_adjust-vert"></i></a>
-	              </div>
-	          </td>
-	        </tr>
-	        <tr class="success">
-	          <td>SOL/4/2019</td>
-	          <td>Juan Pérez González</td>
-	          <td>DCyTIC</td>
-	          <td>13/01/2019</td>
-	          <td>Contratación por Sustitución</td>
-	          <td>Completado</td>
-	          <td>
-	              <div class="btn-group">
-	                <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#ModalDetalleTerminado"><i class="icon_info_alt"></i></a>
-	                <a class="btn btn-success" href="http://localhost:8000/solicitud/contratacion/1"><i class="icon_pencil"></i></a>
-	                <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#ModalConfiguraciones"><i class="icon_adjust-vert"></i></a>	
-	              </div>
-	          </td>
-	        </tr>
-	        <tr class="">
-	          <td>SOL/5/2019</td>
-	          <td>Ramiro Sánchez Gómez</td>
-	          <td>FCC</td>
-	          <td>27/01/2019</td>
-	          <td>Cambio de Adscripción</td>
-	          <td>Recibido</td>
-	          <td>
-				<div class="btn-group">
-				<a class="btn btn-primary" href="#" data-toggle="modal" data-target="#ModalDetalleTerminado"><i class="icon_info_alt"></i></a>
-				<a class="btn btn-success" href="http://localhost:8000/solicitud/contratacion/1"><i class="icon_pencil"></i></a>
-				<a class="btn btn-danger" href="#" data-toggle="modal" data-target="#ModalConfiguraciones"><i class="icon_adjust-vert"></i></a>	
-				</div>
 	          </td>
 	        </tr>
 	      </tbody>

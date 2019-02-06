@@ -66,7 +66,7 @@
             </div>
           </div>-->
           <div class="form-group">
-            <label class="col-sm-2 control-label">Salario solicitado</label>
+            <label class="col-sm-2 control-label">Salario neto solicitado</label>
             <div class="col-sm-6">
               <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" value="0.00">
             </div>

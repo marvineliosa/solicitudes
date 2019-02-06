@@ -27,9 +27,21 @@
             </div>
           </div>
           <div class="form-group">
+            <label class="col-sm-2 control-label">Puesto anterior</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" placeholder="Puesto del candidato anterior">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Actividades anteriores</label>
+            <div class="col-sm-6">
+              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeñába la persona anterior"></textarea>
+            </div>
+          </div>
+          <div class="form-group">
             <label class="col-sm-2 control-label">Candidato propuesto</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" placeholder="Nombre del Candidato">
+              <input type="text" class="form-control" placeholder="Nombre del candidato">
             </div>
           </div>
           <div class="form-group">
@@ -60,7 +72,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Salario solicitado</label>
+            <label class="col-sm-2 control-label">Salario neto solicitado</label>
             <div class="col-sm-6">
               <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" value="0.00">
             </div>
