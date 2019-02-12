@@ -14,10 +14,11 @@ class SolicitudesSustitucionTable extends Migration
     public function up()
     {
         Schema::create('SOLICITUDES_SUSTITUCION', function (Blueprint $table) {
-            $table->string('SUSTITUCION_PERSONA_ANTERIOR');
-            $table->integer('SUSTITUCION_CATEGORIA_ANTERIOR');
-            $table->string('SUSTITUCION_PUESTO_ANTERIOR');
-            $table->integer('SUSTITUCION_SALARIO_ANTERIOR');
+            $table->string('SUSTITUCION_CANDIDATO_NUEVO');
+            $table->integer('SUSTITUCION_CATEGORIA_NUEVA');
+            $table->string('SUSTITUCION_PUESTO_NUEVO');
+            $table->text('SUSTITUCION_ACTIVIDADES_NUEVAS');
+            $table->integer('SUSTITUCION_SALARIO_NUEVO');
             $table->timestamps();
         });
     }
