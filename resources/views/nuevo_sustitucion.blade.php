@@ -39,6 +39,12 @@
             </div>
           </div>
           <div class="form-group">
+            <label class="col-sm-2 control-label">Salario neto anterior</label>
+            <div class="col-sm-6">
+              <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" value="0.00">
+            </div>
+          </div>
+          <div class="form-group">
             <label class="col-sm-2 control-label">Candidato propuesto</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Nombre del candidato">

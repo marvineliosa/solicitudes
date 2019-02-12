@@ -33,9 +33,15 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Actividades</label>
+            <label class="col-sm-2 control-label">Actividades actuales</label>
             <div class="col-sm-6">
               <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeña actualmente"></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Salario neto actual</label>
+            <div class="col-sm-6">
+              <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" value="0.00">
             </div>
           </div>
           <div class="form-group">
