@@ -48,3 +48,5 @@ Route::get('/salir', function () {
 Route::get('/solicitud/contratacion/1', function () {
     return view('edicion_contratacion');
 });
+
+Route::post('/contratacion/insertar', 'SolicitudesController@AlmacenarContratacion');
