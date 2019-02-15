@@ -14,10 +14,15 @@ class SolicitudesDatosCgaTable extends Migration
     public function up()
     {
         Schema::create('SOLICITUDES_DATOS_CGA', function (Blueprint $table) {
-            $table->char('DATOS_CGA_VALIDACION',15);//poniendo increments se da por hecho que es primary
-            $table->enum('DATOS_CGA_ESTATUS',['RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISION','FIRMAS','ENVIADO','COMPLETADO','CANCELADO','OTRO']);
-            $table->string('DATOS_CGA_PRIORIDAD');
-            $table->char('DATOS_CGA_PROCEDENTE',5);
+            $table->char('FK_SOLICITUD_ID', 15)->primary();
+            $table->foreign('FK_SOLICITUD_ID')->references('SOLICITUD_ID')->on('SOLICITUDES_SOLICITUD');
+            $table->enum('DATOS_CGA_ESTATUS',['VALIDACION_INFORMACION','RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISION','FIRMAS','ENVIADO','COMPLETADO','CANCELADO','OTRO']);
+            $table->string('DATOS_CGA_PRIORIDAD')->nullable();
+            $table->char('DATOS_CGA_PROCEDENTE',5)->nullable();
+            $table->char('DATOS_CGA_VALIDACION',15)->nullable();//es el numero de oficio
+            $table->integer('DATOS_CGA_SALARIO_PROPUESTO')->nullable();
+            $table->string('DATOS_CGA_CATEGORIA_PROPUESTA')->nullable();
+            $table->string('DATOS_CGA_PUESTO_PROPUESTO')->nullable();
             $table->timestamps();
         });
     }

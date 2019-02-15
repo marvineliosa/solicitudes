@@ -14,18 +14,24 @@ class SolicitudesFechasTable extends Migration
     public function up()
     {
         Schema::create('SOLICITUDES_FECHAS', function (Blueprint $table) {
-            $table->date('FECHAS_RECIBIDO');
-            $table->date('FECHAS_CORRECCION_INFORMACION');
-            $table->date('FECHAS_INFORMACION_COMPLETA');
-            $table->date('FECHAS_RESPUESTA_OFICIO');
-            $table->date('FECHAS_LEVANTAMIENTO');
-            $table->date('FECHAS_LIMITE_AGENDAR_CITA');
-            $table->date('FECHAS_LIMITE_LEVANTAMIENTO');
-            $table->date('FECHAS_LIMITE_ANALISIS');
-            $table->date('FECHAS_LIMITE_REVISION');
-            $table->date('FECHAS_LIMITE_FIRMAS');
-            $table->date('FECHAS_LIMITE_FINALIZAR');
-            $table->date('FECHAS_ULTIMO_ENVIO');
+            $table->char('FK_SOLICITUD_ID', 15)->primary();
+            $table->foreign('FK_SOLICITUD_ID')->references('SOLICITUD_ID')->on('SOLICITUDES_SOLICITUD');
+            $table->date('FECHAS_CREACION_SOLICITUD');
+            $table->date('FECHAS_CORRECCION_INFORMACION')->nullable();
+            $table->date('FECHAS_INFORMACION_COMPLETA')->nullable();
+            $table->date('FECHAS_RESPUESTA_OFICIO')->nullable();
+            $table->date('FECHAS_LEVANTAMIENTO')->nullable();
+            $table->date('FECHAS_LIMITE_AGENDAR_CITA')->nullable();
+            $table->date('FECHAS_LIMITE_LEVANTAMIENTO')->nullable();
+            $table->date('FECHAS_LIMITE_ANALISIS')->nullable();
+            $table->date('FECHAS_LIMITE_REVISION')->nullable();
+            $table->date('FECHAS_LIMITE_FIRMAS')->nullable();
+            $table->date('FECHAS_LIMITE_FINALIZAR')->nullable();
+            $table->date('FECHAS_ULTIMO_ENVIO')->nullable();
+            $table->date('FECHAS_FIRMA_CGA')->nullable();
+            $table->date('FECHAS_FIRMA_TITULAR')->nullable();
+            $table->date('FECHAS_FIRMA_SPR')->nullable();
+            $table->date('FECHAS_DECISION_SPR')->nullable();
             $table->timestamps();
         });
     }

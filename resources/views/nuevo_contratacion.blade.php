@@ -128,6 +128,7 @@
       $("#Contratacion-Actividades").val('Actividades destinadas para Marvin');
       $("#Contratacion-SalarioSolicitado").val(3200.87);
       $("#Contratacion-Justificacion").val('Es necesario puesto que el departamento tiene sobre carga de trabajo');//*/
+      MensajeModal("TITULO DEL MODAL","MENSAJE DEL MODAL");
     }
     function AlmacenarSolicitud(){
       var candidato = $("#Contratacion-Candidato").val();
@@ -153,7 +154,8 @@
       metodoAjax(url,dataForm,function(success){
         //aquí se escribe todas las operaciones que se harían en el succes
         //la variable success es el json que recibe del servidor el método AJAX
-
+        var mensaje = "El número de solicitud asignado es: "+success['solicitud'];
+        MensajeModal("¡Solicitud almacenada!",mensaje);
       });
     }
 
@@ -169,6 +171,7 @@
       metodoAjax(url,dataForm,function(success){
         //aquí se escribe todas las operaciones que se harían en el succes
         //la variable success es el json que recibe del servidor el método AJAX
+        MensajeModal("TITULO DEL MODAL","MENSAJE DEL MODAL");
       });
     }
   </script>

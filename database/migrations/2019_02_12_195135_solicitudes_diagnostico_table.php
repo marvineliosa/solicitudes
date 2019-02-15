@@ -14,7 +14,8 @@ class SolicitudesDiagnosticoTable extends Migration
     public function up()
     {
         Schema::create('SOLICITUDES_DIAGNOSTICO', function (Blueprint $table) {
-            $table->char('DIAGNOSTICO_OFICIO',15);//poniendo increments se da por hecho que es primary
+            $table->char('FK_SOLICITUD_ID', 15)->primary();
+            $table->foreign('FK_SOLICITUD_ID')->references('SOLICITUD_ID')->on('SOLICITUDES_SOLICITUD');
             $table->date('DIAGNOSTICO_FECHA_ENVIO_OFICIO');
             $table->date('DIAGNOSTICO_FECHA_INFORMACION_COMPLETA');
             $table->date('DIAGNOSTICO_FECHA_ESTABLECIDA');

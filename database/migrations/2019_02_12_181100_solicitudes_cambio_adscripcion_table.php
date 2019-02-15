@@ -14,6 +14,8 @@ class SolicitudesCambioAdscripcionTable extends Migration
     public function up()
     {
         Schema::create('SOLICITUDES_CAMBIO_ADSCRIPCION', function (Blueprint $table) {
+            $table->char('FK_SOLICITUD_ID', 15)->primary();
+            $table->foreign('FK_SOLICITUD_ID')->references('SOLICITUD_ID')->on('SOLICITUDES_SOLICITUD');
             $table->string('CAMBIO_ADSCRIPCION_CATEGORIA_NUEVA');
             $table->integer('CAMBIO_ADSCRIPCION_PUESTO_NUEVO');
             $table->text('CAMBIO_ADSCRIPCION_ACTIVIDADES_NUEVAS');

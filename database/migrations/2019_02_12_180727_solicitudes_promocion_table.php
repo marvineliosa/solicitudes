@@ -14,6 +14,8 @@ class SolicitudesPromocionTable extends Migration
     public function up()
     {
         Schema::create('SOLICITUDES_PROMOCION', function (Blueprint $table) {
+            $table->char('FK_SOLICITUD_ID', 15)->primary();
+            $table->foreign('FK_SOLICITUD_ID')->references('SOLICITUD_ID')->on('SOLICITUDES_SOLICITUD');
             $table->string('PROMOCION_CATEGORIA_SOLICITADA');
             $table->integer('PROMOCION_PUESTO_NUEVO');
             $table->text('PROMOCION_ACTIVIDADES_NUEVAS');

@@ -97,13 +97,40 @@
     <script src="{{ asset('js/jquery.nicescroll.js')}}" type="text/javascript"></script>
     <!--custome script for all page-->
     <script src="{{ asset('js/scripts.js')}}"></script>
+    <!-- Sweet Alert -->
+    <!--<script src="{{ asset('sweetalert2/dist/sweetalert2.all.min.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>-->
 
+    <!-- opcion 2 -->
+    <script src="{{ asset('sweetalert2/dist/sweetalert2.min.js')}}"></script>
+    <link href="{{asset('sweetalert2/dist/sweetalert2.min.css')}}" rel="stylesheet" />
+
+    <!-- modales -->
+    <!-- Modal mensaje -->
+    <div class="modal fade" id="ModalMensaje" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title" id="TituloModalMensaje" align="center"></h2>
+            <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>-->
+          </div>
+          <div class="modal-body">
+            <h3  id="CuerpoModalMensaje" align="center"> </h3>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </body>
 
 </html>
 
-@yield('script');
+
 <script type="text/javascript">
   //señor metodo maestro ajax
   function metodoAjax(url,dataForm,callback){
@@ -136,4 +163,11 @@
     });//*/
   }
 
+  function MensajeModal(titulo,mensaje){
+    $("#TituloModalMensaje").text(titulo);
+    $("#CuerpoModalMensaje").text(mensaje);
+    $("#ModalMensaje").modal();
+  }
+
 </script>
+@yield('script');
