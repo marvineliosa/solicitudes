@@ -7,7 +7,7 @@
 		    Formulario de Contratación por Sustitución
 		  </header>
 		  <div class="panel-body">
-        <form class="form-horizontal " method="get">
+        <div class="form-horizontal " method="get">
           <div class="form-group">
             <label class="col-sm-2 control-label">Dependencia</label>
             <div class="col-sm-6">
@@ -41,7 +41,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Salario neto anterior</label>
             <div class="col-sm-6">
-              <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" value="0.00" id="Sustitucion-SalarioAnterior">
+              <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" value="0.00" step=".01" id="Sustitucion-SalarioAnterior">
             </div>
           </div>
           <div class="form-group">
@@ -69,15 +69,15 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Nómina</label>
+            <label class="col-sm-2 control-label">Salario neto solicitado</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" name="" value="Institucional" id="Sustitucion-Nomina" disabled="disabled">
+              <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" value="0.00" step=".01" id="Sustitucion-SalarioSolicitado">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Salario neto solicitado</label>
+            <label class="col-sm-2 control-label">Nómina</label>
             <div class="col-sm-6">
-              <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" value="0.00" id="Sustitucion-SalarioSolicitado">
+              <input type="text" class="form-control" name="" value="Institucional" id="Sustitucion-Nomina" disabled="disabled">
             </div>
           </div>
           <div class="form-group">
@@ -89,10 +89,10 @@
           <div class="form-group">
             <label class="col-sm-2 control-label"></label>
             <div class="col-sm-2">
-              <button type="submit" class="btn btn-primary" onclick="AlmacenarSolicitud()">Registrar</button>
+              <button type="button" class="btn btn-primary" onclick="AlmacenarSolicitud()">Registrar</button>
             </div>
           </div>
-        </form>
+        </div>
       </div>
 		</section>
 	</div>
@@ -128,24 +128,31 @@
       var actividades_anterior = $("#Sustitucion-ActividadesAnteriores").val();
       var salario_anterior = $("#Sustitucion-SalarioAnterior").val();
       //datos de la persona que sustituye
-      var candidato = $("#Sustitucion-CandidatoPropuesto").val();
-      var categoria = $("#Sustitucion-CategoriaSolicitada").val();
-      var puesto = $("#Sustitucion-PuestoSolicitado").val();
-      var actividades = $("#Sustitucion-ActividadesNuevas").val();
-      var salario = $("#Sustitucion-SalarioSolicitado").val();
+      var persona_solicitada = $("#Sustitucion-CandidatoPropuesto").val();
+      var categoria_solicitada = $("#Sustitucion-CategoriaSolicitada").val();
+      var puesto_solicitado = $("#Sustitucion-PuestoSolicitado").val();
+      var actividades_solicitadas = $("#Sustitucion-ActividadesNuevas").val();
+      var salario_solicitado = $("#Sustitucion-SalarioSolicitado").val();
       //
       var nomina = $("#Sustitucion-Nomina").val();
       var justificacion = $("#Sustitucion-Justificacion").val();
 
       var success;
-      var url = "/contratacion/insertar";
+      var url = "/contratacion_sustitucion/insertar";
       var dataForm = new FormData();
-      dataForm.append('candidato',candidato);
-      dataForm.append('categoria',categoria);
-      dataForm.append('puesto',puesto);
-      dataForm.append('actividades',actividades);
+      dataForm.append('persona_anterior',persona_anterior);
+      dataForm.append('categoria_anterior',categoria_anterior);
+      dataForm.append('puesto_anterior',puesto_anterior);
+      dataForm.append('actividades_anterior',actividades_anterior);
+      dataForm.append('salario_anterior',salario_anterior);
+
+      dataForm.append('persona_solicitada',persona_solicitada);
+      dataForm.append('categoria_solicitada',categoria_solicitada);
+      dataForm.append('puesto_solicitado',puesto_solicitado);
+      dataForm.append('actividades_solicitadas',actividades_solicitadas);
+      dataForm.append('salario_solicitado',salario_solicitado);
+
       dataForm.append('nomina',nomina);
-      dataForm.append('salario',salario);
       dataForm.append('justificacion',justificacion);
       //lamando al metodo ajax
       metodoAjax(url,dataForm,function(success){

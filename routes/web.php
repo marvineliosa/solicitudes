@@ -49,4 +49,13 @@ Route::get('/solicitud/contratacion/1', function () {
     return view('edicion_contratacion');
 });
 
+//contrataciones
 Route::post('/contratacion/insertar', 'SolicitudesController@AlmacenarContratacion');
+
+//Contrataciones por sustitucion
+Route::post('/contratacion_sustitucion/insertar', 'SolicitudesController@AlmacenarContratacionSustitucion');
+
+//promociones
+Route::post('/promocion/insertar', 'SolicitudesController@AlmacenarPromocion');
+
+Route::post('/cerrarsql', 'SolicitudesController@CerrarSql');
