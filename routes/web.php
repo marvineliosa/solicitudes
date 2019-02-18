@@ -58,4 +58,5 @@ Route::post('/contratacion_sustitucion/insertar', 'SolicitudesController@Almacen
 //promociones
 Route::post('/promocion/insertar', 'SolicitudesController@AlmacenarPromocion');
 
-Route::post('/cerrarsql', 'SolicitudesController@CerrarSql');
+//cambio de adscripcion
+Route::post('/cambio_adscripcion/insertar', 'SolicitudesController@AlmacenarCambioAdscripcion');

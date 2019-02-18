@@ -106,7 +106,6 @@
             <label class="col-sm-2 control-label"></label>
             <div class="col-sm-2">
               <button type="button" class="btn btn-primary" onclick="AlmacenarSolicitud()">Registrar</button>
-              <button type="button" class="btn btn-outline-dark" onclick="sql()">Dark</button>
             </div>
           </div>
         </div>
@@ -166,19 +165,6 @@
     function ejemploAjax(){
       var success;
       var url = "/ruta1/ruta2";
-      var dataForm = new FormData();
-      dataForm.append('p1',"p1");
-      dataForm.append('p2','p2');
-      //lamando al metodo ajax
-      metodoAjax(url,dataForm,function(success){
-        //aquí se escribe todas las operaciones que se harían en el succes
-        //la variable success es el json que recibe del servidor el método AJAX
-        MensajeModal("TITULO DEL MODAL","MENSAJE DEL MODAL");
-      });
-    }
-    function sql(){
-      var success;
-      var url = "/cerrarsql";
       var dataForm = new FormData();
       dataForm.append('p1',"p1");
       dataForm.append('p2','p2');
