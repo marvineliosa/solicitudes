@@ -19,6 +19,7 @@ class SolicitudesFechasTable extends Migration
             $table->date('FECHAS_CREACION_SOLICITUD');
             $table->date('FECHAS_CORRECCION_INFORMACION')->nullable();
             $table->date('FECHAS_INFORMACION_COMPLETA')->nullable();
+            $table->date('FECHAS_TURNADO_CGA')->nullable();
             $table->date('FECHAS_RESPUESTA_OFICIO')->nullable();
             $table->date('FECHAS_LEVANTAMIENTO')->nullable();
             $table->date('FECHAS_LIMITE_AGENDAR_CITA')->nullable();
@@ -27,7 +28,7 @@ class SolicitudesFechasTable extends Migration
             $table->date('FECHAS_LIMITE_REVISION')->nullable();
             $table->date('FECHAS_LIMITE_FIRMAS')->nullable();
             $table->date('FECHAS_LIMITE_FINALIZAR')->nullable();
-            $table->date('FECHAS_ULTIMO_ENVIO')->nullable();
+            $table->date('FECHAS_TURNADO_SPR')->nullable();
             $table->date('FECHAS_FIRMA_CGA')->nullable();
             $table->date('FECHAS_FIRMA_TITULAR')->nullable();
             $table->date('FECHAS_FIRMA_SPR')->nullable();

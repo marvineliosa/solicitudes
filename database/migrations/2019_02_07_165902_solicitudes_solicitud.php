@@ -17,6 +17,7 @@ class SolicitudesSolicitud extends Migration
             $table->char('SOLICITUD_ID', 15)->primary();
             $table->string('SOLICITUD_OFICIO')->nullable();
             $table->string('SOLICITUD_NOMBRE');
+            $table->integer('SOLICITUD_DEPENDENCIA');
             $table->string('SOLICITUD_CATEGORIA')->nullable();
             $table->string('SOLICITUD_PUESTO');
             $table->text('SOLICITUD_ACTIVIDADES');

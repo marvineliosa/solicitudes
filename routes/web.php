@@ -27,9 +27,21 @@ Route::get('/solicitudes/promocion', function () {
 Route::get('/solicitudes/cambio_adscripcion', function () {
     return view('nuevo_cambio_adscripcion');
 });
-Route::get('/listado/completo', function () {
+//listados
+/*Route::get('/listado/completo', function () {
     return view('listado_completo');
-});
+});//*/
+Route::get('/listado/completo', 'SolicitudesController@VistaListadoCompleto');
+
+//listado revision informacion
+Route::get('/listado/revision_informacion', 'SolicitudesController@VistaListadoRevisionInformacion');
+
+//listado nuevas en SPR
+Route::get('/listado/nuevas', 'SolicitudesController@VistaNuevasSPR');
+
+//listado nuevas en SPR
+Route::get('/listado/por_revisar', 'SolicitudesController@VistaPorRevisarSPR');
+
 Route::get('/listado/contratacion_sustitucion', function () {
     return view('listado_contratacion_sustitucion');
 });
@@ -49,6 +61,13 @@ Route::get('/solicitud/contratacion/1', function () {
     return view('edicion_contratacion');
 });
 
+//solicitudes en revision de informaicon
+Route::post('/revision_informacion/actualiza_estado', 'SolicitudesController@MarcarInformacionCorrecta');
+
+//solicitudes nuevas en CGA
+Route::post('/nuevas/turnar_cga', 'SolicitudesController@TurnarSolicitudCGA');
+
+
 //contrataciones
 Route::post('/contratacion/insertar', 'SolicitudesController@AlmacenarContratacion');
 
@@ -60,3 +79,6 @@ Route::post('/promocion/insertar', 'SolicitudesController@AlmacenarPromocion');
 
 //cambio de adscripcion
 Route::post('/cambio_adscripcion/insertar', 'SolicitudesController@AlmacenarCambioAdscripcion');
+
+//solicitudes
+Route::post('/solicitud/cambiar_estado', 'SolicitudesController@CambiarEstadoCGA');

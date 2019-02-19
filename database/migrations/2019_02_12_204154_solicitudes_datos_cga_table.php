@@ -16,7 +16,7 @@ class SolicitudesDatosCgaTable extends Migration
         Schema::create('SOLICITUDES_DATOS_CGA', function (Blueprint $table) {
             $table->char('FK_SOLICITUD_ID', 15)->primary();
             $table->foreign('FK_SOLICITUD_ID')->references('SOLICITUD_ID')->on('SOLICITUDES_SOLICITUD');
-            $table->enum('DATOS_CGA_ESTATUS',['VALIDACION_INFORMACION','RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISION','FIRMAS','ENVIADO','COMPLETADO','CANCELADO','OTRO']);
+            $table->enum('DATOS_CGA_ESTATUS',['VALIDACIÓN DE INFORMACIÓN','INFORMACIÓN CORRECTA','RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN','FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR','CANCELADO','OTRO']);
             $table->string('DATOS_CGA_PRIORIDAD')->nullable();
             $table->char('DATOS_CGA_PROCEDENTE',5)->nullable();
             $table->char('DATOS_CGA_VALIDACION',15)->nullable();//es el numero de oficio

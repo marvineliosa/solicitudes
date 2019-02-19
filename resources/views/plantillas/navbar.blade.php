@@ -10,11 +10,15 @@
               <span class="menu-arrow arrow_carrot-right"></span>
             </a>
             <ul class="sub">
+              <li><a class="" href="/listado/revision_informacion">Revision de Información</a></li>
               <li><a class="" href="/listado/completo">Listado Completo</a></li>
               <li><a class="" href="/listado/contratacion">Contratación</a></li>
               <li><a class="" href="/listado/contratacion_sustitucion">Sustitución</a></li>
               <li><a class="" href="/listado/promocion">Promoción</a></li>
               <li><a class="" href="/listado/cambio_adscripcion">Cambio de Adscripción</a></li>
+              <li><a class="" href="/listado/nuevas">Nuevas (SPR)</a></li>
+              <li><a class="" href="/listado/por_revisar">Por Revisar (SPR)</a></li>
+              <li><a class="" href="/listado/revisadas">Revisadas (SPR)</a></li>
             </ul>
           </li>
           <li class="sub-menu">
