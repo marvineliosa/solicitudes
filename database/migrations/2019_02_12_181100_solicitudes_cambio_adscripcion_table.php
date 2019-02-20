@@ -20,7 +20,7 @@ class SolicitudesCambioAdscripcionTable extends Migration
             $table->string('CAMBIO_ADSCRIPCION_CATEGORIA_NUEVA');
             $table->string('CAMBIO_ADSCRIPCION_PUESTO_NUEVO');
             $table->text('CAMBIO_ADSCRIPCION_ACTIVIDADES_NUEVAS');
-            $table->integer('CAMBIO_ADSCRIPCION_SALARIO_NUEVO');
+            $table->float('CAMBIO_ADSCRIPCION_SALARIO_NUEVO');
             $table->timestamps();
         });
     }

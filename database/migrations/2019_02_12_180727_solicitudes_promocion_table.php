@@ -19,7 +19,7 @@ class SolicitudesPromocionTable extends Migration
             $table->string('PROMOCION_CATEGORIA_SOLICITADA');
             $table->string('PROMOCION_PUESTO_NUEVO');
             $table->text('PROMOCION_ACTIVIDADES_NUEVAS');
-            $table->integer('PROMOCION_SALARIO_NUEVO');
+            $table->float('PROMOCION_SALARIO_NUEVO');
             $table->timestamps();
         });
     }

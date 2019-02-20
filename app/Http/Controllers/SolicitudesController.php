@@ -16,6 +16,133 @@
          * @return Response
          */
 
+        public function VerCuadroElaborado($id_solicitud){
+            $id_solicitud = str_replace('_','/',$id_solicitud);
+            $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+            return view('pdf.cuadro') ->with ("solicitud",$solicitud);
+        }
+
+        public function PDFContratacion($id_solicitud){
+            $id_solicitud = str_replace('_','/',$id_solicitud);
+            $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+            $pdf = \PDF::loadView('pdf.cuadro',['solicitud'=>$solicitud])->setPaper('a4', 'landscape');
+            //return $pdf->download($descripcion['DATOS']->NOM_DESC.'.pdf');
+            return $pdf->stream();
+
+            //return view('pdf.cuadro') ->with ("solicitud",$solicitud);
+        }
+
+        public function GuardaDatosCGA(Request $request){
+            dd($request);
+            date_default_timezone_set('America/Mexico_City');
+            $update = DB::table('SOLICITUDES_DATOS_CGA')
+                ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                ->update([
+                            'DATOS_CGA_SALARIO_PROPUESTO' => $request['salario'],
+                            'DATOS_CGA_CATEGORIA_PROPUESTA' => $request['categoria'],
+                            'DATOS_CGA_PUESTO_PROPUESTO' => $request['puesto'],
+                            'DATOS_CGA_PROCEDENTE' => $request['procede'],
+                            'DATOS_CGA_RESPUESTA' => $request['respuesta'],
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]);
+
+            $data = array(
+                "update"=>$update
+            );
+
+            echo json_encode($data);//*/
+        }
+
+        public function AbrirContratacion($id_solicitud){
+            $id_solicitud = str_replace('_','/',$id_solicitud);
+            $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+            //dd($solicitud);
+            return view('edicion_contratacion') ->with ("solicitud",$solicitud);
+            //dd($id_solicitud);
+
+        }
+
+
+        public function ObtenerSolicitudId($id_solicitud){
+            $solicitud = DB::table('SOLICITUDES_SOLICITUD')
+                    ->where('SOLICITUD_ID',$id_solicitud)
+                    ->select(
+                                'SOLICITUD_ID as ID_SOLICITUD',
+                                'SOLICITUD_OFICIO as OFICIO_SOLICITUD',
+                                'SOLICITUD_NOMBRE as NOMBRE_SOLICITUD',
+                                'SOLICITUD_DEPENDENCIA as DEPENDENCIA_SOLICITUD',
+                                'SOLICITUD_CATEGORIA as CATEGORIA_SOLICITUD',
+                                'SOLICITUD_PUESTO as PUESTO_SOLICITUD',
+                                'SOLICITUD_ACTIVIDADES as ACTIVIDADES_SOLICITUD',
+                                'SOLICITUD_NOMINA as NOMINA_SOLICITUD',
+                                'SOLICITUD_SALARIO as SALARIO_SOLICITUD',
+                                'SOLICITUD_JUSTIFICACION as JUSTIFICACION_SOLICITUD',
+                                'SOLICITUD_TIPO_SOLICITUD as TIPO_SOLICITUD_SOLICITUD'
+                            )
+                    ->get();
+            $solicitud[0]->SALARIO_FORMATO = number_format($solicitud[0]->SALARIO_SOLICITUD,2);
+            //echo 'DE: ', $formatter->formatCurrency($amount, 'EUR'), PHP_EOL;
+            $fechas = DB::table('SOLICITUDES_FECHAS')
+                ->where('FK_SOLICITUD_ID',$id_solicitud)
+                ->get();
+            //dd($fechas);
+            $solicitud[0]->FECHA_CREACION = $fechas[0]->FECHAS_CREACION_SOLICITUD;
+            $solicitud[0]->FECHAS_INFORMACION_COMPLETA = $fechas[0]->FECHAS_INFORMACION_COMPLETA;
+            $solicitud[0]->FECHA_TURNADO_CGA = $fechas[0]->FECHAS_TURNADO_CGA;
+            $solicitud[0]->FECHA_ENVIO = $fechas[0]->FECHAS_TURNADO_SPR;
+
+            $datos_cga = DB::table('SOLICITUDES_DATOS_CGA')
+                ->where('FK_SOLICITUD_ID',$id_solicitud)
+                ->get();
+
+            $solicitud[0]->CATEGORIA_PROPUESTA = $datos_cga[0]->DATOS_CGA_CATEGORIA_PROPUESTA;
+            $solicitud[0]->PUESTO_PROPUESTO = $datos_cga[0]->DATOS_CGA_PUESTO_PROPUESTO;
+            $solicitud[0]->SALARIO_PROPUESTO = $datos_cga[0]->DATOS_CGA_SALARIO_PROPUESTO;
+            $solicitud[0]->ESTATUS_PROCEDE = $datos_cga[0]->DATOS_CGA_PROCEDENTE;
+            $solicitud[0]->RESPUESTA_CGA = $datos_cga[0]->DATOS_CGA_RESPUESTA;
+
+            return $solicitud[0];
+        }
+
+
+        public function ValidarSolicitudSPR(Request $request){
+            date_default_timezone_set('America/Mexico_City');
+            $usuario = 'USUARIO SPR';//aqui se debe poner el nombre del usuario de SPR
+
+            $update = DB::table('SOLICITUDES_DATOS_CGA')
+                ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                ->update(['DATOS_CGA_ESTATUS' => 'COMPLETADO POR SPR']);
+
+            $update = DB::table('SOLICITUDES_FECHAS')
+                ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                ->update(['FECHAS_FIRMA_SPR' => date('Y-m-d H:i:s')]);
+
+            $existeFirma = DB::table('SOLICITUDES_FIRMAS')->where('FK_SOLICITUD_ID', $request['id_sol'])->get();
+            if(count($existeFirma)==0){
+                //dd('nuevo');
+                DB::table('SOLICITUDES_FIRMAS')
+                    ->insert(
+                                [
+                                    'FK_SOLICITUD_ID' => $request['id_sol'], 
+                                    'FIRMAS_SPR' => $usuario
+                                ]
+                            );
+            }else{
+                //dd('update');
+                $update = DB::table('SOLICITUDES_FIRMAS')
+                    ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                    ->update(['FIRMAS_SPR' => $usuario]);
+            }
+
+
+            $data = array(
+                "update"=>$update
+            );
+
+            echo json_encode($data);//*/
+
+        }
+
         public function CambiarEstadoCGA(Request $request){
             date_default_timezone_set('America/Mexico_City');
             //dd($request['estatus']);
@@ -23,10 +150,10 @@
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])
                 ->update(['DATOS_CGA_ESTATUS' => $request['estatus']]);
 
-            /*if(str_cmp($request['estatus'],'TURNADO A SPR')==0){
-                $update = DB::table('SOLICITUDES_DATOS_CGA')
+            if(strcmp($request['estatus'],'TURNADO A SPR')==0){
+                $update = DB::table('SOLICITUDES_FECHAS')
                     ->where('FK_SOLICITUD_ID', $request['id_sol'])
-                    ->update(['DATOS_CGA_ESTATUS' => $request['estatus']]);
+                    ->update(['FECHAS_TURNADO_SPR' => date('Y-m-d H:i:s')]);
                 }//*/
 
             $data = array(

@@ -22,7 +22,7 @@ class SolicitudesSolicitud extends Migration
             $table->string('SOLICITUD_PUESTO');
             $table->text('SOLICITUD_ACTIVIDADES');
             $table->string('SOLICITUD_NOMINA');
-            $table->integer('SOLICITUD_SALARIO');
+            $table->float('SOLICITUD_SALARIO');
             $table->text('SOLICITUD_JUSTIFICACION');
             $table->string('SOLICITUD_TIPO_SOLICITUD');
             $table->timestamps();

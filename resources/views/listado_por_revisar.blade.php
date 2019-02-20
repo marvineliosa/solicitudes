@@ -198,12 +198,12 @@
 		      <th scope="row" width="50%">Validar cuadro</th>
 		      <td>
 		      	<div class="form-check form-check-inline">
-			      <select id="SelectEstatus" class="form-control">
+			      <select id="SelectValidar" class="form-control">
 			        <option value="SELECCIONAR">SELECCIONAR</option>
 			        <option value="VALIDAR">VALIDAR</option>
 			      </select>
 			      <br>
-			      <button type="button" class="btn btn-primary" onclick="CambiarEstado()">Guardar</button>
+			      <button type="button" class="btn btn-primary" onclick="ValidarSolicitud()">Guardar</button>
 				</div>
 		      </td>
 		    </tr>
@@ -246,6 +246,26 @@
 					MensajeModal("¡EXITO!","El estatus se ha turnado nuevamente a CGA.");
 				});//*/
     		}
+    	}
+
+    	function ValidarSolicitud(){
+    		var id_sol = $("#num_oficio").val();
+    		var estatus = $("#SelectEstatus").val();
+
+    		if(estatus != 'REVISION'){
+	    		var success;
+				var url = "/solicitud/validar_solicitud";
+				var dataForm = new FormData();
+				dataForm.append('id_sol',id_sol);
+				//lamando al metodo ajax
+				metodoAjax(url,dataForm,function(success){
+					//aquí se escribe todas las operaciones que se harían en el succes
+					//la variable success es el json que recibe del servidor el método AJAX
+					MensajeModal("¡EXITO!","La solicitud ha sido validada, se ha agregado un sello digital al cuadro.");
+				});//*/
+
+    		}
+
     	}
 
 

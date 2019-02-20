@@ -20,7 +20,7 @@ class SolicitudesSustitucionTable extends Migration
             $table->string('SUSTITUCION_CATEGORIA_NUEVA');
             $table->string('SUSTITUCION_PUESTO_NUEVO');
             $table->text('SUSTITUCION_ACTIVIDADES_NUEVAS');
-            $table->integer('SUSTITUCION_SALARIO_NUEVO');
+            $table->float('SUSTITUCION_SALARIO_NUEVO');
             $table->timestamps();
         });
     }

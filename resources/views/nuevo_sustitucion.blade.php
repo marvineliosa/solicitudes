@@ -77,7 +77,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Nómina</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" name="" value="Institucional" id="Sustitucion-Nomina" disabled="disabled">
+              <input type="text" class="form-control" name="" value="INSTITUCIONAL" id="Sustitucion-Nomina" disabled="disabled">
             </div>
           </div>
           <div class="form-group">

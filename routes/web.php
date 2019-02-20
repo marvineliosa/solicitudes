@@ -57,9 +57,10 @@ Route::get('/listado/cambio_adscripcion', function () {
 Route::get('/salir', function () {
     return view('login');
 });
-Route::get('/solicitud/contratacion/1', function () {
+/*Route::get('/solicitud/contratacion/{id_solicitud}', function () {
     return view('edicion_contratacion');
-});
+});//*/
+Route::get('/solicitud/contratacion/{id_solicitud}', 'SolicitudesController@AbrirContratacion');
 
 //solicitudes en revision de informaicon
 Route::post('/revision_informacion/actualiza_estado', 'SolicitudesController@MarcarInformacionCorrecta');
@@ -70,6 +71,7 @@ Route::post('/nuevas/turnar_cga', 'SolicitudesController@TurnarSolicitudCGA');
 
 //contrataciones
 Route::post('/contratacion/insertar', 'SolicitudesController@AlmacenarContratacion');
+Route::post('/contratacion/guardar_datos_cga', 'SolicitudesController@GuardaDatosCGA');
 
 //Contrataciones por sustitucion
 Route::post('/contratacion_sustitucion/insertar', 'SolicitudesController@AlmacenarContratacionSustitucion');
@@ -82,3 +84,9 @@ Route::post('/cambio_adscripcion/insertar', 'SolicitudesController@AlmacenarCamb
 
 //solicitudes
 Route::post('/solicitud/cambiar_estado', 'SolicitudesController@CambiarEstadoCGA');
+Route::post('/solicitud/validar_solicitud', 'SolicitudesController@ValidarSolicitudSPR');
+
+//CUADROS
+//Route::get('/cuadro/{id_solicitud}', 'SolicitudesController@VerCuadroElaborado');
+Route::get('/cuadro/{id_solicitud}', 'SolicitudesController@VerCuadroElaborado');
+Route::get('/cuadro/contratacion/{id_solicitud}', 'SolicitudesController@PDFContratacion');

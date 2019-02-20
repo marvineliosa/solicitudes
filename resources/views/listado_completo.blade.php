@@ -32,7 +32,9 @@
 		              <div class="btn-group">
 		                <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#ModalDetalle"><i class="icon_info_alt"></i></a>
 		                @if(strcmp($solicitud->ESTATUS_SOLICITUD,'VALIDACIÓN DE INFORMACIÓN')!=0)
-		                	<a class="btn btn-success" href="http://localhost:8000/solicitud/contratacion/1"><i class="icon_pencil"></i></a>
+		                	@if(strcmp($solicitud->ESTATUS_SOLICITUD,'ANÁLISIS')==0 || strcmp($solicitud->ESTATUS_SOLICITUD,'REVISIÓN')==0)
+		                		<a class="btn btn-success" href="/solicitud/contratacion/{{$solicitud->ID_ESCAPE}}"><i class="icon_pencil"></i></a>
+		                	@endif
 		                	<a class="btn btn-danger" href="#" onclick="modalConfig('{{$solicitud->ID_SOLICITUD}}','{{$solicitud->ESTATUS_SOLICITUD}}')"><i class="icon_adjust-vert"></i></a>
 		                @endif
 		              </div>
@@ -246,6 +248,7 @@
     	console.log(gl_solicitudes);
     	function modalConfig(id_sol){
     		var estatus_sol = gl_solicitudes[id_sol]['ESTATUS_SOLICITUD'];
+    		//if(estatus)
     		$("#SelectEstatus").val(estatus_sol);
     		//$("#select_status option[value='" + estatus_sol + "']").attr('selected','selected');
     		//console.log(estatus_sol);

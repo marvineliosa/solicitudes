@@ -19,10 +19,15 @@ class SolicitudesDatosCgaTable extends Migration
             $table->enum('DATOS_CGA_ESTATUS',['VALIDACIÓN DE INFORMACIÓN','INFORMACIÓN CORRECTA','RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN','FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR','CANCELADO','OTRO']);
             $table->string('DATOS_CGA_PRIORIDAD')->nullable();
             $table->char('DATOS_CGA_PROCEDENTE',5)->nullable();
+            $table->text('DATOS_CGA_RESPUESTA')->nullable();
             $table->char('DATOS_CGA_VALIDACION',15)->nullable();//es el numero de oficio
-            $table->integer('DATOS_CGA_SALARIO_PROPUESTO')->nullable();
+            $table->float('DATOS_CGA_SALARIO_PROPUESTO')->nullable();
             $table->string('DATOS_CGA_CATEGORIA_PROPUESTA')->nullable();
             $table->string('DATOS_CGA_PUESTO_PROPUESTO')->nullable();
+            $table->float('DATOS_CGA_SALARIO_SUPERIOR')->nullable();
+            $table->string('DATOS_CGA_CATEGORIA_SUPERIOR')->nullable();
+            $table->float('DATOS_CGA_SALARIO_INFERIOR')->nullable();
+            $table->string('DATOS_CGA_CATEGORIA_INFERIOR')->nullable();
             $table->timestamps();
         });
     }

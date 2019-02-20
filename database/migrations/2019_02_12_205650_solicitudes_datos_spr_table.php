@@ -17,7 +17,7 @@ class SolicitudesDatosSprTable extends Migration
             $table->char('FK_SOLICITUD_ID', 15)->primary();
             $table->foreign('FK_SOLICITUD_ID')->references('SOLICITUD_ID')->on('SOLICITUDES_SOLICITUD');
             $table->char('DATOS_SPR_VALIDACION',15);
-            $table->integer('DATOS_SPR_SALARIO_INDICADO');
+            $table->float('DATOS_SPR_SALARIO_INDICADO');
             $table->string('DATOS_SPR_CATEGORIA_AUTORIZADA');
             $table->timestamps();
         });
