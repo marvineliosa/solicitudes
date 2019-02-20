@@ -38,6 +38,7 @@
 </head>
 
 <body class="login-buap-body">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <div class="container">
 
@@ -46,14 +47,14 @@
         <p class="login-img"><i class="icon_lock_alt"></i></p>
         <div class="input-group">
           <span class="input-group-addon"><i class="icon_profile"></i></span>
-          <input type="text" class="form-control" placeholder="Username" autofocus>
+          <input type="text" class="form-control" placeholder="Username" id="usuario" autofocus>
         </div>
         <div class="input-group">
           <span class="input-group-addon"><i class="icon_key_alt"></i></span>
-          <input type="password" class="form-control" placeholder="Password">
+          <input type="password" class="form-control" placeholder="Password" id="contrasena">
         </div>
         <label class="checkbox">
-                <span class="pull-right"> <a href="#"> Recuperar Contraseña</a></span>
+                <!--<span class="pull-right"> <a href="#"> Recuperar Contraseña</a></span>-->
             </label>
         <button class="btn btn-primary btn-lg btn-block" type="submit" onclick="ingresar()">Ingresar</button>
       </div>
@@ -87,6 +88,69 @@
 
 <script type="text/javascript">
   function ingresar(){
-    location.href = '/listado/completo';
+    var usuario = $("#usuario").val();
+    var pass = $("#contrasena").val();
+    //console.log(estatus);
+    var success;
+    var url = "/login/validar";
+    var dataForm = new FormData();
+    dataForm.append('usuario',usuario);
+    dataForm.append('pass',pass);
+    console.log(usuario);
+    console.log(pass);
+    $.ajax({
+      url :url,
+      data : dataForm,
+      contentType:false,
+      processData:false,
+      headers:{
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+      type: 'POST',
+      dataType : 'json',
+      beforeSend: function (){
+        $("#modalCarga").modal();
+      },
+      success : function(json){
+        //resultado = json;
+        if(!json['exito']){
+          $("#tituloModalMensaje").text('ATENCION');
+          $("#textoModalMensaje").text('Usuario o contraseña incorrecta.');
+          alert('Usuario o contraseña incorrecta.');
+          $("#modalMensaje").modal();
+        }else{
+          /*if(json['categoria']=='DIRECTOR_DRH'){
+            location.href='/dependencias'
+          }else if(json['categoria']=='FACILITADOR'){
+            location.href='/dependencias'
+          }else if(json['categoria']=='DIRECTOR_D/UA'){
+            location.href='/descripciones'
+          }else if(json['categoria']=='ENCARGADO_D/UA'){
+            location.href='/descripciones'
+          }else if(json['categoria']=='CGA'){
+            location.href='/dependencias'
+          }else{
+            $("#textoModalMensaje").text("No existe la categoría: "+json['categoria']);
+            $("#modalMensaje").modal();
+          }//*/
+          if(json['categoria']=='TRBAJADOR_CGA'){
+            location.href='/listado/completo';
+          }else if(json['categoria']=='TRABAJADOR_SPR'){
+            location.href='/listado/nuevas';
+          }else if(json['categoria']=='COORDINADOR_CGA'){
+            location.href='/listado/nuevas';
+          }else if(json['categoria']=='TITULAR'){
+            location.href='/listado/dependencia';
+          }
+        }
+      },
+      error : function(xhr, status) {
+        $("#textoModalMensaje").text('Existió un problema con la operación');
+        $("#modalMensaje").modal();
+      },
+      complete : function(xhr, status){
+         $("#modalCarga").modal('hide');
+      }
+    });//*/
   }
 </script>

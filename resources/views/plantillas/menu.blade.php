@@ -126,6 +126,73 @@
       </div>
     </div>
 
+    <!-- MODAL MOSTRAR CONTRATACION -->
+    <!-- Modal -->
+    <div class="modal fade" id="ModalDetalleContratacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Concepto</th>
+              <th scope="col">Descripción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Número de Solicitud</th>
+              <td id="ModalCont-id_sol"></td>
+            </tr>
+            <tr>
+              <th scope="row">Candidato</th>
+              <td id="ModalCont-candidato"></td>
+            </tr>
+            <tr>
+              <th scope="row">Dependencia</th>
+              <td id="ModalCont-dependencia"></td>
+            </tr>
+            <tr>
+              <th scope="row">Fecha de Solicitud</th>
+              <td id="ModalCont-fehca_solicitud"></td>
+            </tr>
+            <tr>
+              <th scope="row">Fecha de información completa</th>
+              <td id="ModalCont-fecha_informacion_conpleta"></td>
+            </tr>
+            <tr>
+              <th scope="row">Categoría Solicitada</th>
+              <td id="ModalCont-categoria_solicitada"></td>
+            </tr>
+            <tr>
+              <th scope="row">Puesto Solicitado</th>
+              <td id="ModalCont-puesto_solicitado"></td>
+            </tr>
+            <tr>
+              <th scope="row">Salario Solicitado</th>
+              <td id="ModalCont-salario_solicitado"></td>
+            </tr>
+          </tbody>
+        </table>
+        <div align="center">
+          <a href="" target="_blank" id="verCuadro">Ver cuadro</a>
+          
+        </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+          </div>
+        </div>
+      </div>
+    </div>
+
   </body>
 
 </html>
@@ -167,6 +234,37 @@
     $("#TituloModalMensaje").text(titulo);
     $("#CuerpoModalMensaje").text(mensaje);
     $("#ModalMensaje").modal();
+  }
+
+  function formatoMoneda(numero) {
+    numero = '3258.56';
+    if(numero>999999){
+      conPunto = numero.substring(0, numero.length-9);
+      conPunto2 = numero.substring(numero.length-9, numero.length-6);
+      conPunto3 = numero.substring(numero.length-6, numero.length);
+      numero = conPunto + ',' + conPunto2 + ',' + conPunto3;
+    }else{
+      if(numero>999){
+        conPunto = numero.substring(0, numero.length-6);
+        conPunto2 = numero.substring(numero.length-6, numero.length);
+        numero = conPunto + ',' + conPunto2;
+      }       
+    }
+    return numero;
+  }
+
+  function AbreModalContratacion(id_sol){
+    console.log(gl_solicitudes[id_sol]);
+    $("#ModalCont-id_sol").html(gl_solicitudes[id_sol]['ID_SOLICITUD']);
+    $("#ModalCont-candidato").html(gl_solicitudes[id_sol]['NOMBRE_SOLICITUD']);
+    $("#ModalCont-dependencia").html(gl_solicitudes[id_sol]['DEPENDENCIA_SOLICITUD']);
+    $("#ModalCont-fehca_solicitud").html(gl_solicitudes[id_sol]['FECHA_CREACION']);
+    $("#ModalCont-fecha_informacion_conpleta").html(gl_solicitudes[id_sol]['FECHA_TURNADO_SPR']);
+    $("#ModalCont-categoria_solicitada").html(gl_solicitudes[id_sol]['CATEGORIA_SOLICITUD']);
+    $("#ModalCont-puesto_solicitado").html(gl_solicitudes[id_sol]['PUESTO_SOLICITUD']);
+    $("#ModalCont-salario_solicitado").html('$ '+formatoMoneda(gl_solicitudes[id_sol]['SALARIO_SOLICITUD']));
+    $("#verCuadro").attr('href','/cuadro/contratacion/'+gl_solicitudes[id_sol]['ID_ESCAPE']);
+    $("#ModalDetalleContratacion").modal();
   }
 
 </script>

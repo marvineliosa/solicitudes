@@ -16,6 +16,7 @@ class SolicitudesLoginTable extends Migration
         Schema::create('SOLICITUDES_LOGIN', function (Blueprint $table) {
             $table->string('LOGIN_USUARIO', 150)->primary();
             $table->string('LOGIN_CONTRASENIA');
+            $table->enum('CATEGORIA',['TRBAJADOR_CGA','COORDINADOR_CGA','TITULAR','TRABAJADOR_SPR']);
             $table->timestamps();
         });
     }

@@ -4,7 +4,7 @@
 <div class="col-lg-12">
 	<section class="panel">
 	  <header class="panel-heading">
-	    Listado de Cambios de Adscripción
+	    Listado Completo
 	  </header>
 	  <div class="table-responsive">
 	    <table class="table">
@@ -13,8 +13,9 @@
 	          <th>Folio</th>
 	          <th>Candidato</th>
 	          <th>Dependencia</th>
-	          <th>Fecha de recepción</th>
+	          <th>Fecha de turnado a CGA</th>
 	          <th>Solicitud</th>
+	          <th>Estatus</th>
 	          <th>Acciones</th>
 	        </tr>
 	      </thead>
@@ -24,16 +25,38 @@
 		          <td>{{$solicitud->ID_SOLICITUD}}</td>
 		          <td>{{$solicitud->NOMBRE_SOLICITUD}}</td>
 		          <td>{{$solicitud->DEPENDENCIA_SOLICITUD}}</td>
-		          <td>{{$solicitud->FECHA_TURNADO_SPR}}</td>
+		          <td>{{$solicitud->FECHA_TURNADO_CGA}}</td>
 		          <td>{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}</td>
+		          <td id="td_estatus_{{$solicitud->ID_ESCAPE}}">{{$solicitud->ESTATUS_SOLICITUD}}</td>
 		          <td>
-					<div class="btn-group">
-					<a class="btn btn-primary" href="#" onclick="AbreModalContratacion('{{$solicitud->ID_SOLICITUD}}')"><i class="icon_info_alt"></i></a>
-					<a class="btn btn-danger" href="#" onclick="modalConfig('{{$solicitud->ID_SOLICITUD}}')"><i class="icon_adjust-vert"></i></a>	
-					</div>
+		              <div class="btn-group">
+		              	@if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN')==0)
+		                	<a class="btn btn-primary" href="#" onclick="AbreModalContratacion('{{$solicitud->ID_SOLICITUD}}')"><i class="icon_info_alt"></i></a>
+		              	@endif
+		                @if(strcmp($solicitud->ESTATUS_SOLICITUD,'FIRMAS')==0))
+		                	<a class="btn btn-danger" href="#" onclick="modalConfig('{{$solicitud->ID_SOLICITUD}}','{{$solicitud->ESTATUS_SOLICITUD}}')"><i class="icon_adjust-vert"></i></a>
+		               	
+		                @endif
+		              </div>
 		          </td>
 		        </tr>
 		    @endforeach
+	        
+	        <!--<tr class="success">
+	          <td>SOL/5/2019</td>
+	          <td>Ramiro Sánchez Gómez</td>
+	          <td>FCC</td>
+	          <td>27/01/2019</td>
+	          <td>Cambio de Adscripción</td>
+	          <td>Recibido</td>
+	          <td>
+				<div class="btn-group">
+				<a class="btn btn-primary" href="#" data-toggle="modal" data-target="#ModalDetalleTerminado"><i class="icon_info_alt"></i></a>
+				<a class="btn btn-success" href="http://localhost:8000/solicitud/contratacion/1"><i class="icon_pencil"></i></a>
+				<a class="btn btn-danger" href="#" data-toggle="modal" data-target="#ModalConfiguraciones"><i class="icon_adjust-vert"></i></a>	
+				</div>
+	          </td>
+	        </tr>-->
 	      </tbody>
 	    </table>
 	  </div>
@@ -41,7 +64,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="ModalDetalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="ModalDetalleTMP" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -170,7 +193,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Configuraciones</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -189,12 +212,12 @@
 		  </thead>-->
 		  <tbody>
 		    <tr>
-		      <th scope="row" width="50%">Turnar</th>
+		      <th scope="row" width="50%">Validar Solicitud</th>
 		      <td>
 		      	<div class="form-check form-check-inline">
-			      <select id="SelectEstatus" class="form-control">
-			        <option value="RECIBIDO" selected>RECIBIDO A SPR</option>
-			        <option value="TURNAR A CGA">TURNAR A CGA</option>
+			      <select id="SelectValidar" class="form-control" id="select_status">
+			        <option value="SELECCIONAR">--SELECCIONAR--</option>
+			        <option value="VALIDAR">VALIDAR</option>
 			      </select>
 			      <br>
 			      <button type="button" class="btn btn-primary" onclick="CambiarEstado()">Guardar</button>
@@ -217,45 +240,36 @@
 	<script type="text/javascript">
 		var gl_solicitudes = <?php echo json_encode($solicitudes) ?>;
     	console.log(gl_solicitudes);
-
     	function modalConfig(id_sol){
+    		var estatus_sol = gl_solicitudes[id_sol]['ESTATUS_SOLICITUD'];
+    		//if(estatus)
+    		$("#SelectEstatus").val(estatus_sol);
+    		//$("#select_status option[value='" + estatus_sol + "']").attr('selected','selected');
+    		//console.log(estatus_sol);
     		$("#num_oficio").val(id_sol);
     		$("#ModalConfiguraciones").modal();
     	}
 
     	function CambiarEstado(){
     		var id_sol = $("#num_oficio").val();
-    		var estatus = $("#SelectEstatus").val();
-    		console.log(id_sol);
-    		if(estatus == 'TURNAR A CGA'){
-	    		var success;
-				var url = "/nuevas/turnar_cga";
-				var dataForm = new FormData();
-				dataForm.append('id_sol',id_sol);
-				//lamando al metodo ajax
-				metodoAjax(url,dataForm,function(success){
-					//aquí se escribe todas las operaciones que se harían en el succes
-					//la variable success es el json que recibe del servidor el método AJAX
-					MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente, la solicitud se ha turnado a CGA.");
-				});//*/
-    		}
+    		var estatus = $("#SELECCIONAR").val();
+    		//console.log(estatus);
+    		var success;
+			var url = "/solicitud/validacion_cga";
+			var dataForm = new FormData();
+			dataForm.append('id_sol',id_sol);
+			dataForm.append('estatus',estatus);
+			//lamando al metodo ajax
+
+			metodoAjax(url,dataForm,function(success){
+				//aquí se escribe todas las operaciones que se harían en el succes
+				//la variable success es el json que recibe del servidor el método AJAX
+				gl_solicitudes[id_sol]['ESTATUS_SOLICITUD'] = estatus;
+				$("#td_estatus_"+gl_solicitudes[id_sol]['ID_ESCAPE']).html(estatus);
+				//console.log(gl_solicitudes);
+				MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente.");
+			});//*/
     	}
-
-
-
-	    function ejemploAjax(){
-	      var success;
-	      var url = "/ruta1/ruta2";
-	      var dataForm = new FormData();
-	      dataForm.append('p1',"p1");
-	      dataForm.append('p2','p2');
-	      //lamando al metodo ajax
-	      metodoAjax(url,dataForm,function(success){
-	        //aquí se escribe todas las operaciones que se harían en el succes
-	        //la variable success es el json que recibe del servidor el método AJAX
-	        MensajeModal("TITULO DEL MODAL","MENSAJE DEL MODAL");
-	      });
-	    }
 
 
 

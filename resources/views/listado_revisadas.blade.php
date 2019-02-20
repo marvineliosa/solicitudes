@@ -68,7 +68,7 @@
 				</div>
 		      </td>
 		    </tr>
-		    <tr>
+		    <!--<tr>
 		      <th scope="row" width="50%">Validar cuadro</th>
 		      <td>
 		      	<div class="form-check form-check-inline">
@@ -80,10 +80,10 @@
 			      <button type="button" class="btn btn-primary" onclick="ValidarSolicitud()">Guardar</button>
 				</div>
 		      </td>
-		    </tr>
+		    </tr>-->
 		  </tbody>
 		</table>
-		<!--<a href="/cuadro/contratacion/SOL_2_2019" target="_blank">Ver cuadro</a>-->
+		<a href="/cuadro/contratacion/SOL_1_2019" target="_blank">Ver cuadro</a>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>

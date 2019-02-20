@@ -28,80 +28,89 @@
 	</style>
 </head>
 <body style="size: landscape">
-	<div id="div-dependencia" align="center" class=""><h3>{{$solicitud->DEPENDENCIA_SOLICITUD}}</h3></div>
+	<div id="div-dependencia" align="center" class=""><h3>FACULTAD DE CIENCIAS DE LA COMPUTACIÓN</h3></div>
 	@if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN')==0||strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN POR SUSTITUCIÓN')==0)
 		<div id="div-subtitulo" align="center" class="">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}} EN NÓMINA {{$solicitud->NOMINA_SOLICITUD}}</div>
 	@else
 		<div id="div-subtitulo" align="center" class="">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}</div>
 	@endif
-	<div id="div-fecha" align="right" class="">FECHA: </div>
+	<div id="div-fecha" align="right" class="">FECHA: 20/02/2019</div>
 	<div id="div-solicitud" align="right" class="">SOLICITUD: {{$solicitud->ID_SOLICITUD}}</div>
 	<div id="div-tabla_datos" align="right" class="">
-		<table style="width:100%" class="table table-bordered">
+		<table style="width:100%;" class="table table-bordered">
 		  <tr>
-		    <th style="font-size: 13px;" class="bloque">NOMBRE</th>
-		    <th style="font-size: 13px;" class="bloque">FUNCIONES</th> 
-		    <th style="font-size: 13px;" class="bloque">CATEGORÍA/PUESTO SOLICITADO</th>
-		    <th style="font-size: 13px;" class="bloque">SALARIO NETO SOLICITADO</th>
-		    <th style="font-size: 13px;" class="bloque">DIFERENCIA QUINCENAL</th>
-		    <th style="font-size: 13px;" class="bloque">% DIFERENCIA</th>
+		    <th style="font-size: 13px;border:1px solid black;" class="bloque">NOMBRE</th>
+		    <th style="font-size: 13px;border:1px solid black;" class="bloque">FUNCIONES</th> 
+		    <th style="font-size: 13px;border:1px solid black;" class="bloque">CATEGORÍA/PUESTO SOLICITADO</th>
+		    <th style="font-size: 13px;border:1px solid black;" class="bloque">SALARIO NETO SOLICITADO</th>
+		    <th style="font-size: 13px;border:1px solid black;" class="bloque">DIFERENCIA QUINCENAL</th>
+		    <th style="font-size: 13px;border:1px solid black;" class="bloque">% DIFERENCIA</th>
 		  </tr>
 		  <tr>
-		    <td style="font-size: 10px;" align="center">{{$solicitud->NOMBRE_SOLICITUD}}</td>
-		    <td style="font-size: 10px;" align="justify">{{$solicitud->ACTIVIDADES_SOLICITUD}}</td>
-		    <td style="font-size: 10px;" align="center">{{$solicitud->PUESTO_SOLICITUD}}</td>
-		    <td style="font-size: 10px;" align="center">{{$solicitud->SALARIO_FORMATO}}</td>
-		    <td style="font-size: 10px;" align="center"></td>
-		    <td style="font-size: 10px;" align="center"></td>
+		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$solicitud->NOMBRE_SOLICITUD}}</td>
+		    <td style="font-size: 10px;border:1px solid black;" align="justify">{{$solicitud->ACTIVIDADES_SOLICITUD}}</td>
+		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$solicitud->PUESTO_SOLICITUD}}</td>
+		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$solicitud->SALARIO_FORMATO}}</td>
+		    <td style="font-size: 10px;border:1px solid black;" align="center"></td>
+		    <td style="font-size: 10px;border:1px solid black;" align="center"></td>
 		  </tr>
 		</table>
 	</div>
 	<div id="div-tabla_cantidades" align="right" class="">
 		<table style="width:75%" class="table table-bordered" align="center">
 		  <tr>
-		    <th style="font-size: 8px; visibility: hidden" class="bloque"></th>
-		    <th style="font-size: 8px;" class="bloque">CATEGORÍAS INMEDIATAS</th> 
-		    <th style="font-size: 8px;" class="bloque">SALARIO NETO QUINCENAL</th>
-		    <th style="font-size: 8px;" class="bloque">DIFERENCIA QUINCENAL</th>
-		    <th style="font-size: 8px;" class="bloque">% DE DIFERENCIA</th>
+		    <th style="font-size: 8px;border:1px solid black; visibility: hidden" class="bloque"></th>
+		    <th style="font-size: 8px;border:1px solid black;" class="bloque">CATEGORÍAS INMEDIATAS</th> 
+		    <th style="font-size: 8px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL</th>
+		    <th style="font-size: 8px;border:1px solid black;" class="bloque">DIFERENCIA QUINCENAL</th>
+		    <th style="font-size: 8px;border:1px solid black;" class="bloque">% DE DIFERENCIA</th>
 		  </tr>
 		  <tr>
-		    <td style="font-size: 8px;" align="center">PROPUESTA DE LA COORDINACIÓN GENERAL ADMINISTRATIVA</td>
-		    <td style="font-size: 8px; background-color: rgb(255, 230, 153);" align="center">{{$solicitud->PUESTO_PROPUESTO}}</td>
-		    <td style="font-size: 8px; background-color: rgb(255, 230, 153);" align="center">{{$solicitud->SALARIO_PROPUESTO}}</td>
-		    <td style="font-size: 8px; background-color: rgb(255, 230, 153);" align="center"></td>
-		    <td style="font-size: 8px; background-color: rgb(255, 230, 153);" align="center"></td>
+		    <td style="font-size: 8px;border:1px solid black;" align="center">PROPUESTA DE LA COORDINACIÓN GENERAL ADMINISTRATIVA</td>
+		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{$solicitud->PUESTO_PROPUESTO}}</td>
+		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{$solicitud->SALARIO_PROPUESTO}}</td>
+		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center"></td>
+		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center"></td>
 		  </tr>
 		</table>
 	</div>
 	<div id="div-tabla_respuesta" align="right" class="">
 		<table style="width:100%" class="table table" border="0">
 		  <tr>
-		    <th style="font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" class="">NOTA:</th>
+		    <th style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" class="">NOTA:</th>
 		  </tr>
 		  <tr>
-		    <td style="font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="justify">{{$solicitud->RESPUESTA_CGA}}</td>
+		    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="justify">{{$solicitud->RESPUESTA_CGA}}</td>
 		  </tr>
 		</table>
 	</div>
 	<div id="div-tabla_sellos" align="right" class="">
-		<table style="width:100%" class="table table-bordered">
+		<table style="width:100%" class="table table" border="0">
 		  <tr>
-		    <td style="font-size: 10px;" align="center" id="sello_titular"></td>
-		    <td style="font-size: 10px;" align="center" id="sello_coordinador"></td>
-		    <td style="font-size: 10px;" align="center" id="sello_spr"></td>
+		  	<td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
+		  		<img src="img/qr_titular.png" width="100" height="100">
+		  	</td>
+		    <td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
+		    	<img src="img/qr_coordinador.png" width="100" height="100">
+		    </td>
+		    <td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
+		    	<img src="img/qr_spr.png" width="100" height="100">
+		    </td>
 		  </tr>
 		</table>
 	</div>
 
+	<div id='mydiv1'></div>
 
 </body>
 </html>
-
+<script type="text/javascript">
+    document.getElementById('mydiv1').innerHTML = 'this is a test';
+</script>
 <script type="text/javascript">
     var gl_solicitud = <?php echo json_encode($solicitud) ?>;
     console.log(gl_solicitud);
-    sellos();
+    //sellos();
     function formatoMoneda(numero) {
     	numero = '3258.56';
 	    if(numero>999999){

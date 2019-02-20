@@ -33,6 +33,8 @@ Route::get('/solicitudes/cambio_adscripcion', function () {
 });//*/
 Route::get('/listado/completo', 'SolicitudesController@VistaListadoCompleto');
 
+Route::get('/listado/en_proceso', 'SolicitudesController@VistaListadoEnProceso');
+
 //listado revision informacion
 Route::get('/listado/revision_informacion', 'SolicitudesController@VistaListadoRevisionInformacion');
 
@@ -41,6 +43,13 @@ Route::get('/listado/nuevas', 'SolicitudesController@VistaNuevasSPR');
 
 //listado nuevas en SPR
 Route::get('/listado/por_revisar', 'SolicitudesController@VistaPorRevisarSPR');
+Route::get('/listado/revisadas', 'SolicitudesController@VistaRevisadasSPR');
+
+//listado nuevas en SPR
+Route::get('/listado/dependencia', 'SolicitudesController@VistaListadoDependencia');
+
+//listado CGA
+Route::get('/listado/coordinacion', 'SolicitudesController@VistaListadoCGA');
 
 Route::get('/listado/contratacion_sustitucion', function () {
     return view('listado_contratacion_sustitucion');
@@ -86,7 +95,16 @@ Route::post('/cambio_adscripcion/insertar', 'SolicitudesController@AlmacenarCamb
 Route::post('/solicitud/cambiar_estado', 'SolicitudesController@CambiarEstadoCGA');
 Route::post('/solicitud/validar_solicitud', 'SolicitudesController@ValidarSolicitudSPR');
 
+Route::post('/solicitud/validacion_titular', 'SolicitudesController@ValidarSolicitudDependencia');
+
+Route::post('/solicitud/validacion_cga', 'SolicitudesController@ValidarSolicitudCGA');
+
+
 //CUADROS
 //Route::get('/cuadro/{id_solicitud}', 'SolicitudesController@VerCuadroElaborado');
 Route::get('/cuadro/{id_solicitud}', 'SolicitudesController@VerCuadroElaborado');
 Route::get('/cuadro/contratacion/{id_solicitud}', 'SolicitudesController@PDFContratacion');
+
+
+Route::post('/login/validar', 'LoginController@ValidarUsuario');
+Route::post('/salir', 'LoginController@cerrarSesion');

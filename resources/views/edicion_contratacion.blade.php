@@ -95,25 +95,25 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Categoría Superior Propuesta</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" placeholder="Categoría Superior Propuesta" value="{{$solicitud->CATEGORIA_PROPUESTA}}" id="propuesta-categoria_superior">
+              <input type="text" class="form-control" placeholder="Categoría Superior Propuesta" value="{{$solicitud->CATEGORIA_SUPERIOR}}" id="propuesta-categoria_superior">
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label">Salario Neto Superior Propuesto</label>
             <div class="col-sm-6">
-              <input type="number" class="form-control" placeholder="Puesto del Candidato" value="{{$solicitud->SALARIO_PROPUESTO}}" id="propuesta-salario_superior" step=".01">
+              <input type="number" class="form-control" placeholder="Puesto del Candidato" value="{{$solicitud->SALARIO_SUPERIOR}}" id="propuesta-salario_superior" step=".01">
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label">Categoría Inferior Propuesta</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" placeholder="Categoría Inferior Propuesta" value="{{$solicitud->CATEGORIA_PROPUESTA}}" id="propuesta-categoria_inferior">
+              <input type="text" class="form-control" placeholder="Categoría Inferior Propuesta" value="{{$solicitud->CATEGORIA_INFERIOR}}" id="propuesta-categoria_inferior">
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label">Salario Neto Inferior Propuesto</label>
             <div class="col-sm-6">
-              <input type="number" class="form-control" placeholder="Slario Neto Inferior" value="{{$solicitud->SALARIO_PROPUESTO}}" id="propuesta-salario_inferior" step=".01">
+              <input type="number" class="form-control" placeholder="Slario Neto Inferior" value="{{$solicitud->SALARIO_INFERIOR}}" id="propuesta-salario_inferior" step=".01">
             </div>
           </div>
           <div class="form-group">

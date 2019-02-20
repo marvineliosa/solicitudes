@@ -33,7 +33,7 @@
         }
 
         public function GuardaDatosCGA(Request $request){
-            dd($request);
+            //dd($request);
             date_default_timezone_set('America/Mexico_City');
             $update = DB::table('SOLICITUDES_DATOS_CGA')
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])
@@ -43,6 +43,10 @@
                             'DATOS_CGA_PUESTO_PROPUESTO' => $request['puesto'],
                             'DATOS_CGA_PROCEDENTE' => $request['procede'],
                             'DATOS_CGA_RESPUESTA' => $request['respuesta'],
+                            'DATOS_CGA_SALARIO_SUPERIOR' => $request['salario_superior'],
+                            'DATOS_CGA_CATEGORIA_SUPERIOR' => $request['categoria_superior'],
+                            'DATOS_CGA_SALARIO_INFERIOR' => $request['salario_inferior'],
+                            'DATOS_CGA_CATEGORIA_INFERIOR' => $request['categoria_inferior'],
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
 
@@ -100,8 +104,78 @@
             $solicitud[0]->SALARIO_PROPUESTO = $datos_cga[0]->DATOS_CGA_SALARIO_PROPUESTO;
             $solicitud[0]->ESTATUS_PROCEDE = $datos_cga[0]->DATOS_CGA_PROCEDENTE;
             $solicitud[0]->RESPUESTA_CGA = $datos_cga[0]->DATOS_CGA_RESPUESTA;
+            $solicitud[0]->CATEGORIA_SUPERIOR = $datos_cga[0]->DATOS_CGA_CATEGORIA_SUPERIOR;
+            $solicitud[0]->SALARIO_SUPERIOR = $datos_cga[0]->DATOS_CGA_SALARIO_SUPERIOR;
+            $solicitud[0]->CATEGORIA_INFERIOR = $datos_cga[0]->DATOS_CGA_CATEGORIA_INFERIOR;
+            $solicitud[0]->SALARIO_INFERIOR = $datos_cga[0]->DATOS_CGA_SALARIO_INFERIOR;
 
             return $solicitud[0];
+        }
+
+        public function ValidarSolicitudDependencia(Request $request){
+            date_default_timezone_set('America/Mexico_City');
+            $usuario = 'USUARIO TITULAR';//aqui se debe poner el nombre del usuario de SPR
+
+            $update = DB::table('SOLICITUDES_FECHAS')
+                ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                ->update(['FECHAS_FIRMA_TITULAR' => date('Y-m-d H:i:s')]);
+
+            $existeFirma = DB::table('SOLICITUDES_FIRMAS')->where('FK_SOLICITUD_ID', $request['id_sol'])->get();
+            if(count($existeFirma)==0){
+                //dd('nuevo');
+                DB::table('SOLICITUDES_FIRMAS')
+                    ->insert(
+                                [
+                                    'FK_SOLICITUD_ID' => $request['id_sol'], 
+                                    'FIRMAS_TITULAR' => $usuario
+                                ]
+                            );
+            }else{
+                //dd('update');
+                $update = DB::table('SOLICITUDES_FIRMAS')
+                    ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                    ->update(['FIRMAS_TITULAR' => $usuario]);
+            }
+
+
+            $data = array(
+                "update"=>$update
+            );
+
+            echo json_encode($data);//*/
+        }
+
+        public function ValidarSolicitudCGA(Request $request){
+            date_default_timezone_set('America/Mexico_City');
+            $usuario = 'USUARIO COORDINADOR';//aqui se debe poner el nombre del usuario de SPR
+
+            $update = DB::table('SOLICITUDES_FECHAS')
+                ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                ->update(['FECHAS_FIRMA_CGA' => date('Y-m-d H:i:s')]);
+
+            $existeFirma = DB::table('SOLICITUDES_FIRMAS')->where('FK_SOLICITUD_ID', $request['id_sol'])->get();
+            if(count($existeFirma)==0){
+                //dd('nuevo');
+                DB::table('SOLICITUDES_FIRMAS')
+                    ->insert(
+                                [
+                                    'FK_SOLICITUD_ID' => $request['id_sol'], 
+                                    'FIRMAS_CGA' => $usuario
+                                ]
+                            );
+            }else{
+                //dd('update');
+                $update = DB::table('SOLICITUDES_FIRMAS')
+                    ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                    ->update(['FIRMAS_CGA' => $usuario]);
+            }
+
+
+            $data = array(
+                "update"=>$update
+            );
+
+            echo json_encode($data);//*/
         }
 
 
@@ -164,7 +238,7 @@
         }
 
         public function VistaNuevasSPR(){
-            $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('INFORMACIÓN CORRECTA');
+            $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('VALIDACIÓN DE INFORMACIÓN');
             return view('listado_nuevas') ->with ("solicitudes",$solicitudes);
         }
 
@@ -173,10 +247,30 @@
             return view('listado_por_revisar') ->with ("solicitudes",$solicitudes);
         }
 
+        public function VistaRevisadasSPR(){
+            $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('COMPLETADO POR SPR');
+            return view('listado_revisadas') ->with ("solicitudes",$solicitudes);
+        }
+
         
         public function VistaListadoRevisionInformacion(){
             $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('VALIDACION DE INFORMACION');
             return view('listado_revision_informacion') ->with ("solicitudes",$solicitudes);
+        }
+        
+        public function VistaListadoDependencia(){
+            $solicitudes = SolicitudesController::ObtenerSolicitudes();
+            return view('listado_dependencia')->with("solicitudes",$solicitudes);
+        }
+        
+        public function VistaListadoCGA(){
+            $solicitudes = SolicitudesController::ObtenerSolicitudes();
+            return view('listado_cga')->with("solicitudes",$solicitudes);
+        }
+
+        public function VistaListadoEnProceso(){
+            $solicitudes = SolicitudesController::ObtenerSolicitudes();
+            return view('listado_en_proceso') ->with ("solicitudes",$solicitudes);
         }
 
 
@@ -269,7 +363,7 @@
             //dd($request['id_sol']);
             $update = DB::table('SOLICITUDES_DATOS_CGA')
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])
-                ->update(['DATOS_CGA_ESTATUS' => 'INFORMACIÓN CORRECTA']);
+                ->update(['DATOS_CGA_ESTATUS' => 'RECIBIDO']);
 
             $updateFecha = DB::table('SOLICITUDES_FECHAS')
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])
@@ -287,7 +381,7 @@
             //dd($request['id_sol']);
             $update = DB::table('SOLICITUDES_DATOS_CGA')
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])
-                ->update(['DATOS_CGA_ESTATUS' => 'RECIBIDO']);
+                ->update(['DATOS_CGA_ESTATUS' => 'VALIDACIÓN DE INFORMACIÓN']);
 
             $updateFecha = DB::table('SOLICITUDES_FECHAS')
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])

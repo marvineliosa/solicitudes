@@ -30,7 +30,9 @@
 		          <td id="td_estatus_{{$solicitud->ID_ESCAPE}}">{{$solicitud->ESTATUS_SOLICITUD}}</td>
 		          <td>
 		              <div class="btn-group">
-		                <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#ModalDetalle"><i class="icon_info_alt"></i></a>
+		              	@if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN')==0)
+		                	<a class="btn btn-primary" href="#" onclick="AbreModalContratacion('{{$solicitud->ID_SOLICITUD}}')"><i class="icon_info_alt"></i></a>
+		              	@endif
 		                @if(strcmp($solicitud->ESTATUS_SOLICITUD,'VALIDACIÓN DE INFORMACIÓN')!=0)
 		                	@if(strcmp($solicitud->ESTATUS_SOLICITUD,'ANÁLISIS')==0 || strcmp($solicitud->ESTATUS_SOLICITUD,'REVISIÓN')==0)
 		                		<a class="btn btn-success" href="/solicitud/contratacion/{{$solicitud->ID_ESCAPE}}"><i class="icon_pencil"></i></a>
@@ -64,7 +66,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="ModalDetalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="ModalDetalleTMP" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -225,6 +227,16 @@
 			        <option value="CANCELADO">CANCELADO</option>
 			        <option value="OTRO">OTRO</option>
 			      </select>
+			      <br>
+			      <button type="button" class="btn btn-primary" onclick="CambiarEstado()">Guardar</button>
+				</div>
+		      </td>
+		    </tr>
+		    <tr>
+		      <th scope="row" width="50%">Observaciones</th>
+		      <td>
+		      	<div class="form-check form-check-inline">
+		      		<textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeñará" id="Contratacion-Actividades"></textarea>
 			      <br>
 			      <button type="button" class="btn btn-primary" onclick="CambiarEstado()">Guardar</button>
 				</div>
