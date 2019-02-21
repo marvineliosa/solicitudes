@@ -17,7 +17,7 @@ class SolicitudesDependenciaTable extends Migration
             $table->increments('DEPENDENCIA_ID');//poniendo increments se da por hecho que es primary
             $table->integer('DEPENDENCIA_CODIGO');
             $table->string('DEPENDENCIA_NOMBRE');
-            $table->string('DEPENDENCIA_TITULAR');
+            $table->string('DEPENDENCIA_TITULAR')->nullable();
             $table->timestamps();
         });
     }

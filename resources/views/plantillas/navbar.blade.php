@@ -34,6 +34,26 @@
               <li><a class="" href="/solicitudes/cambio_adscripcion">Cambio de Adscripción</a></li>
             </ul>
           </li>
+          <li class="sub-menu">
+            <a href="javascript:;" class="">
+              <i class="icon_group"></i>
+              <span>Usuarios</span>
+              <span class="menu-arrow arrow_carrot-right"></span>
+            </a>
+            <ul class="sub">
+              <li><a class="" href="/usuarios/crear">Crear Usuario</a></li>
+            </ul>
+          </li>
+          <li class="sub-menu">
+            <a href="javascript:;" class="">
+              <i class="icon_building_alt"></i>
+              <span>Dependencias</span>
+              <span class="menu-arrow arrow_carrot-right"></span>
+            </a>
+            <ul class="sub">
+              <li><a class="" href="/dependencias">Editar Dependencias</a></li>
+            </ul>
+          </li>
           <li class="">
             <a class="" href="/">
               <i class=""></i>

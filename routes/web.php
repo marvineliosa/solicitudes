@@ -90,3 +90,8 @@ Route::post('/solicitud/validar_solicitud', 'SolicitudesController@ValidarSolici
 //Route::get('/cuadro/{id_solicitud}', 'SolicitudesController@VerCuadroElaborado');
 Route::get('/cuadro/{id_solicitud}', 'SolicitudesController@VerCuadroElaborado');
 Route::get('/cuadro/contratacion/{id_solicitud}', 'SolicitudesController@PDFContratacion');
+
+
+Route::get('/dependencias','DependenciasController@VistaDependencias');
+Route::post('/dependencias/trae_dependencia','DependenciasController@TraerDatosDependencia');
+Route::post('/dependencias/editar','DependenciasController@EditarDependencia');
