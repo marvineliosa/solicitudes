@@ -17,6 +17,7 @@ class SolicitudesFechasTable extends Migration
             $table->char('FK_SOLICITUD_ID', 15)->primary();
             $table->foreign('FK_SOLICITUD_ID')->references('SOLICITUD_ID')->on('SOLICITUDES_SOLICITUD');
             $table->date('FECHAS_CREACION_SOLICITUD');
+            $table->date('FECHAS_EXPIRACION')->nullable();
             $table->date('FECHAS_CORRECCION_INFORMACION')->nullable();
             $table->date('FECHAS_INFORMACION_COMPLETA')->nullable();
             $table->date('FECHAS_TURNADO_CGA')->nullable();
@@ -28,6 +29,7 @@ class SolicitudesFechasTable extends Migration
             $table->date('FECHAS_LIMITE_REVISION')->nullable();
             $table->date('FECHAS_LIMITE_FIRMAS')->nullable();
             $table->date('FECHAS_LIMITE_FINALIZAR')->nullable();
+            $table->date('FECHAS_MARCADO_URGENTE')->nullable();
             $table->date('FECHAS_TURNADO_SPR')->nullable();
             $table->date('FECHAS_FIRMA_CGA')->nullable();
             $table->date('FECHAS_FIRMA_TITULAR')->nullable();

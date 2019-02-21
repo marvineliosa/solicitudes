@@ -34,7 +34,7 @@
 	@else
 		<div id="div-subtitulo" align="center" class="">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}</div>
 	@endif
-	<div id="div-fecha" align="right" class="">FECHA: 20/02/2019</div>
+	<div id="div-fecha" align="right" class="">FECHA: {{$solicitud->HOY}}</div>
 	<div id="div-solicitud" align="right" class="">SOLICITUD: {{$solicitud->ID_SOLICITUD}}</div>
 	<div id="div-tabla_datos" align="right" class="">
 		<table style="width:100%;" class="table table-bordered">
@@ -48,7 +48,7 @@
 		  </tr>
 		  <tr>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$solicitud->NOMBRE_SOLICITUD}}</td>
-		    <td style="font-size: 10px;border:1px solid black;" align="justify">{{$solicitud->ACTIVIDADES_SOLICITUD}}</td>
+		    <td style="font-size: 8px;border:1px solid black;" align="justify">{{$solicitud->ACTIVIDADES_SOLICITUD}}</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$solicitud->PUESTO_SOLICITUD}}</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$solicitud->SALARIO_FORMATO}}</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="center"></td>
@@ -84,21 +84,23 @@
 		  </tr>
 		</table>
 	</div>
-	<div id="div-tabla_sellos" align="right" class="">
-		<table style="width:100%" class="table table" border="0">
-		  <tr>
-		  	<td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
-		  		<img src="img/qr_titular.png" width="100" height="100">
-		  	</td>
-		    <td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
-		    	<img src="img/qr_coordinador.png" width="100" height="100">
-		    </td>
-		    <td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
-		    	<img src="img/qr_spr.png" width="100" height="100">
-		    </td>
-		  </tr>
-		</table>
-	</div>
+	
+		<div id="div-tabla_sellos" align="right" class="">
+			<table style="width:100%" class="table table" border="0">
+			  <tr>
+			  	<td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
+			  		<img src="img/qr_titular.png" width="100" height="100">
+			  	</td>
+			    <td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
+			    	<img src="img/qr_coordinador.png" width="100" height="100">
+			    </td>
+			    <td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
+			    	<img src="img/qr_spr.png" width="100" height="100">
+			    </td>
+			  </tr>
+			</table>
+		</div>
+	
 
 	<div id='mydiv1'></div>
 

@@ -45,8 +45,11 @@ Route::get('/listado/nuevas', 'SolicitudesController@VistaNuevasSPR');
 Route::get('/listado/por_revisar', 'SolicitudesController@VistaPorRevisarSPR');
 Route::get('/listado/revisadas', 'SolicitudesController@VistaRevisadasSPR');
 
-//listado nuevas en SPR
+//listado nuevas en dependencia
 Route::get('/listado/dependencia', 'SolicitudesController@VistaListadoDependencia');
+
+//listado nuevas en dependencia
+Route::get('/listado/spr', 'SolicitudesController@VistaListadoSecretarioParticular');
 
 //listado CGA
 Route::get('/listado/coordinacion', 'SolicitudesController@VistaListadoCGA');
@@ -99,6 +102,10 @@ Route::post('/solicitud/validacion_titular', 'SolicitudesController@ValidarSolic
 
 Route::post('/solicitud/validacion_cga', 'SolicitudesController@ValidarSolicitudCGA');
 
+Route::post('/solicitud/validacion_rectoria', 'SolicitudesController@ValidacionRectoria');
+
+Route::post('/solicitudes/cambiar_prioridad', 'SolicitudesController@CambiarPrioridad');
+
 
 //CUADROS
 //Route::get('/cuadro/{id_solicitud}', 'SolicitudesController@VerCuadroElaborado');
@@ -106,5 +113,13 @@ Route::get('/cuadro/{id_solicitud}', 'SolicitudesController@VerCuadroElaborado')
 Route::get('/cuadro/contratacion/{id_solicitud}', 'SolicitudesController@PDFContratacion');
 
 
+
 Route::post('/login/validar', 'LoginController@ValidarUsuario');
 Route::post('/salir', 'LoginController@cerrarSesion');
+
+Route::get('/dependencias','DependenciasController@VistaDependencias');
+Route::post('/dependencias/trae_dependencia','DependenciasController@TraerDatosDependencia');
+Route::post('/dependencias/editar','DependenciasController@EditarDependencia');
+
+Route::post('/usuarios/dependencias','DependenciasController@EditarDependencia');
+Route::post('/usuarios/coordinacion','DependenciasController@EditarDependencia');

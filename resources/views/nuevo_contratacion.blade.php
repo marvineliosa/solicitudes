@@ -11,7 +11,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Dependencia</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" placeholder="Dependencia" id="Contratacion-Dependencia">
+              <input type="text" class="form-control" placeholder="Dependencia" id="Contratacion-Dependencia" value="FACULTAD DE CIENCIAS DE LA COMPUTACIÓN">
             </div>
           </div>
           <div class="form-group">

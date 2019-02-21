@@ -7,7 +7,7 @@
 	    Listado Completo
 	  </header>
 	  <div class="table-responsive">
-	    <table class="table">
+	    <table class="table" id="tabla_datos">
 	      <thead>
 	        <tr>
 	          <th>Folio</th>

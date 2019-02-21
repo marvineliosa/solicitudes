@@ -105,6 +105,12 @@
     <script src="{{ asset('sweetalert2/dist/sweetalert2.min.js')}}"></script>
     <link href="{{asset('sweetalert2/dist/sweetalert2.min.css')}}" rel="stylesheet" />
 
+    <!-- datatables -->
+
+    <script src="{{ asset('js/datatables/jquery.dataTables.js')}}"></script>
+    <script src="{{ asset('js/datatables/dataTables.bootstrap4.js')}}"></script>
+    <link href="{{asset('js/datatables/dataTables.bootstrap4.css')}}" rel="stylesheet" />
+
     <!-- modales -->
     <!-- Modal mensaje -->
     <div class="modal fade" id="ModalMensaje" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -199,6 +205,30 @@
 
 
 <script type="text/javascript">
+
+  $('#tabla_datos').DataTable({
+      //responsive: true,
+      "searching": true,
+      "paging":   true,
+      "info":     true,
+      //"pageLength": false,
+      language: {
+        emptyTable: "No hay datos para mostrar en la tabla",
+        zeroRecords: "No hay datos para mostrar en la tabla",
+        "search": "Buscar:",
+        "info":"Se muestra los registros _START_ a _END_ de _TOTAL_ totales.",
+        "infoEmpty":"No se ha encontrado registros.",
+        "lengthMenu":"Mostrando _MENU_ registros",
+        "infoFiltered":"(Filtrado de un total de _MAX_ registros)",
+        "search": "Buscar: ",
+        paginate: {
+          "first":      "Primero",
+          "last":       "Ultimo",
+          "next":       "Siguiente",
+          "previous":   "Anterior"
+        },
+      }
+    });//*/
   //señor metodo maestro ajax
   function metodoAjax(url,dataForm,callback){
     var resultado = null;

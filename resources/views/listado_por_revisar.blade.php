@@ -7,7 +7,7 @@
 	    Listado de Cambios de Adscripción
 	  </header>
 	  <div class="table-responsive">
-	    <table class="table">
+	    <table class="table" id="tabla_datos">
 	      <thead>
 	        <tr>
 	          <th>Folio</th>
@@ -129,14 +129,14 @@
 
     		if(estatus != 'REVISION'){
 	    		var success;
-				var url = "/solicitud/validar_solicitud";
+				var url = "/solicitud/validacion_rectoria";
 				var dataForm = new FormData();
 				dataForm.append('id_sol',id_sol);
 				//lamando al metodo ajax
 				metodoAjax(url,dataForm,function(success){
 					//aquí se escribe todas las operaciones que se harían en el succes
 					//la variable success es el json que recibe del servidor el método AJAX
-					MensajeModal("¡EXITO!","La solicitud ha sido validada, se ha agregado un sello digital al cuadro.");
+					MensajeModal("¡EXITO!","La solicitud ha sido validada.");
 				});//*/
 
     		}

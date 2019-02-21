@@ -47,12 +47,14 @@
         <p class="login-img"><i class="icon_lock_alt"></i></p>
         <div class="input-group">
           <span class="input-group-addon"><i class="icon_profile"></i></span>
-          <input type="text" class="form-control" placeholder="Username" id="usuario" autofocus>
+          <input type="text" class="form-control" placeholder="Usuario" id="usuario" autofocus>
         </div>
         <div class="input-group">
           <span class="input-group-addon"><i class="icon_key_alt"></i></span>
-          <input type="password" class="form-control" placeholder="Password" id="contrasena">
+          <input type="password" class="form-control" placeholder="Contraseña" id="contrasena">
         </div>
+        <div align="center">SISTEMA DE CONTROL DE SOLICITUDES DE PERSONAL</div>
+        
         <label class="checkbox">
                 <!--<span class="pull-right"> <a href="#"> Recuperar Contraseña</a></span>-->
             </label>
@@ -133,14 +135,16 @@
             $("#textoModalMensaje").text("No existe la categoría: "+json['categoria']);
             $("#modalMensaje").modal();
           }//*/
-          if(json['categoria']=='TRBAJADOR_CGA'){
+          if(json['categoria']=='TRABAJADOR_CGA'){
             location.href='/listado/completo';
           }else if(json['categoria']=='TRABAJADOR_SPR'){
             location.href='/listado/nuevas';
           }else if(json['categoria']=='COORDINADOR_CGA'){
-            location.href='/listado/nuevas';
+            location.href='/listado/coordinacion';
           }else if(json['categoria']=='TITULAR'){
             location.href='/listado/dependencia';
+          }else if(json['categoria']=='SECRETARIO_PARTICULAR'){
+            location.href='/listado/spr';
           }
         }
       },

@@ -7,7 +7,7 @@
 	    Listado Completo
 	  </header>
 	  <div class="table-responsive">
-	    <table class="table">
+	    <table class="table" id="tabla_datos">
 	      <thead>
 	        <tr>
 	          <th>Folio</th>
@@ -21,6 +21,7 @@
 	      </thead>
 	      <tbody>
 	      	@foreach($solicitudes as $solicitud)
+	      		@if(strcmp($solicitud->ESTATUS_SOLICITUD,'RECIBIDO SPR')!=0)
 		        <tr class="">
 		          <td>{{$solicitud->ID_SOLICITUD}}</td>
 		          <td>{{$solicitud->NOMBRE_SOLICITUD}}</td>
@@ -42,6 +43,7 @@
 		              </div>
 		          </td>
 		        </tr>
+		        @endif
 		    @endforeach
 	        
 	        <!--<tr class="success">
@@ -267,6 +269,8 @@
     		$("#num_oficio").val(id_sol);
     		$("#ModalConfiguraciones").modal();
     	}
+
+    	
 
     	function CambiarEstado(){
     		var id_sol = $("#num_oficio").val();

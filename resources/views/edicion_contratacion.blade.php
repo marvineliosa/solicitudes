@@ -135,6 +135,12 @@
           <div class="form-group">
             <label class="col-sm-2 control-label"></label>
             <div class="col-sm-2">
+              <button type="button" class="btn btn-secondary" onclick="regresar()">Regresar</button>
+            </div>
+            <div class="col-sm-2">
+              <button type="button" class="btn btn-success" onclick="verCuadro('{{$solicitud->ID_ESCAPE}}')">Ver Cuadro</button>
+            </div>
+            <div class="col-sm-2">
               <button type="button" class="btn btn-primary" onclick="guardarDatos('{{$solicitud->ID_SOLICITUD}}')">Guardar</button>
             </div>
           </div>
@@ -150,6 +156,18 @@
   <script type="text/javascript">
     var gl_solicitud = <?php echo json_encode($solicitud) ?>;
     console.log(gl_solicitud);
+
+    
+
+    function verCuadro(id_solicitud){
+      //location.href='/cuadro/contratacion/'+id_solicitud;
+      window.open('/cuadro/contratacion/'+id_solicitud,'_blank');
+
+    }
+
+    function regresar(){
+      location.href='/listado/completo';
+    }
 
     function guardarDatos(id_solicitud){
       console.log(id_solicitud);

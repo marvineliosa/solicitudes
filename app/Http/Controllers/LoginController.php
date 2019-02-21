@@ -34,7 +34,7 @@
                     //\Session::forget('nombre');
                 }
                 \Session::push('usuario',$existe[0]->LOGIN_USUARIO);
-                \Session::push('categoria',$existe[0]->CATEGORIA);
+                \Session::push('categoria',$existe[0]->LOGIN_CATEGORIA);
                 //\Session::push('nombre',$n_usuario[0]->USUARIOS_NOMBRE_RESPONSABLE);
             }
             $data = array(
@@ -54,3 +54,12 @@
         }
 
     }
+
+/*
+insert into SOLICITUDES_LOGIN(LOGIN_USUARIO,LOGIN_CONTRASENIA,LOGIN_CATEGORIA)values('marvineliosa','123456','TRABAJADOR_CGA');
+insert into SOLICITUDES_LOGIN(LOGIN_USUARIO,LOGIN_CONTRASENIA,LOGIN_CATEGORIA)values('coordinador','123456','COORDINADOR_CGA');
+insert into SOLICITUDES_LOGIN(LOGIN_USUARIO,LOGIN_CONTRASENIA,LOGIN_CATEGORIA)values('titular','123456','TITULAR');
+insert into SOLICITUDES_LOGIN(LOGIN_USUARIO,LOGIN_CONTRASENIA,LOGIN_CATEGORIA)values('trabajador_spr','123456','TRABAJADOR_SPR');
+insert into SOLICITUDES_LOGIN(LOGIN_USUARIO,LOGIN_CONTRASENIA,LOGIN_CATEGORIA)values('secretario_particular','123456','SECRETARIO_PARTICULAR');
+insert into SOLICITUDES_LOGIN(LOGIN_USUARIO,LOGIN_CONTRASENIA,LOGIN_CATEGORIA)values('administrador','123456','ADMINISTRADOR_CGA');
+*/

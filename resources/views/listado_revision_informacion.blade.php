@@ -7,7 +7,7 @@
 	    Listado de Cambios de Adscripción
 	  </header>
 	  <div class="table-responsive">
-	    <table class="table">
+	    <table class="table" id="tabla_datos">
 	      <thead>
 	        <tr>
 	          <th>Folio</th>
@@ -30,7 +30,9 @@
 		          <td>{{$solicitud->ESTATUS_SOLICITUD}}</td>
 		          <td>
 					<div class="btn-group">
-					<a class="btn btn-primary" href="#" data-toggle="modal" data-target="#ModalDetalleTerminado"><i class="icon_info_alt"></i></a>
+	              	@if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN')==0)
+	                	<a class="btn btn-primary" href="#" onclick="AbreModalContratacion('{{$solicitud->ID_SOLICITUD}}')"><i class="icon_info_alt"></i></a>
+	              	@endif
 					<a class="btn btn-success" href="http://localhost:8000/solicitud/contratacion/1"><i class="icon_pencil"></i></a>
 					<a class="btn btn-danger" href="#" onclick="modalConfig('{{$solicitud->ID_SOLICITUD}}')"><i class="icon_adjust-vert"></i></a>	
 					</div>
@@ -44,7 +46,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="ModalDetalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -105,7 +107,7 @@
   </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="ModalDetalleTerminado" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -240,7 +242,7 @@
 				metodoAjax(url,dataForm,function(success){
 					//aquí se escribe todas las operaciones que se harían en el succes
 					//la variable success es el json que recibe del servidor el método AJAX
-					MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente, la solicitud se ha enviado a SPR para su confirmación.");
+					MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente, la solicitud se ha marcado como RECIBIDA.");
 				});//*/
     		}else{
 

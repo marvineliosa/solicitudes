@@ -25,6 +25,7 @@ class SolicitudesSolicitud extends Migration
             $table->float('SOLICITUD_SALARIO');
             $table->text('SOLICITUD_JUSTIFICACION');
             $table->string('SOLICITUD_TIPO_SOLICITUD');
+            $table->string('SOLICITUD_URGENCIA')->nullable();
             $table->timestamps();
         });
     }
