@@ -301,6 +301,12 @@
                     ->update(['FECHAS_TURNADO_SPR' => date('Y-m-d H:i:s')]);
                 }//*/
 
+            if(strcmp($request['estatus'],'FIRMAS')==0){
+                /*$update = DB::table('SOLICITUDES_FECHAS')
+                    ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                    ->update(['FECHAS_TURNADO_SPR' => date('Y-m-d H:i:s')]);//*/
+                }//*/
+
             $data = array(
                 "update"=>$update
             );
@@ -393,6 +399,7 @@
 
         public function VistaListadoCompleto(){
             $solicitudes = SolicitudesController::ObtenerSolicitudes();
+            //dd($solicitudes);
             return view('listado_completo') ->with ("solicitudes",$solicitudes);
         }
 
@@ -868,6 +875,14 @@
 
             dd('epale');
             //DB::raw('unlock tables');//*/
+        }
+
+        public function RefrescarListadoCompleto(){
+            $solicitudes = SolicitudesController::ObtenerSolicitudes();
+            //dd($solicitudes);
+            return View('tablas.listado_completo') ->with ("solicitudes",$solicitudes);
+            //return View::make("tablas.listado_completo", ["solicitudes" => $solicitudes]);
+    
         }
 
 

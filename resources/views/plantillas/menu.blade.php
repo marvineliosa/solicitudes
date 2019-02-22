@@ -205,30 +205,33 @@
 
 
 <script type="text/javascript">
+  crearDatatable();
+  function crearDatatable(){
+    $('#tabla_datos').DataTable({
+        //responsive: true,
+        "searching": true,
+        "paging":   true,
+        "info":     true,
+        //"pageLength": false,
+        language: {
+          emptyTable: "No hay datos para mostrar en la tabla",
+          zeroRecords: "No hay datos para mostrar en la tabla",
+          "search": "Buscar:",
+          "info":"Se muestra los registros _START_ a _END_ de _TOTAL_ totales.",
+          "infoEmpty":"No se ha encontrado registros.",
+          "lengthMenu":"Mostrando _MENU_ registros",
+          "infoFiltered":"(Filtrado de un total de _MAX_ registros)",
+          "search": "Buscar: ",
+          paginate: {
+            "first":      "Primero",
+            "last":       "Ultimo",
+            "next":       "Siguiente",
+            "previous":   "Anterior"
+          },
+        }
+      });//*/
+  }
 
-  $('#tabla_datos').DataTable({
-      //responsive: true,
-      "searching": true,
-      "paging":   true,
-      "info":     true,
-      //"pageLength": false,
-      language: {
-        emptyTable: "No hay datos para mostrar en la tabla",
-        zeroRecords: "No hay datos para mostrar en la tabla",
-        "search": "Buscar:",
-        "info":"Se muestra los registros _START_ a _END_ de _TOTAL_ totales.",
-        "infoEmpty":"No se ha encontrado registros.",
-        "lengthMenu":"Mostrando _MENU_ registros",
-        "infoFiltered":"(Filtrado de un total de _MAX_ registros)",
-        "search": "Buscar: ",
-        paginate: {
-          "first":      "Primero",
-          "last":       "Ultimo",
-          "next":       "Siguiente",
-          "previous":   "Anterior"
-        },
-      }
-    });//*/
   //señor metodo maestro ajax
   function metodoAjax(url,dataForm,callback){
     var resultado = null;
@@ -259,6 +262,25 @@
       }
     });//*/
   }
+
+  //señor ajax de las recargas de tablas
+  function recargarTablaAjax(url) {
+      
+      var dataForm = new FormData();
+      dataForm.append('id_sol','id_sol');
+      $.ajax({
+          method: "POST",
+          url: url,
+        headers:{
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+          success: function (response) {
+              $('.collapse').collapse('show');
+              $('#div_tabla_datos').html(response);
+              crearDatatable();
+          },                               
+      }); 
+    }
 
   function MensajeModal(titulo,mensaje){
     $("#TituloModalMensaje").text(titulo);

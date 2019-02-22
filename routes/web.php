@@ -123,3 +123,6 @@ Route::post('/dependencias/editar','DependenciasController@EditarDependencia');
 
 Route::post('/usuarios/dependencias','DependenciasController@EditarDependencia');
 Route::post('/usuarios/coordinacion','DependenciasController@EditarDependencia');
+
+//refrescando tablas
+Route::post('/refrescar/listado_completo', 'SolicitudesController@RefrescarListadoCompleto');

@@ -28,6 +28,7 @@ class SolicitudesDatosCgaTable extends Migration
             $table->string('DATOS_CGA_CATEGORIA_SUPERIOR')->nullable();
             $table->float('DATOS_CGA_SALARIO_INFERIOR')->nullable();
             $table->string('DATOS_CGA_CATEGORIA_INFERIOR')->nullable();
+            $table->float('DATOS_CGA_AHORRO')->nullable();
             $table->timestamps();
         });
     }

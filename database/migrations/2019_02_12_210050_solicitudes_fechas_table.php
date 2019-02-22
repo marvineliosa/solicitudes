@@ -29,11 +29,12 @@ class SolicitudesFechasTable extends Migration
             $table->date('FECHAS_LIMITE_REVISION')->nullable();
             $table->date('FECHAS_LIMITE_FIRMAS')->nullable();
             $table->date('FECHAS_LIMITE_FINALIZAR')->nullable();
+            $table->date('FECHAS_PUESTO_FIRMAS')->nullable();
             $table->date('FECHAS_MARCADO_URGENTE')->nullable();
-            $table->date('FECHAS_TURNADO_SPR')->nullable();
             $table->date('FECHAS_FIRMA_CGA')->nullable();
             $table->date('FECHAS_FIRMA_TITULAR')->nullable();
             $table->date('FECHAS_FIRMA_SPR')->nullable();
+            $table->date('FECHAS_TURNADO_SPR')->nullable();
             $table->date('FECHAS_DECISION_SPR')->nullable();
             $table->timestamps();
         });
