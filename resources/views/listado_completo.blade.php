@@ -167,6 +167,7 @@
 		      <td>
 		      	<div class="form-check form-check-inline">
 			      <select id="SelectEstatus" class="form-control" id="select_status">
+			        <option value="SELECCIONAR">SELECCIONAR</option>
 			        <option value="RECIBIDO">RECIBIDO</option>
 			        <option value="LEVANTAMIENTO">LEVANTAMIENTO</option>
 			        <option value="ANÁLISIS">ANÁLISIS</option>
@@ -210,7 +211,10 @@
     	function modalConfig(id_sol){
     		var estatus_sol = gl_solicitudes[id_sol]['ESTATUS_SOLICITUD'];
     		//if(estatus)
-    		$("#SelectEstatus").val(estatus_sol);
+    		if(estatus_sol != 'TURNADO A SPR'){
+    			$("#SelectEstatus").val(estatus_sol);
+
+    		}
     		//$("#select_status option[value='" + estatus_sol + "']").attr('selected','selected');
     		//console.log(estatus_sol);
     		$("#num_oficio").val(id_sol);

@@ -29,6 +29,7 @@ class SolicitudesFechasTable extends Migration
             $table->date('FECHAS_LIMITE_REVISION')->nullable();
             $table->date('FECHAS_LIMITE_FIRMAS')->nullable();
             $table->date('FECHAS_LIMITE_FINALIZAR')->nullable();
+            $table->date('FECHAS_PUESTO_REVISION')->nullable();
             $table->date('FECHAS_PUESTO_FIRMAS')->nullable();
             $table->date('FECHAS_MARCADO_URGENTE')->nullable();
             $table->date('FECHAS_FIRMA_CGA')->nullable();

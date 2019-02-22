@@ -301,11 +301,31 @@
                     ->update(['FECHAS_TURNADO_SPR' => date('Y-m-d H:i:s')]);
                 }//*/
 
-            if(strcmp($request['estatus'],'FIRMAS')==0){
-                /*$update = DB::table('SOLICITUDES_FECHAS')
+            if(strcmp($request['estatus'],'REVISIÓN')==0){
+                $update = DB::table('SOLICITUDES_FECHAS')
                     ->where('FK_SOLICITUD_ID', $request['id_sol'])
-                    ->update(['FECHAS_TURNADO_SPR' => date('Y-m-d H:i:s')]);//*/
-                }//*/
+                    ->update(['FECHAS_PUESTO_REVISION' => date('Y-m-d H:i:s')]);//*/
+                    //reseteando las firmas
+                $existeFirma = DB::table('SOLICITUDES_FIRMAS')->where('FK_SOLICITUD_ID', $request['id_sol'])->get();
+                if(count($existeFirma)!=0){
+                    //dd('Limpiando Firmas');
+                    $update = DB::table('SOLICITUDES_FIRMAS')
+                        ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                        ->update([
+                                    'FIRMAS_CGA' => null,
+                                    'FIRMAS_TITULAR' => null,
+                                    'FIRMAS_SPR' => null
+                                ]);
+                }
+            }//*/
+
+            if(strcmp($request['estatus'],'FIRMAS')==0){
+                $update = DB::table('SOLICITUDES_FECHAS')
+                    ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                    ->update(['FECHAS_PUESTO_FIRMAS' => date('Y-m-d H:i:s')]);//*/
+
+                //enviar coorreo electrónico
+            }//*/
 
             $data = array(
                 "update"=>$update
