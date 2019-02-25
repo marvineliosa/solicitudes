@@ -135,7 +135,7 @@
             $("#textoModalMensaje").text("No existe la categoría: "+json['categoria']);
             $("#modalMensaje").modal();
           }//*/
-          if(json['categoria']=='TRABAJADOR_CGA'){
+          if(json['categoria']=='ADMINISTRADOR_CGA'){
             location.href='/listado/completo';
           }else if(json['categoria']=='TRABAJADOR_SPR'){
             location.href='/listado/nuevas';

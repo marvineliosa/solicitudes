@@ -12,7 +12,7 @@
                 <span class="menu-arrow arrow_carrot-right"></span>
               </a>
               <ul class="sub">
-                @if(strcmp(\Session::get('categoria')[0],'TRABAJADOR_CGA')==0)
+                @if(strcmp(\Session::get('categoria')[0],'ADMINISTRADOR_CGA')==0)
                   <li><a class="" href="/listado/revision_informacion">Revision de Información</a></li>
                   <li><a class="" href="/listado/completo">Listado Completo</a></li>
                   <!--<li><a class="" href="/listado/contratacion">Contratación</a></li>
@@ -51,27 +51,19 @@
           </li>
           @endif
 
+          @if(strcmp(\Session::get('categoria')[0],'ADMINISTRADOR_CGA')==0)
           <!-- USUARIOS -->
-          <!--<li class="sub-menu">
+          <li class="sub-menu">
             <a href="javascript:;" class="">
               <i class="icon_group"></i>
               <span>Usuarios</span>
               <span class="menu-arrow arrow_carrot-right"></span>
             </a>
             <ul class="sub">
-              <li><a class="" href="/usuarios/crear">Crear Usuario</a></li>
+              <li><a class="" href="/usuarios">Crear Usuario</a></li>
             </ul>
-          </li>-->
-          <!--<li class="sub-menu">
-            <a href="javascript:;" class="">
-              <i class="icon_building_alt"></i>
-              <span>Dependencias</span>
-              <span class="menu-arrow arrow_carrot-right"></span>
-            </a>
-            <ul class="sub">
-              <li><a class="" href="/dependencias">Editar Dependencias</a></li>
-            </ul>
-          </li>-->
+          </li>
+          @endif
 
           <li class="">
             <a class="" href="/salir">

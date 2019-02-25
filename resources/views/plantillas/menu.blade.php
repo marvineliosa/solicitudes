@@ -66,7 +66,7 @@
             <div class="col-lg-12">
               <h3 class="page-header">@yield('TipoUsuario')</h3>
               <ol class="breadcrumb">
-                
+                @yield('barra_superior')
               </ol>
             </div>
           </div>

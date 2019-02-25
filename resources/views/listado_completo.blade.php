@@ -183,6 +183,18 @@
 		      </td>
 		    </tr>
 		    <tr>
+		      <th scope="row" width="50%">Asignar solicitud a un analista</th>
+		      <td>
+		      	<div class="form-check form-check-inline">
+			      <select id="SelectAnalistas" class="form-control" id="select_status">
+			        <option value="SELECCIONAR">SELECCIONAR</option>
+			      </select>
+			      <br>
+			      <button type="button" class="btn btn-primary" onclick="AsignarAnalista()">Asignar</button>
+				</div>
+		      </td>
+		    </tr>
+		    <tr>
 		      <th scope="row" width="50%">Observaciones</th>
 		      <td>
 		      	<div class="form-check form-check-inline">

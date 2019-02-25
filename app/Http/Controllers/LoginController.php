@@ -16,6 +16,18 @@
          * @return Response
          */
 
+        public function EliminarUsuario(Request $request){
+
+            $delete2 = DB::table('REL_DEPENCENCIA_TITULAR')->where('FK_USUARIO', $request['usuario'])->delete();
+            $delete = DB::table('SOLICITUDES_LOGIN')->where('LOGIN_USUARIO', $request['usuario'])->delete();
+            $data = array(
+                "delete" => $delete,
+                "delete2" => $delete2
+              );
+
+            echo json_encode($data);//*/
+        }
+
         public function ValidarUsuario(Request $request){
             //dd("epale");
             $usr = $request['usuario'];
@@ -53,13 +65,32 @@
             return redirect('/');
         }
 
+        public static function randomPassword() {
+            $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890._@';
+            $pass = array(); //remember to declare $pass as an array
+            $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+            for ($i = 0; $i < 10; $i++) {
+                $n = rand(0, $alphaLength);
+                $pass[] = $alphabet[$n];
+            }
+            return implode($pass); //turn the array into a string
+        }
+
     }
 
 /*
-insert into SOLICITUDES_LOGIN(LOGIN_USUARIO,LOGIN_CONTRASENIA,LOGIN_CATEGORIA)values('marvineliosa','123456','TRABAJADOR_CGA');
+insert into SOLICITUDES_LOGIN(LOGIN_USUARIO,LOGIN_CONTRASENIA,LOGIN_CATEGORIA)values('marvineliosa','123456','ANALISTA_CGA');
 insert into SOLICITUDES_LOGIN(LOGIN_USUARIO,LOGIN_CONTRASENIA,LOGIN_CATEGORIA)values('coordinador','123456','COORDINADOR_CGA');
 insert into SOLICITUDES_LOGIN(LOGIN_USUARIO,LOGIN_CONTRASENIA,LOGIN_CATEGORIA)values('titular','123456','TITULAR');
 insert into SOLICITUDES_LOGIN(LOGIN_USUARIO,LOGIN_CONTRASENIA,LOGIN_CATEGORIA)values('trabajador_spr','123456','TRABAJADOR_SPR');
 insert into SOLICITUDES_LOGIN(LOGIN_USUARIO,LOGIN_CONTRASENIA,LOGIN_CATEGORIA)values('secretario_particular','123456','SECRETARIO_PARTICULAR');
 insert into SOLICITUDES_LOGIN(LOGIN_USUARIO,LOGIN_CONTRASENIA,LOGIN_CATEGORIA)values('administrador','123456','ADMINISTRADOR_CGA');
+
+update SOLICITUDES_LOGIN set LOGIN_RESPONSABLE = "Usuario Administrador" where LOGIN_USUARIO='administrador';
+update SOLICITUDES_LOGIN set LOGIN_RESPONSABLE = "Usuario Coordinador" where LOGIN_USUARIO='coordinador';
+update SOLICITUDES_LOGIN set LOGIN_RESPONSABLE = "Usuario Analista" where LOGIN_USUARIO='marvineliosa';
+update SOLICITUDES_LOGIN set LOGIN_RESPONSABLE = "Usuario Secretario Particular" where LOGIN_USUARIO='secretario_particular';
+update SOLICITUDES_LOGIN set LOGIN_RESPONSABLE = "Usuario Titular" where LOGIN_USUARIO='titular';
+update SOLICITUDES_LOGIN set LOGIN_RESPONSABLE = "Usuario Trabajador SPR" where LOGIN_USUARIO='trabajador_spr';
+
 */

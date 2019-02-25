@@ -117,12 +117,15 @@ Route::get('/cuadro/contratacion/{id_solicitud}', 'SolicitudesController@PDFCont
 Route::post('/login/validar', 'LoginController@ValidarUsuario');
 Route::post('/salir', 'LoginController@cerrarSesion');
 
-Route::get('/dependencias','DependenciasController@VistaDependencias');
-Route::post('/dependencias/trae_dependencia','DependenciasController@TraerDatosDependencia');
+//Route::get('/dependencias','DependenciasController@VistaDependencias');
 Route::post('/dependencias/editar','DependenciasController@EditarDependencia');
+Route::post('/dependencias/trae_dependencia','DependenciasController@TraerDatosDependencia');
 
-Route::post('/usuarios/dependencias','DependenciasController@EditarDependencia');
-Route::post('/usuarios/coordinacion','DependenciasController@EditarDependencia');
+Route::get('/usuarios','SolicitudesController@VistaUsuarios');
+Route::post('/usuarios/eliminar','LoginController@EliminarUsuario');
 
 //refrescando tablas
 Route::post('/refrescar/listado_completo', 'SolicitudesController@RefrescarListadoCompleto');
+
+//mails
+Route::get('/enviamail','MailsController@pruebamail');

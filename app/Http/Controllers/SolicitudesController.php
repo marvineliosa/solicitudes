@@ -334,6 +334,46 @@
             echo json_encode($data);//*/
         }
 
+        public function VistaUsuarios(){
+            $dependencias = DependenciasController::ObtenerSoloDependencias();
+            $usuarios = DB::table('SOLICITUDES_LOGIN')
+                ->select(
+                            'LOGIN_USUARIO as NOMBRE_USUARIO',
+                            'LOGIN_RESPONSABLE as RESPONSABLE_USUARIO',
+                            'LOGIN_CATEGORIA as CATEGORIA_USUARIO'
+                        )
+                ->get();
+            foreach ($usuarios as $usuario) {
+                switch ($usuario->CATEGORIA_USUARIO) {
+                    case 'ADMINISTRADOR_CGA':
+                            $usuario->CATEGORIA_USUARIO = 'ADMINISTRADOR CGA';
+                        break;
+                    case 'COORDINADOR_CGA':
+                            $usuario->CATEGORIA_USUARIO = 'COORDINADOR CGA';
+                        break;
+                    case 'ANALISTA_CGA':
+                            $usuario->CATEGORIA_USUARIO = 'ANALISTA CGA';
+                        break;
+                    case 'SECRETARIO_PARTICULAR':
+                            $usuario->CATEGORIA_USUARIO = 'SECRETARIO PARTICULAR';
+                        break;
+                    case 'TRABAJADOR_SPR':
+                            $usuario->CATEGORIA_USUARIO = 'ENCARGADO DE SPR';
+                        break;
+                    case 'TITULAR':
+                            $usuario->CATEGORIA_USUARIO = 'TITULAR DE DEPENDENCIA';
+                        break;
+                    
+                    default:
+                        
+                        break;
+                }
+            }
+            //dd($usuarios);
+            return view('listado_usuarios') ->with (["usuarios"=>$usuarios,"dependencias"=>$dependencias]);
+            //return view('listado_nuevas') ->with ("solicitudes",$solicitudes);
+        }
+
         public function VistaNuevasSPR(){
             $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('RECIBIDO SPR');
             return view('listado_nuevas') ->with ("solicitudes",$solicitudes);
