@@ -156,6 +156,8 @@
   <script type="text/javascript">
     var gl_solicitud = <?php echo json_encode($solicitud) ?>;
     console.log(gl_solicitud);
+    var categoria = <?php echo json_encode(\Session::get('categoria')[0]) ?>;
+    console.log(categoria);
 
     
 
@@ -166,7 +168,11 @@
     }
 
     function regresar(){
-      location.href='/listado/completo';
+      if(categoria == 'ADMINISTRADOR_CGA'){
+        location.href='/listado/completo';
+      }else{
+        location.href='/listado/analista';
+      }
     }
 
     function guardarDatos(id_solicitud){

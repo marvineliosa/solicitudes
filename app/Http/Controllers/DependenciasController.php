@@ -86,8 +86,28 @@
                 "dependencia"=>$dependencia,
                 "usuario"=>((count($usuario)>0)?$usuario[0]:null)
             );
+            echo json_encode($data);//*/
+
+        }
+
+        public function RegresarNombreDependencia(Request $request){
+            $dependencia = DependenciasController::ObtenerNombreDependencia($request['id_dependencia']);
+            $data = array(
+                "dependencia"=>$dependencia[0]
+            );
 
             echo json_encode($data);//*/
+        }
+
+        public static function ObtenerNombreDependencia($id_dependencia){
+            $dependencia = DB::table('SOLICITUDES_DEPENDENCIA')
+                ->where('DEPENDENCIA_ID',$id_dependencia)
+                ->select(
+                            'DEPENDENCIA_CODIGO as CODIGO_DEPENDENCIA',
+                            'DEPENDENCIA_NOMBRE as NOMBRE_DEPENDENCIA'
+                        )
+                ->get();
+            return $dependencia;
 
         }
 
@@ -119,7 +139,7 @@
             return $dependencias;
         }
 
-        public function ObtenerDatosDependencia($id_dependencia){
+        public static function ObtenerDatosDependencia($id_dependencia){
             //dd($id_dependencia);
             $dependencia = DB::table('SOLICITUDES_DEPENDENCIA')
                 ->where('DEPENDENCIA_ID',$id_dependencia)

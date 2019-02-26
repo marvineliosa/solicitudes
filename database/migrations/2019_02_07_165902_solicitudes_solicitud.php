@@ -19,12 +19,13 @@ class SolicitudesSolicitud extends Migration
             $table->string('SOLICITUD_NOMBRE');
             $table->integer('SOLICITUD_DEPENDENCIA');
             $table->string('SOLICITUD_CATEGORIA')->nullable();
-            $table->string('SOLICITUD_PUESTO');
+            $table->string('SOLICITUD_PUESTO')->nullable();
             $table->text('SOLICITUD_ACTIVIDADES');
             $table->string('SOLICITUD_NOMINA');
-            $table->float('SOLICITUD_SALARIO');
+            $table->float('SOLICITUD_SALARIO')->nullable();
             $table->text('SOLICITUD_JUSTIFICACION');
             $table->string('SOLICITUD_TIPO_SOLICITUD');
+            $table->string('SOLICITUD_FUENTE_RECURSOS');
             $table->string('SOLICITUD_URGENCIA')->nullable();
             $table->timestamps();
         });

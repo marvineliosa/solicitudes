@@ -81,6 +81,16 @@
             </div>
           </div>
           <div class="form-group">
+            <label class="col-sm-2 control-label">Fuente de Recursos*</label>
+            <div class="col-sm-6">
+              <select class="form-control m-bot15" id="SelectFuenteRecursos">
+                  <option>SELECCIONAR</option>
+                  <option value="ADMINISTRACIÓN CENTRAL">ADMINISTRACIÓN CENTRAL</option>
+                  <option value="RECURSOS PROPIOS">RECURSOS PROPIOS</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
             <label class="col-sm-2 control-label">Justificación</label>
             <div class="col-sm-6">
               <textarea class="form-control ckeditor" name="editor1" rows="6" placeholder="Justificación de la solicitud del personal" id="Sustitucion-Justificacion"></textarea>
@@ -136,6 +146,7 @@
       //
       var nomina = $("#Sustitucion-Nomina").val();
       var justificacion = $("#Sustitucion-Justificacion").val();
+      var fuente_recursos = $("#SelectFuenteRecursos").val();
 
       var success;
       var url = "/contratacion_sustitucion/insertar";
@@ -154,6 +165,7 @@
 
       dataForm.append('nomina',nomina);
       dataForm.append('justificacion',justificacion);
+      dataForm.append('fuente_recursos',fuente_recursos);
       //lamando al metodo ajax
       metodoAjax(url,dataForm,function(success){
         //aquí se escribe todas las operaciones que se harían en el succes

@@ -11,11 +11,11 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Dependencia</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" placeholder="Dependencia" id="Contratacion-Dependencia" value="FACULTAD DE CIENCIAS DE LA COMPUTACIÓN">
+              <input type="text" class="form-control" placeholder="Dependencia" id="nombre_dependencia" value="" disabled>
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Candidato</label>
+            <label class="col-sm-2 control-label">Candidato*</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Nombre del Candidato" id="Contratacion-Candidato">
             </div>
@@ -33,7 +33,7 @@
                 </div>
               </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Actividades</label>
+            <label class="col-sm-2 control-label">Actividades*</label>
             <div class="col-sm-6">
               <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeñará" id="Contratacion-Actividades"></textarea>
             </div>
@@ -58,46 +58,50 @@
             </div>-->
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Justificación</label>
+            <label class="col-sm-2 control-label">Fuente de Recursos*</label>
+            <div class="col-sm-6">
+              <select class="form-control m-bot15" id="SelectFuenteRecursos">
+                  <option>SELECCIONAR</option>
+                  <option value="ADMINISTRACIÓN CENTRAL">ADMINISTRACIÓN CENTRAL</option>
+                  <option value="RECURSOS PROPIOS">RECURSOS PROPIOS</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Justificación*</label>
             <div class="col-sm-6">
               <textarea class="form-control ckeditor" name="editor1" rows="6" placeholder="Justificación de la solicitud del personal" id="Contratacion-Justificacion"></textarea>
             </div>
           </div>
           <hr>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Subir Organigramas</label>
+            <label class="col-sm-3 control-label">Organigrama*</label>
             <div class="col-sm-9">
-              <input type="file" class="form-control-file" id="exampleFormControlFile1">
+              <input type="file" class="form-control-file" id="archivo-organigrama">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Subir Plantilla de Personal</label>
+            <label class="col-sm-3 control-label">Plantilla de Personal*</label>
             <div class="col-sm-9">
-              <input type="file" class="form-control-file" id="exampleFormControlFile1">
+              <input type="file" class="form-control-file" id="archivo-plantilla">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Subir Descripción de Puesto a Cubrir</label>
+            <label class="col-sm-3 control-label">Descripción del Puesto a Cubrir*</label>
             <div class="col-sm-9">
-              <input type="file" class="form-control-file" id="exampleFormControlFile1">
+              <input type="file" class="form-control-file" id="archivo-descripcion">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Subir Curriculum Actualizado</label>
+            <label class="col-sm-3 control-label">Curriculum Actualizado*</label>
             <div class="col-sm-9">
-              <input type="file" class="form-control-file" id="exampleFormControlFile1">
+              <input type="file" class="form-control-file" id="archivo-curriculum">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Mapa de Ubicación Física</label>
+            <label class="col-sm-3 control-label">Mapa de Ubicación Física</label>
             <div class="col-sm-9">
-              <input type="file" class="form-control-file" id="exampleFormControlFile1">
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label">Fuente de Recursos</label>
-            <div class="col-sm-9">
-              <input type="file" class="form-control-file" id="exampleFormControlFile1">
+              <input type="file" class="form-control-file" id="archivo-mapa_ubicacion">
             </div>
           </div>
 
@@ -122,6 +126,8 @@
       location.href="/listado/completo";
     }
 
+    id_dependencia = <?php echo json_encode(\Session::get('id_dependencia')[0]) ?>;
+    //console.log(id_dependencia);
     function autollenado(){
       $("#Contratacion-Candidato").val('Marvin Eliosa Abaroa');
       $("#Contratacion-CategoriaSolicitada").val('Auxiliar Administrativo');
@@ -139,24 +145,74 @@
       var nomina = $("#Contratacion-Nomina").val();
       var salario = $("#Contratacion-SalarioSolicitado").val();
       var justificacion = $("#Contratacion-Justificacion").val();
+      var fuente_recursos = $("#SelectFuenteRecursos").val();
+
+      var archivo_organigrama = document.getElementById('archivo-organigrama');
+      var archivo_plantilla = document.getElementById('archivo-plantilla');
+      var archivo_descripcion = document.getElementById('archivo-descripcion');
+      var archivo_curriculum = document.getElementById('archivo-curriculum');
+      var archivo_mapa_ubicacion = document.getElementById('archivo-mapa_ubicacion');
+      if(candidato==''){
+        MensajeModal("¡ATENCIÓN!",'El nombre del candidato es un campo obligatorio');
+      }else if(actividades==''){
+        MensajeModal("¡ATENCIÓN!",'Las actividades son un campo obligatorio');
+      }else if(fuente_recursos=='SELECCIONAR'){
+        MensajeModal("¡ATENCIÓN!",'La fuente de recursos es un campo obligatorio');
+      }else if(justificacion==''){
+        MensajeModal("¡ATENCIÓN!",'La justificación es un campo obligatorio');
+      }else if(archivo_organigrama.value==""){
+        console.log('falta organigrama');
+        MensajeModal("¡ATENCIÓN!",'Debe adjuntar el organigrama de la dependencia');
+      }else if(archivo_plantilla.value==''){
+        MensajeModal("¡ATENCIÓN!",'Debe adjuntar la plantilla de personal de la dependencia');
+      }else if(archivo_descripcion.value==''){
+        MensajeModal("¡ATENCIÓN!",'Debe adjuntar la descripción del puesto a desempeñar');
+      }else if(archivo_curriculum.value==''){
+        MensajeModal("¡ATENCIÓN!",'Debe adjuntar el curriculum del candidato');
+      }else{
+        console.log('Enviando');
+        var success;
+        var url = "/contratacion/insertar";
+        var dataForm = new FormData();
+        dataForm.append('candidato',candidato);
+        dataForm.append('categoria',categoria);
+        dataForm.append('puesto',puesto);
+        dataForm.append('actividades',actividades);
+        dataForm.append('nomina',nomina);
+        dataForm.append('salario',salario);
+        dataForm.append('justificacion',justificacion);
+        dataForm.append('fuente_recursos',fuente_recursos);
+
+        dataForm.append('archivo_organigrama',archivo_organigrama.files[0]);
+        dataForm.append('archivo_plantilla',archivo_plantilla.files[0]);
+        dataForm.append('archivo_descripcion',archivo_descripcion.files[0]);
+        dataForm.append('archivo_curriculum',archivo_curriculum.files[0]);
+        //lamando al metodo ajax
+        metodoAjax(url,dataForm,function(success){
+          //aquí se escribe todas las operaciones que se harían en el succes
+          //la variable success es el json que recibe del servidor el método AJAX
+          var mensaje = "El número de solicitud asignado es: "+success['solicitud'];
+          MensajeModal("¡Solicitud almacenada!",mensaje);
+        });//*/
+      }
+
+      
+    }
 
 
+    ObtenerNombreDependencia();
+    function ObtenerNombreDependencia(){
       var success;
-      var url = "/contratacion/insertar";
+      var url = "/dependencias/obtener_nombre";
       var dataForm = new FormData();
-      dataForm.append('candidato',candidato);
-      dataForm.append('categoria',categoria);
-      dataForm.append('puesto',puesto);
-      dataForm.append('actividades',actividades);
-      dataForm.append('nomina',nomina);
-      dataForm.append('salario',salario);
-      dataForm.append('justificacion',justificacion);
+      dataForm.append('id_dependencia',id_dependencia);
       //lamando al metodo ajax
       metodoAjax(url,dataForm,function(success){
         //aquí se escribe todas las operaciones que se harían en el succes
         //la variable success es el json que recibe del servidor el método AJAX
-        var mensaje = "El número de solicitud asignado es: "+success['solicitud'];
-        MensajeModal("¡Solicitud almacenada!",mensaje);
+        //MensajeModal("TITULO DEL MODAL","MENSAJE DEL MODAL");
+        //console.log(success['dependencia']);
+        $("#nombre_dependencia").val(success['dependencia']['NOMBRE_DEPENDENCIA']);
       });
     }
 

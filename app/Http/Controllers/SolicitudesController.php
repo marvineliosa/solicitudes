@@ -16,6 +16,39 @@
          * @return Response
          */
 
+        public function AsignarAnalista(Request $request){
+            date_default_timezone_set('America/Mexico_City');
+            $IdAnalista = $request['analista'];
+            $IdSolicitud = $request['id_solicitud'];
+            //dd($request);
+
+            $existeRelacion = $users = DB::table('REL_SOLICITUDES_ANALISTA')
+                ->where('FK_SOLICITUD_ID', $IdSolicitud)
+                ->get();
+
+            //si existe una relación con anterioridad, la solicitud se borra la relación existente
+            if(count($existeRelacion)>0){
+                DB::table('REL_SOLICITUDES_ANALISTA')
+                    ->where('FK_SOLICITUD_ID', $IdSolicitud)
+                    ->delete();
+            }
+            $insert = DB::table('REL_SOLICITUDES_ANALISTA')
+                ->insert(
+                    [
+                        'FK_SOLICITUD_ID' => $IdSolicitud, 
+                        'FK_USUARIO' => $IdAnalista,
+                        'FECHA_ASIGNACION' => date('Y-m-d H:i:s')
+                    ]
+                );
+
+            $data = array(
+                "insert"=>$insert
+            );
+
+            echo json_encode($data);//*/
+
+        }
+
         public function CambiarPrioridad(Request $request){
             date_default_timezone_set('America/Mexico_City');
 
@@ -84,9 +117,11 @@
 
         }
 
-
         public function ObtenerSolicitudId($id_solicitud){
             date_default_timezone_set('America/Mexico_City');
+            $DatosGenerales = SolicitudesController::DatosGenerales();
+            $institucional = $DatosGenerales['institucional'];
+            //dd($id_solicitud);
             $solicitud = DB::table('SOLICITUDES_SOLICITUD')
                     ->where('SOLICITUD_ID',$id_solicitud)
                     ->select(
@@ -100,10 +135,20 @@
                                 'SOLICITUD_NOMINA as NOMINA_SOLICITUD',
                                 'SOLICITUD_SALARIO as SALARIO_SOLICITUD',
                                 'SOLICITUD_JUSTIFICACION as JUSTIFICACION_SOLICITUD',
-                                'SOLICITUD_TIPO_SOLICITUD as TIPO_SOLICITUD_SOLICITUD'
+                                'SOLICITUD_TIPO_SOLICITUD as TIPO_SOLICITUD_SOLICITUD',
+                                'SOLICITUD_URGENCIA as PRIORIDAD_SOLICITUD'
                             )
                     ->get();
 
+            $dependencia = DependenciasController::ObtenerDatosDependencia($solicitud[0]->DEPENDENCIA_SOLICITUD);
+            if($institucional){
+                //dd('Modo Institucional');
+                $solicitud[0]->NOMBRE_DEPENDENCIA = $dependencia->NOMBRE_DEPENDENCIA;
+            }else{
+                //dd('Modo NPS');
+                $solicitud[0]->NOMBRE_DEPENDENCIA = $dependencia->CODIGO_DEPENDENCIA;
+            }
+            //dd($dependencia);
             $solicitud[0]->ID_ESCAPE = str_replace('/','_',$solicitud[0]->ID_SOLICITUD);
             $solicitud[0]->SALARIO_FORMATO = number_format($solicitud[0]->SALARIO_SOLICITUD,2);
             //echo 'DE: ', $formatter->formatCurrency($amount, 'EUR'), PHP_EOL;
@@ -131,6 +176,20 @@
             $solicitud[0]->SALARIO_INFERIOR = $datos_cga[0]->DATOS_CGA_SALARIO_INFERIOR;
             $solicitud[0]->ESTATUS_SOLICITUD = $datos_cga[0]->DATOS_CGA_ESTATUS;
             $solicitud[0]->HOY = date('d/m/Y');
+
+            $rel_analista = DB::table('REL_SOLICITUDES_ANALISTA')
+                ->where('FK_SOLICITUD_ID',$id_solicitud)
+                ->select('FK_USUARIO')
+                ->get();
+            if(count($rel_analista)>0){
+                $analista = DB::table('SOLICITUDES_LOGIN')
+                ->where('LOGIN_USUARIO',$rel_analista[0]->FK_USUARIO)
+                ->select('LOGIN_RESPONSABLE')
+                ->get();
+                $solicitud[0]->ANALISTA_SOLICITUD = $analista[0]->LOGIN_RESPONSABLE;
+            }else{
+                $solicitud[0]->ANALISTA_SOLICITUD = 'SIN ASIGNAR';
+            }
 
             return $solicitud[0];
         }
@@ -396,7 +455,8 @@
         }
         
         public function VistaListadoDependencia(){
-            $solicitudes = SolicitudesController::ObtenerSolicitudes();
+            $id_dependencia = \Session::get('id_dependencia')[0];
+            $solicitudes = SolicitudesController::ObtenerSolicitudesDependencia($id_dependencia);
             return view('listado_dependencia')->with("solicitudes",$solicitudes);
         }
         
@@ -423,81 +483,70 @@
                 ->get();
             $solicitud = array();
             foreach ($datos_cga as $datos) {
-                $tmp_solicitud = DB::table('SOLICITUDES_SOLICITUD')
-                    ->where('SOLICITUD_ID',$datos->FK_SOLICITUD_ID)
-                    ->select(
-                                'SOLICITUD_ID as ID_SOLICITUD',
-                                'SOLICITUD_OFICIO as OFICIO_SOLICITUD',
-                                'SOLICITUD_NOMBRE as NOMBRE_SOLICITUD',
-                                'SOLICITUD_DEPENDENCIA as DEPENDENCIA_SOLICITUD',
-                                'SOLICITUD_CATEGORIA as CATEGORIA_SOLICITUD',
-                                'SOLICITUD_PUESTO as PUESTO_SOLICITUD',
-                                'SOLICITUD_ACTIVIDADES as ACTIVIDADES_SOLICITUD',
-                                'SOLICITUD_NOMINA as NOMINA_SOLICITUD',
-                                'SOLICITUD_SALARIO as SALARIO_SOLICITUD',
-                                'SOLICITUD_JUSTIFICACION as JUSTIFICACION_SOLICITUD',
-                                'SOLICITUD_TIPO_SOLICITUD as TIPO_SOLICITUD_SOLICITUD',
-                                'SOLICITUD_URGENCIA as PRIORIDAD_SOLICITUD'
-                            )
-                    ->get();
-                $tmp_solicitud[0]->ESTATUS_SOLICITUD = $datos->DATOS_CGA_ESTATUS;
-                $tmp_solicitud[0]->ID_ESCAPE = str_replace('/','_',$tmp_solicitud[0]->ID_SOLICITUD);
-
-                $fechas = DB::table('SOLICITUDES_FECHAS')
-                    ->where('FK_SOLICITUD_ID',$datos->FK_SOLICITUD_ID)
-                    ->get();
-                //dd($fechas);
-                $tmp_solicitud[0]->FECHA_CREACION = $fechas[0]->FECHAS_CREACION_SOLICITUD;
-                $tmp_solicitud[0]->FECHA_TURNADO_SPR = $fechas[0]->FECHAS_INFORMACION_COMPLETA;
-                $tmp_solicitud[0]->FECHA_TURNADO_CGA = $fechas[0]->FECHAS_TURNADO_CGA;
-
-                $solicitud[$datos->FK_SOLICITUD_ID]=$tmp_solicitud[0];
-
+                $solicitud[$datos->FK_SOLICITUD_ID]=SolicitudesController::ObtenerSolicitudId($datos->FK_SOLICITUD_ID);
             }
             return $solicitud;
         }
 
+
         public function VistaListadoCompleto(){
             $solicitudes = SolicitudesController::ObtenerSolicitudes();
+            $analistas = LoginController::ObtenerListadoAnalistas();
+            //dd($analistas);
+            return view('listado_completo') ->with (["solicitudes"=>$solicitudes,"analistas"=>$analistas]);
+
+            /*return view('listado_usuarios') ->with (["usuarios"=>$usuarios,"dependencias"=>$dependencias]);//*/
+        }
+
+        public function VistaListadoAnalista(){
+            $analista = \Session::get('usuario')[0];
+            $solicitudes = SolicitudesController::ObtenerSolicitudesAnalista($analista);
+            //$analistas = 'SIN PERMISOS';
+            $analistas = array();
+
+            return view('listado_completo') ->with (["solicitudes"=>$solicitudes,"analistas"=>$analistas]);
+        }
+
+        public function ObtenerSolicitudesAnalista($analista){
+            $solicitudes = array();
+            //dd($id_dependencia);
+            $rel_solicitudes = DB::table('REL_SOLICITUDES_ANALISTA')
+                ->where('FK_USUARIO',$analista)
+                ->get();
+            foreach ($rel_solicitudes as $solicitud) {
+            //dd($solicitud);
+                $solicitudes[$solicitud->FK_SOLICITUD_ID] = SolicitudesController::ObtenerSolicitudId($solicitud->FK_SOLICITUD_ID);
+            }
             //dd($solicitudes);
-            return view('listado_completo') ->with ("solicitudes",$solicitudes);
+            return $solicitudes;
+
+        }
+
+        public function ObtenerSolicitudesDependencia($id_dependencia){
+            $solicitudes = array();
+            //dd($id_dependencia);
+            $rel_solicitudes = DB::table('REL_DEPENCENCIA_SOLICITUD')
+                                ->where('FK_DEPENDENCIA',$id_dependencia)
+                                ->get();
+            //dd($rel_solicitudes);
+            foreach ($rel_solicitudes as $solicitud) {
+                $tmp_solicitud = SolicitudesController::ObtenerSolicitudId($solicitud->FK_SOLICITUD_ID);
+                $solicitudes[$solicitud->FK_SOLICITUD_ID] = $tmp_solicitud;
+                //dd($tmp_solicitud);
+            }
+            //dd($solicitudes);
+            return $solicitudes;
         }
 
         public function ObtenerSolicitudes(){
-            $res_solicitudes = DB::table('SOLICITUDES_SOLICITUD')->get();
+            $res_solicitudes = DB::table('SOLICITUDES_DATOS_CGA')
+                                ->whereNotIn('DATOS_CGA_ESTATUS',['RECIBIDO SPR','VALIDACIÓN DE INFORMACIÓN'])
+                                ->select('FK_SOLICITUD_ID')
+                                ->get();
             $solicitudes = array();
             foreach ($res_solicitudes as $solicitud){
-                $tmpSol = array();
-                $tmpSol['ID_SOLICITUD'] = $solicitud->SOLICITUD_ID;
-                $tmpSol['OFICIO_SOLICITUD'] = $solicitud->SOLICITUD_OFICIO;
-                $tmpSol['NOMBRE_SOLICITUD'] = $solicitud->SOLICITUD_NOMBRE;
-                $tmpSol['DEPENDENCIA_SOLICITUD'] = $solicitud->SOLICITUD_DEPENDENCIA;
-                $tmpSol['CATEGORIA_SOLICITUD'] = $solicitud->SOLICITUD_CATEGORIA;
-                $tmpSol['PUESTO_SOLICITUD'] = $solicitud->SOLICITUD_PUESTO;
-                $tmpSol['ACTIVIDADES_SOLICITUD'] = $solicitud->SOLICITUD_ACTIVIDADES;
-                $tmpSol['NOMINA_SOLICITUD'] = $solicitud->SOLICITUD_NOMINA;
-                $tmpSol['SALARIO_SOLICITUD'] = $solicitud->SOLICITUD_SALARIO;
-                $tmpSol['JUSTIFICACION_SOLICITUD'] = $solicitud->SOLICITUD_JUSTIFICACION;
-                $tmpSol['TIPO_SOLICITUD_SOLICITUD'] = $solicitud->SOLICITUD_TIPO_SOLICITUD;
-                $tmpSol['ID_ESCAPE'] = str_replace('/','_',$solicitud->SOLICITUD_ID);
-                $datos_cga = DB::table('SOLICITUDES_DATOS_CGA')
-                    ->where('FK_SOLICITUD_ID',$solicitud->SOLICITUD_ID)
-                    ->get();
-                //$solicitud->ESTATUS_SOLICITUD = $datos_cga[0]->DATOS_CGA_ESTATUS;
-                $tmpSol['ESTATUS_SOLICITUD'] = $datos_cga[0]->DATOS_CGA_ESTATUS;
-                $fechas = DB::table('SOLICITUDES_FECHAS')
-                    ->where('FK_SOLICITUD_ID',$solicitud->SOLICITUD_ID)
-                    ->get();
-                //dd($fechas);
-
-                $tmpSol['FECHA_CREACION'] = $fechas[0]->FECHAS_CREACION_SOLICITUD;
-                $tmpSol['FECHA_TURNADO_SPR'] = $fechas[0]->FECHAS_INFORMACION_COMPLETA;
-                $tmpSol['FECHA_TURNADO_CGA'] = $fechas[0]->FECHAS_TURNADO_CGA;
-
-                /*$solicitud->FECHA_CREACION = $fechas[0]->FECHAS_CREACION_SOLICITUD;
-                $solicitud->FECHA_TURNADO_SPR = $fechas[0]->FECHAS_INFORMACION_COMPLETA;
-                $solicitud->FECHA_TURNADO_CGA = $fechas[0]->FECHAS_TURNADO_CGA;//*/
-                $solicitudes[$solicitud->SOLICITUD_ID] = (object)$tmpSol;
+                $solicitudes[$solicitud->FK_SOLICITUD_ID]=SolicitudesController::ObtenerSolicitudId($solicitud->FK_SOLICITUD_ID);
+                //$solicitudes[$solicitud->SOLICITUD_ID] = (object)$tmpSol;
             }
             //dd($solicitudes);
             return $solicitudes;
@@ -539,6 +588,85 @@
             echo json_encode($data);//*/
         }
 
+        public function InsertarRelacionDependenciaSolicitud($id_dependencia,$id_solicitud){
+            DB::table('REL_DEPENCENCIA_SOLICITUD')->insert(
+                [
+                    'FK_DEPENDENCIA' => $id_dependencia,
+                    'FK_SOLICITUD_ID' => $id_solicitud
+                ]
+            );
+        }
+
+        public function ObtenerConsecutivo(){
+            $sol = '';
+            $ultima_solicitud = DB::table('SOLICITUDES_SOLICITUD')->latest()->get();
+            if(count($ultima_solicitud)==0){//es la primera solicitud de la base de datos
+                //dd('Primera Solicitud');
+                $año = date('Y');
+                $sol = 'SOL/1/'.$año;
+                //dd($sol);
+            }else{
+                $separa = explode("/", $ultima_solicitud[0]->SOLICITUD_ID);
+                //dd($separa);
+                if(strcmp(date('Y'),$separa[2])==0){//en caso de que el año sea el mismo
+                    $consecutivo = ((int)$separa[1])+1;
+                }else{//en caso de que el año haya cambiado, primera solicitud del año en curso
+                    $consecutivo = '1';
+                }
+                $sol = 'SOL/'.$consecutivo.'/'.date('Y');
+            }
+             return $sol;   
+        }
+
+        public function AlmacenarSolicitud($datos_solicitud){
+            date_default_timezone_set('America/Mexico_City');
+            $sol = '';
+            //Se bloquea la base de datos para que otro usuario no genere un folio repetido
+            DB::raw('lock tables SOLICITUDES_SOLICITUD write');
+                $sol = SolicitudesController::ObtenerConsecutivo();
+                //dd($sol);
+                $insert = DB::table('SOLICITUDES_SOLICITUD')->insert(
+                    [
+                        'SOLICITUD_ID' => $sol,
+                        'SOLICITUD_OFICIO' => '',
+                        'SOLICITUD_NOMBRE' => $datos_solicitud['candidato'],
+                        'SOLICITUD_DEPENDENCIA' => $datos_solicitud['id_dependencia'],
+                        'SOLICITUD_CATEGORIA' => $datos_solicitud['categoria'],
+                        'SOLICITUD_PUESTO' => $datos_solicitud['puesto'],
+                        'SOLICITUD_ACTIVIDADES' => $datos_solicitud['actividades'],
+                        'SOLICITUD_NOMINA' => $datos_solicitud['nomina'],
+                        'SOLICITUD_SALARIO' => $datos_solicitud['salario'],
+                        'SOLICITUD_JUSTIFICACION' => $datos_solicitud['justificacion'],
+                        'SOLICITUD_TIPO_SOLICITUD' => $datos_solicitud['tipo_solicitud'],
+                        'SOLICITUD_URGENCIA' => 'PRIORIDAD 1',
+                        'SOLICITUD_FUENTE_RECURSOS' => $datos_solicitud['fuente_recursos'],
+                        'created_at' => date('Y-m-d H:i:s')
+                    ]
+                );//*/
+                //sleep(30);
+            DB::raw('unlock tables');
+            if($insert){
+                DB::table('SOLICITUDES_DATOS_CGA')->insert(
+                    [
+                        'FK_SOLICITUD_ID' => $sol,
+                        'DATOS_CGA_ESTATUS' => 'RECIBIDO SPR',
+                        'DATOS_CGA_PRIORIDAD' => 'PRIORIDAD 1',
+                         'created_at' => date('Y-m-d H:i:s')
+                    ]
+                );
+
+                DB::table('SOLICITUDES_FECHAS')->insert(
+                    [
+                        'FK_SOLICITUD_ID' => $sol,
+                        'FECHAS_CREACION_SOLICITUD' => date('Y-m-d H:i:s'),
+                         'created_at' => date('Y-m-d H:i:s')
+                    ]
+                );
+                
+            }
+            return $sol;
+        }
+
         public function AlmacenarContratacion(Request $request){
             date_default_timezone_set('America/Mexico_City');
             //dd($request);
@@ -551,70 +679,25 @@
             $justificacion = $request['justificacion'];
             $consecutivo = 0;
             $usuario = 'marvineliosa';
-            $id_dependencia = 106;
-            //dd($request);
-            //Se bloquea la base de datos para que otro usuario no genere un folio repetido
-            DB::raw('lock tables SOLICITUDES_SOLICITUD write');
-                $ultima_solicitud = DB::table('SOLICITUDES_SOLICITUD')->latest()->get();
-                //$ultima_solicitud = DB::table('SOLICITUDES_SOLICITUD')->get();
-                //dd(gettype($ultima_solicitud));
-                //dd(count($ultima_solicitud));
-                //dd(gettype($request['categoria']));
-                if(count($ultima_solicitud)==0){//es la primera solicitud de la base de datos
-                    //dd('Primera Solicitud');
-                    $año = date('Y');
-                    $sol = 'SOL/1/'.$año;
-                    //dd($sol);
-                }else{
-                    //dd('NO ES PRIMERA SOLICITUD');
-                    $separa = explode("/", $ultima_solicitud[0]->SOLICITUD_ID);
-                    //dd($separa);
-                    if(strcmp(date('Y'),$separa[2])==0){//en caso de que el año sea el mismo
-                        $consecutivo = ((int)$separa[1])+1;
-                    }else{//en caso de que el año haya cambiado, primera solicitud del año en curso
-                        //dd('Nuevo año');
-                        $consecutivo = '1';
-                    }
-                    $sol = 'SOL/'.$consecutivo.'/'.date('Y');
-                    //dd($sol);
-                    //dd(gettype($consecutivo));
-                    //dd($ultima_solicitud[0]->SOLICITUD_ID);
-                }
-                DB::table('SOLICITUDES_SOLICITUD')->insert(
-                    [
-                        'SOLICITUD_ID' => $sol,
-                        'SOLICITUD_OFICIO' => '',
-                        'SOLICITUD_NOMBRE' => $candidato,
-                        'SOLICITUD_DEPENDENCIA' => $id_dependencia,
-                        'SOLICITUD_CATEGORIA' => $categoria,
-                        'SOLICITUD_PUESTO' => $puesto,
-                        'SOLICITUD_ACTIVIDADES' => $actividades,
-                        'SOLICITUD_NOMINA' => $nomina,
-                        'SOLICITUD_SALARIO' => $salario,
-                        'SOLICITUD_JUSTIFICACION' => $justificacion,
-                        'SOLICITUD_TIPO_SOLICITUD' => 'CONTRATACIÓN',
-                        'SOLICITUD_URGENCIA' => 'PRIORIDAD 1',
-                        'created_at' => date('Y-m-d H:i:s')
-                    ]
-                );//*/
-            DB::raw('unlock tables');
+            $id_dependencia = \Session::get('id_dependencia')[0];
+            $fuente_recursos = $request['fuente_recursos'];
 
-            DB::table('SOLICITUDES_DATOS_CGA')->insert(
-                [
-                    'FK_SOLICITUD_ID' => $sol,
-                    'DATOS_CGA_ESTATUS' => 'RECIBIDO SPR',
-                    'DATOS_CGA_PRIORIDAD' => 'NORMAL',
-                     'created_at' => date('Y-m-d H:i:s')
-                ]
+            $datos_solicitud = array(
+                'candidato' => $candidato,
+                'id_dependencia' => $id_dependencia,
+                'categoria' => $categoria,
+                'puesto' => $puesto,
+                'actividades' => $actividades,
+                'nomina' => $nomina,
+                'salario' => $salario,
+                'justificacion' => $justificacion,
+                'tipo_solicitud' => 'CONTRATACIÓN',
+                'fuente_recursos' => $fuente_recursos
             );
-
-            DB::table('SOLICITUDES_FECHAS')->insert(
-                [
-                    'FK_SOLICITUD_ID' => $sol,
-                    'FECHAS_CREACION_SOLICITUD' => date('Y-m-d H:i:s'),
-                     'created_at' => date('Y-m-d H:i:s')
-                ]
-            );
+            //dd($datos_solicitud);
+            $sol = SolicitudesController::AlmacenarSolicitud($datos_solicitud);
+            //dd($sol);
+            SolicitudesController::InsertarRelacionDependenciaSolicitud($id_dependencia,$sol);//*/
             //dd('Listo: '.$sol);
             //dd($descripciones);
             $data = array(
@@ -641,54 +724,23 @@
 
             $nomina = $request['nomina'];
             $justificacion = $request['justificacion'];
-            $id_dependencia = 106;
+            $id_dependencia = \Session::get('id_dependencia')[0];
+            $fuente_recursos = $request['fuente_recursos'];
 
-            
-            //Se bloquea la base de datos para que otro usuario no genere un folio repetido
-            DB::raw('lock tables SOLICITUDES_SOLICITUD write');
-                $ultima_solicitud = DB::table('SOLICITUDES_SOLICITUD')->latest()->get();
-                //$ultima_solicitud = DB::table('SOLICITUDES_SOLICITUD')->get();
-                //dd(gettype($ultima_solicitud));
-                //dd(count($ultima_solicitud));
-                //dd(gettype($request['categoria']));
-                if(count($ultima_solicitud)==0){//es la primera solicitud de la base de datos
-                    //dd('Primera Solicitud');
-                    $año = date('Y');
-                    $sol = 'SOL/1/'.$año;
-                    //dd($sol);
-                }else{
-                    //dd('NO ES PRIMERA SOLICITUD');
-                    $separa = explode("/", $ultima_solicitud[0]->SOLICITUD_ID);
-                    //dd($separa);
-                    if(strcmp(date('Y'),$separa[2])==0){//en caso de que el año sea el mismo
-                        $consecutivo = ((int)$separa[1])+1;
-                    }else{//en caso de que el año haya cambiado, primera solicitud del año en curso
-                        //dd('Nuevo año');
-                        $consecutivo = '1';
-                    }
-                    $sol = 'SOL/'.$consecutivo.'/'.date('Y');
-                    //dd($sol);
-                    //dd(gettype($consecutivo));
-                    //dd($ultima_solicitud[0]->SOLICITUD_ID);
-                }
-                DB::table('SOLICITUDES_SOLICITUD')->insert(
-                    [
-                        'SOLICITUD_ID' => $sol,
-                        'SOLICITUD_OFICIO' => '',
-                        'SOLICITUD_NOMBRE' => $persona_anterior,
-                        'SOLICITUD_DEPENDENCIA' => $id_dependencia,
-                        'SOLICITUD_CATEGORIA' => $categoria_anterior,
-                        'SOLICITUD_PUESTO' => $puesto_anterior,
-                        'SOLICITUD_ACTIVIDADES' => $actividades_anterior,
-                        'SOLICITUD_NOMINA' => $nomina,
-                        'SOLICITUD_SALARIO' => $salario_anterior,
-                        'SOLICITUD_JUSTIFICACION' => $justificacion,
-                        'SOLICITUD_TIPO_SOLICITUD' => 'CONTRATACIÓN POR SUSTITUCIÓN',
-                        'SOLICITUD_URGENCIA' => 'PRIORIDAD 1',
-                        'created_at' => date('Y-m-d H:i:s')
-                    ]
-                );//*/
-            DB::raw('unlock tables');
+            $datos_solicitud = array(
+                'candidato' => $persona_anterior,
+                'id_dependencia' => $id_dependencia,
+                'categoria' => $categoria_anterior,
+                'puesto' => $puesto_anterior,
+                'actividades' => $actividades_anterior,
+                'nomina' => $nomina,
+                'salario' => $salario_anterior,
+                'justificacion' => $justificacion,
+                'tipo_solicitud' => 'CONTRATACIÓN POR SUSTITUCIÓN',
+                'fuente_recursos' => $fuente_recursos
+            );
+            //dd($datos_solicitud);
+            $sol = SolicitudesController::AlmacenarSolicitud($datos_solicitud);
 
             DB::table('SOLICITUDES_SUSTITUCION')->insert(
                 [
@@ -698,23 +750,6 @@
                     'SUSTITUCION_PUESTO_NUEVO' => $puesto_solicitado,
                     'SUSTITUCION_ACTIVIDADES_NUEVAS' => $actividades_solicitadas,
                     'SUSTITUCION_SALARIO_NUEVO' => $salario_solicitado,
-                     'created_at' => date('Y-m-d H:i:s')
-                ]
-            );
-
-            DB::table('SOLICITUDES_DATOS_CGA')->insert(
-                [
-                    'FK_SOLICITUD_ID' => $sol,
-                    'DATOS_CGA_ESTATUS' => 'RECIBIDO SPR',
-                    'DATOS_CGA_PRIORIDAD' => 'NORMAL',
-                     'created_at' => date('Y-m-d H:i:s')
-                ]
-            );
-
-            DB::table('SOLICITUDES_FECHAS')->insert(
-                [
-                    'FK_SOLICITUD_ID' => $sol,
-                    'FECHAS_CREACION_SOLICITUD' => date('Y-m-d H:i:s'),
                      'created_at' => date('Y-m-d H:i:s')
                 ]
             );
@@ -744,53 +779,23 @@
 
             $nomina = $request['nomina'];
             $justificacion = $request['justificacion'];
-            $id_dependencia = 106;
-            
-            //Se bloquea la base de datos para que otro usuario no genere un folio repetido
-            DB::raw('lock tables SOLICITUDES_SOLICITUD write');
-                $ultima_solicitud = DB::table('SOLICITUDES_SOLICITUD')->latest()->get();
-                //$ultima_solicitud = DB::table('SOLICITUDES_SOLICITUD')->get();
-                //dd(gettype($ultima_solicitud));
-                //dd(count($ultima_solicitud));
-                //dd(gettype($request['categoria']));
-                if(count($ultima_solicitud)==0){//es la primera solicitud de la base de datos
-                    //dd('Primera Solicitud');
-                    $año = date('Y');
-                    $sol = 'SOL/1/'.$año;
-                    //dd($sol);
-                }else{
-                    //dd('NO ES PRIMERA SOLICITUD');
-                    $separa = explode("/", $ultima_solicitud[0]->SOLICITUD_ID);
-                    //dd($separa);
-                    if(strcmp(date('Y'),$separa[2])==0){//en caso de que el año sea el mismo
-                        $consecutivo = ((int)$separa[1])+1;
-                    }else{//en caso de que el año haya cambiado, primera solicitud del año en curso
-                        //dd('Nuevo año');
-                        $consecutivo = '1';
-                    }
-                    $sol = 'SOL/'.$consecutivo.'/'.date('Y');
-                    //dd($sol);
-                    //dd(gettype($consecutivo));
-                    //dd($ultima_solicitud[0]->SOLICITUD_ID);
-                }
-                DB::table('SOLICITUDES_SOLICITUD')->insert(
-                    [
-                        'SOLICITUD_ID' => $sol,
-                        'SOLICITUD_OFICIO' => '',
-                        'SOLICITUD_NOMBRE' => $Candidato,
-                        'SOLICITUD_DEPENDENCIA' => $id_dependencia,
-                        'SOLICITUD_CATEGORIA' => $CategoriaActual,
-                        'SOLICITUD_PUESTO' => $PuestoActual,
-                        'SOLICITUD_ACTIVIDADES' => $ActividadesActuales,
-                        'SOLICITUD_NOMINA' => $nomina,
-                        'SOLICITUD_SALARIO' => $SalarioActual,
-                        'SOLICITUD_JUSTIFICACION' => $justificacion,
-                        'SOLICITUD_TIPO_SOLICITUD' => 'PROMOCION',
-                        'SOLICITUD_URGENCIA' => 'PRIORIDAD 1',
-                        'created_at' => date('Y-m-d H:i:s')
-                    ]
-                );//*/
-            DB::raw('unlock tables');
+            $id_dependencia = \Session::get('id_dependencia')[0];
+            $fuente_recursos = 'NA';
+
+            $datos_solicitud = array(
+                'candidato' => $Candidato,
+                'id_dependencia' => $id_dependencia,
+                'categoria' => $CategoriaActual,
+                'puesto' => $PuestoActual,
+                'actividades' => $ActividadesActuales,
+                'nomina' => $nomina,
+                'salario' => $SalarioActual,
+                'justificacion' => $justificacion,
+                'tipo_solicitud' => 'PROMOCION',
+                'fuente_recursos' => $fuente_recursos
+            );
+            //dd($datos_solicitud);
+            $sol = SolicitudesController::AlmacenarSolicitud($datos_solicitud);
 
             DB::table('SOLICITUDES_PROMOCION')->insert(
                 [
@@ -799,23 +804,6 @@
                     'PROMOCION_PUESTO_NUEVO' => $PuestoNuevo,
                     'PROMOCION_ACTIVIDADES_NUEVAS' => $ActividadesNuevas,
                     'PROMOCION_SALARIO_NUEVO' => $SalarioSolicitado,
-                     'created_at' => date('Y-m-d H:i:s')
-                ]
-            );
-
-            DB::table('SOLICITUDES_DATOS_CGA')->insert(
-                [
-                    'FK_SOLICITUD_ID' => $sol,
-                    'DATOS_CGA_ESTATUS' => 'RECIBIDO SPR',
-                    'DATOS_CGA_PRIORIDAD' => 'NORMAL',
-                     'created_at' => date('Y-m-d H:i:s')
-                ]
-            );
-
-            DB::table('SOLICITUDES_FECHAS')->insert(
-                [
-                    'FK_SOLICITUD_ID' => $sol,
-                    'FECHAS_CREACION_SOLICITUD' => date('Y-m-d H:i:s'),
                      'created_at' => date('Y-m-d H:i:s')
                 ]
             );
@@ -838,7 +826,7 @@
             $ActividadesActuales = $request['ActividadesActuales'];
             $SalarioActual = $request['SalarioActual'];
 
-            $DependenciaDestino = 120;
+            $DependenciaDestino = 120;//<<<<<<<AQUI HAY QUE OBTENERLO DE LA VISTA
             $CategoriaNueva = $request['CategoriaNueva'];
             $PuestoNuevo = $request['PuestoNuevo'];
             $ActividadesNuevas = $request['ActividadesNuevas'];
@@ -846,53 +834,23 @@
             
             $nomina = $request['Nomina'];
             $justificacion = $request['Justificacion'];
-            $id_dependencia = 106;
-            //dd($ActividadesNuevas);
-            //Se bloquea la base de datos para que otro usuario no genere un folio repetido
-            DB::raw('lock tables SOLICITUDES_SOLICITUD write');
-                $ultima_solicitud = DB::table('SOLICITUDES_SOLICITUD')->latest()->get();
-                //$ultima_solicitud = DB::table('SOLICITUDES_SOLICITUD')->get();
-                //dd(gettype($ultima_solicitud));
-                //dd(count($ultima_solicitud));
-                //dd(gettype($request['categoria']));
-                if(count($ultima_solicitud)==0){//es la primera solicitud de la base de datos
-                    //dd('Primera Solicitud');
-                    $año = date('Y');
-                    $sol = 'SOL/1/'.$año;
-                    //dd($sol);
-                }else{
-                    //dd('NO ES PRIMERA SOLICITUD');
-                    $separa = explode("/", $ultima_solicitud[0]->SOLICITUD_ID);
-                    //dd($separa);
-                    if(strcmp(date('Y'),$separa[2])==0){//en caso de que el año sea el mismo
-                        $consecutivo = ((int)$separa[1])+1;
-                    }else{//en caso de que el año haya cambiado, primera solicitud del año en curso
-                        //dd('Nuevo año');
-                        $consecutivo = '1';
-                    }
-                    $sol = 'SOL/'.$consecutivo.'/'.date('Y');
-                    //dd($sol);
-                    //dd(gettype($consecutivo));
-                    //dd($ultima_solicitud[0]->SOLICITUD_ID);
-                }
-                DB::table('SOLICITUDES_SOLICITUD')->insert(
-                    [
-                        'SOLICITUD_ID' => $sol,
-                        'SOLICITUD_OFICIO' => '',
-                        'SOLICITUD_NOMBRE' => $NombreCandidato,
-                        'SOLICITUD_DEPENDENCIA' => $id_dependencia,
-                        'SOLICITUD_CATEGORIA' => $CategoriaActual,
-                        'SOLICITUD_PUESTO' => $PuestoActual,
-                        'SOLICITUD_ACTIVIDADES' => $ActividadesActuales,
-                        'SOLICITUD_NOMINA' => $nomina,
-                        'SOLICITUD_SALARIO' => $SalarioActual,
-                        'SOLICITUD_JUSTIFICACION' => $justificacion,
-                        'SOLICITUD_TIPO_SOLICITUD' => 'CAMBIO DE ADSCRIPCIÓN',
-                        'SOLICITUD_URGENCIA' => 'PRIORIDAD 1',
-                        'created_at' => date('Y-m-d H:i:s')
-                    ]
-                );//*/
-            DB::raw('unlock tables');
+            $id_dependencia = \Session::get('id_dependencia')[0];
+            $fuente_recursos = 'NA';
+
+            $datos_solicitud = array(
+                'candidato' => $NombreCandidato,
+                'id_dependencia' => $id_dependencia,
+                'categoria' => $CategoriaActual,
+                'puesto' => $PuestoActual,
+                'actividades' => $ActividadesActuales,
+                'nomina' => $nomina,
+                'salario' => $SalarioActual,
+                'justificacion' => $justificacion,
+                'tipo_solicitud' => 'CAMBIO DE ADSCRIPCIÓN',
+                'fuente_recursos' => $fuente_recursos
+            );
+            //dd($datos_solicitud);
+            $sol = SolicitudesController::AlmacenarSolicitud($datos_solicitud);
 
             DB::table('SOLICITUDES_CAMBIO_ADSCRIPCION')->insert(
                 [
@@ -905,23 +863,6 @@
                      'created_at' => date('Y-m-d H:i:s')
                 ]
             );
-
-            DB::table('SOLICITUDES_DATOS_CGA')->insert(
-                [
-                    'FK_SOLICITUD_ID' => $sol,
-                    'DATOS_CGA_ESTATUS' => 'RECIBIDO SPR',
-                    'DATOS_CGA_PRIORIDAD' => 'NORMAL',
-                     'created_at' => date('Y-m-d H:i:s')
-                ]
-            );
-
-            DB::table('SOLICITUDES_FECHAS')->insert(
-                [
-                    'FK_SOLICITUD_ID' => $sol,
-                    'FECHAS_CREACION_SOLICITUD' => date('Y-m-d H:i:s'),
-                     'created_at' => date('Y-m-d H:i:s')
-                ]
-            );
             //dd('Listo: '.$sol);
             //dd($descripciones);
             $data = array(
@@ -930,19 +871,38 @@
 
             echo json_encode($data);//*/
         }
+        public function BloquearSql(Request $request){
 
-        public function CerrarSql(Request $request){
+            //dd('epale');
+            DB::raw('lock tables SOLICITUDES_SOLICITUD write');//*/
+        }
 
-            dd('epale');
-            //DB::raw('unlock tables');//*/
+        public function DesbloquearSql(Request $request){
+
+            //dd('epale');
+            DB::raw('unlock tables');//*/
         }
 
         public function RefrescarListadoCompleto(){
-            $solicitudes = SolicitudesController::ObtenerSolicitudes();
+            $analista = \Session::get('usuario')[0];
+            $categoria = \Session::get('categoria')[0];
+            if(strcmp($categoria, 'ADMINISTRADOR_CGA')==0){
+                $solicitudes = SolicitudesController::ObtenerSolicitudes();
+            }else{
+                $solicitudes = SolicitudesController::ObtenerSolicitudesAnalista($analista);
+
+            }
             //dd($solicitudes);
             return View('tablas.listado_completo') ->with ("solicitudes",$solicitudes);
             //return View::make("tablas.listado_completo", ["solicitudes" => $solicitudes]);
-    
+        }
+
+        public static function DatosGenerales(){
+            //en este método se sabrá si el sistema está funcionando de modo institucional o prestación de servicios
+            $datos = array(
+                            'institucional' => true
+                        );
+            return $datos;
         }
 
 

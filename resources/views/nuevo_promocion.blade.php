@@ -106,12 +106,12 @@
       $("#Promocion-ActividadesActuales").val('Actividades de Marvin');
       $("#Promocion-SalarioActual").val(3200.87);
 
-      $("#Promocion-CategoriaSolicitada").val('Nuevo Candidato Propuesto');
-      $("#Promocion-PuestoNuevo").val('Nueva Categoria');
-      $("#Promocion-ActividadesNuevas").val('Puesto Nuevo');
+      $("#Promocion-CategoriaSolicitada").val('Nueva Categoría solicitada');
+      $("#Promocion-PuestoNuevo").val('Nuevo Puesto a desempeñar');
+      $("#Promocion-ActividadesNuevas").val('NUEVAS ACTIVIDADES A DESEMPEÑAR');
       $("#Promocion-SalarioSolicitado").val(5000);
 
-      $("#Promocion-Justificacion").val('Es necesario puesto que el departamento tiene sobre carga de trabajo');//*/
+      $("#Promocion-Justificacion").val('Es necesaria la promoción puesto que el departamento tiene sobre carga de trabajo');//*/
       //MensajeModal("TITULO DEL MODAL","MENSAJE DEL MODAL");
     }
     function AlmacenarSolicitud(){

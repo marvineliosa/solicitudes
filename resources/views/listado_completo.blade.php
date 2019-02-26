@@ -15,136 +15,11 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="ModalDetalleTMP" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <table class="table">
-		  <thead>
-		    <tr>
-		      <th scope="col">Concepto</th>
-		      <th scope="col">Descripción</th>
-		    </tr>
-		  </thead>
-		  <tbody>
-		    <tr>
-		      <th scope="row">ID</th>
-		      <td>SOL/1/2018</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Candidato</th>
-		      <td>Marvin Gabriel Eliosa Abaroa</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Dependencia</th>
-		      <td>Coordinación General Administrativa</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Fecha de Solicitud</th>
-		      <td>13/12/2018</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Fecha de información completa</th>
-		      <td>22/01/2019</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Categoría</th>
-		      <td>Técnico Administrativo</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Puesto</th>
-		      <td>Encargado de Cómputo</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Salario</th>
-		      <td>$2,750.80</td>
-		    </tr>
-		  </tbody>
-		</table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <!--<button type="button" class="btn btn-primary">Save changes</button>-->
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="ModalDetalleTerminado" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <table class="table">
-		  <thead>
-		    <tr>
-		      <th scope="col">Concepto</th>
-		      <th scope="col">Descripción</th>
-		    </tr>
-		  </thead>
-		  <tbody>
-		    <tr>
-		      <th scope="row">ID</th>
-		      <td>SOL/4/2019</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Candidato</th>
-		      <td>Juan Pérez González</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Dependencia</th>
-		      <td>DCyTIC</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Fecha de Solicitud</th>
-		      <td>13/01/2019</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Fecha de información completa</th>
-		      <td>13/01/2019</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Categoría</th>
-		      <td>Responsable de Área</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Puesto</th>
-		      <td>Juan Pérez González</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Salario</th>
-		      <td>$6,577.63</td>
-		    </tr>
-		  </tbody>
-		</table>
-		<a href="{{asset('pdf/EjemploCuadroAprobado.pdf')}}" target="_blank">Ver cuadro</a>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <!--<button type="button" class="btn btn-primary">Save changes</button>-->
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- Modal -->
 <div class="modal fade" id="ModalConfiguraciones" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Configuraciones</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -182,18 +57,23 @@
 				</div>
 		      </td>
 		    </tr>
+		    @if(strcmp(\Session::get('categoria')[0],'ADMINISTRADOR_CGA')==0)
 		    <tr>
 		      <th scope="row" width="50%">Asignar solicitud a un analista</th>
 		      <td>
 		      	<div class="form-check form-check-inline">
 			      <select id="SelectAnalistas" class="form-control" id="select_status">
 			        <option value="SELECCIONAR">SELECCIONAR</option>
+			        @foreach($analistas as $analista)
+			        	<option value="{{$analista->USUARIO_ANALISTA}}">{{$analista->NOMBRE_ANALISTA}}</option>
+			        @endforeach
 			      </select>
 			      <br>
 			      <button type="button" class="btn btn-primary" onclick="AsignarAnalista()">Asignar</button>
 				</div>
 		      </td>
 		    </tr>
+		    @endif
 		    <tr>
 		      <th scope="row" width="50%">Observaciones</th>
 		      <td>
@@ -220,6 +100,31 @@
 	<script type="text/javascript">
 		var gl_solicitudes = <?php echo json_encode($solicitudes) ?>;
     	console.log(gl_solicitudes);
+		var gl_analistas = <?php echo json_encode($analistas) ?>;
+    	console.log(gl_analistas);
+
+    	function AsignarAnalista(){
+    		var analista = $("#SelectAnalistas").val();
+    		var id_solicitud = $("#num_oficio").val();
+    		if(analista != 'SELECCIONAR'){
+	    		//console.log(estatus);
+	    		var success;
+				var url = "/solicitud/asignar_analista";
+				var dataForm = new FormData();
+				dataForm.append('id_solicitud',id_solicitud);
+				dataForm.append('analista',analista);
+				//lamando al metodo ajax
+
+				metodoAjax(url,dataForm,function(success){
+					//aquí se escribe todas las operaciones que se harían en el succes
+					//la variable success es el json que recibe del servidor el método AJAX
+					MensajeModal("¡EXITO!","La solicitud se ha asignado correctamente.");
+				});//*/
+    		}else{
+    			MensajeModal('¡ATENCIÓN!','Debe seleccionar un analista');
+    		}
+    	}
+
     	function modalConfig(id_sol){
     		var estatus_sol = gl_solicitudes[id_sol]['ESTATUS_SOLICITUD'];
     		//if(estatus)

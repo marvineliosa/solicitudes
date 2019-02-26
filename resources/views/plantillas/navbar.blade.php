@@ -12,7 +12,7 @@
                 <span class="menu-arrow arrow_carrot-right"></span>
               </a>
               <ul class="sub">
-                @if(strcmp(\Session::get('categoria')[0],'ADMINISTRADOR_CGA')==0)
+                @if(strcmp(\Session::get('categoria')[0],'ADMINISTRADOR_CGA')==0 || strcmp(\Session::get('categoria')[0],'ANALISTA_CGA')==0)
                   <li><a class="" href="/listado/revision_informacion">Revision de Información</a></li>
                   <li><a class="" href="/listado/completo">Listado Completo</a></li>
                   <!--<li><a class="" href="/listado/contratacion">Contratación</a></li>

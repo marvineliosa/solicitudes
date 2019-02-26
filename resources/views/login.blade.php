@@ -98,8 +98,8 @@
     var dataForm = new FormData();
     dataForm.append('usuario',usuario);
     dataForm.append('pass',pass);
-    console.log(usuario);
-    console.log(pass);
+    //console.log(usuario);
+    //console.log(pass);
     $.ajax({
       url :url,
       data : dataForm,
@@ -121,20 +121,6 @@
           alert('Usuario o contraseña incorrecta.');
           $("#modalMensaje").modal();
         }else{
-          /*if(json['categoria']=='DIRECTOR_DRH'){
-            location.href='/dependencias'
-          }else if(json['categoria']=='FACILITADOR'){
-            location.href='/dependencias'
-          }else if(json['categoria']=='DIRECTOR_D/UA'){
-            location.href='/descripciones'
-          }else if(json['categoria']=='ENCARGADO_D/UA'){
-            location.href='/descripciones'
-          }else if(json['categoria']=='CGA'){
-            location.href='/dependencias'
-          }else{
-            $("#textoModalMensaje").text("No existe la categoría: "+json['categoria']);
-            $("#modalMensaje").modal();
-          }//*/
           if(json['categoria']=='ADMINISTRADOR_CGA'){
             location.href='/listado/completo';
           }else if(json['categoria']=='TRABAJADOR_SPR'){
@@ -145,6 +131,8 @@
             location.href='/listado/dependencia';
           }else if(json['categoria']=='SECRETARIO_PARTICULAR'){
             location.href='/listado/spr';
+          }else if(json['categoria']=='ANALISTA_CGA'){
+            location.href='/listado/analista';
           }
         }
       },

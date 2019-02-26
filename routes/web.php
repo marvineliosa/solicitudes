@@ -51,6 +51,9 @@ Route::get('/listado/dependencia', 'SolicitudesController@VistaListadoDependenci
 //listado nuevas en dependencia
 Route::get('/listado/spr', 'SolicitudesController@VistaListadoSecretarioParticular');
 
+//listado analista
+Route::get('/listado/analista', 'SolicitudesController@VistaListadoAnalista');
+
 //listado CGA
 Route::get('/listado/coordinacion', 'SolicitudesController@VistaListadoCGA');
 
@@ -97,14 +100,11 @@ Route::post('/cambio_adscripcion/insertar', 'SolicitudesController@AlmacenarCamb
 //solicitudes
 Route::post('/solicitud/cambiar_estado', 'SolicitudesController@CambiarEstadoCGA');
 Route::post('/solicitud/validar_solicitud', 'SolicitudesController@ValidarSolicitudSPR');
-
 Route::post('/solicitud/validacion_titular', 'SolicitudesController@ValidarSolicitudDependencia');
-
 Route::post('/solicitud/validacion_cga', 'SolicitudesController@ValidarSolicitudCGA');
-
 Route::post('/solicitud/validacion_rectoria', 'SolicitudesController@ValidacionRectoria');
-
 Route::post('/solicitudes/cambiar_prioridad', 'SolicitudesController@CambiarPrioridad');
+Route::post('/solicitud/asignar_analista', 'SolicitudesController@AsignarAnalista');
 
 
 //CUADROS
@@ -120,6 +120,7 @@ Route::post('/salir', 'LoginController@cerrarSesion');
 //Route::get('/dependencias','DependenciasController@VistaDependencias');
 Route::post('/dependencias/editar','DependenciasController@EditarDependencia');
 Route::post('/dependencias/trae_dependencia','DependenciasController@TraerDatosDependencia');
+Route::post('/dependencias/obtener_nombre','DependenciasController@RegresarNombreDependencia');
 
 Route::get('/usuarios','SolicitudesController@VistaUsuarios');
 Route::post('/usuarios/eliminar','LoginController@EliminarUsuario');
@@ -129,3 +130,7 @@ Route::post('/refrescar/listado_completo', 'SolicitudesController@RefrescarLista
 
 //mails
 Route::get('/enviamail','MailsController@pruebamail');
+
+
+/*Route::get('/lock','SolicitudesController@BloquearSql');
+Route::get('/unlock','SolicitudesController@DesbloquearSql');//*/

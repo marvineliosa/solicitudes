@@ -50,9 +50,9 @@
         </div>
 
         <!--logo start-->
-        <a href="index.html" class="logo">Solicitudes <span class="lite">BUAP</span></a>
+        <a href="#" class="logo">Solicitudes <span class="lite">BUAP</span></a>
         <!--logo end-->
-
+        
 
       </header>
       <!--header end-->
@@ -64,7 +64,7 @@
         <section class="wrapper">
           <div class="row">
             <div class="col-lg-12">
-              <h3 class="page-header">@yield('TipoUsuario')</h3>
+              <h3 class="page-header">{{\Session::get('responsable')[0]}}@yield('TipoUsuario')</h3>
               <ol class="breadcrumb">
                 @yield('barra_superior')
               </ol>
@@ -138,7 +138,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Detalle de Contratación</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -309,9 +309,9 @@
     console.log(gl_solicitudes[id_sol]);
     $("#ModalCont-id_sol").html(gl_solicitudes[id_sol]['ID_SOLICITUD']);
     $("#ModalCont-candidato").html(gl_solicitudes[id_sol]['NOMBRE_SOLICITUD']);
-    $("#ModalCont-dependencia").html(gl_solicitudes[id_sol]['DEPENDENCIA_SOLICITUD']);
+    $("#ModalCont-dependencia").html(gl_solicitudes[id_sol]['NOMBRE_DEPENDENCIA']);
     $("#ModalCont-fehca_solicitud").html(gl_solicitudes[id_sol]['FECHA_CREACION']);
-    $("#ModalCont-fecha_informacion_conpleta").html(gl_solicitudes[id_sol]['FECHA_TURNADO_SPR']);
+    $("#ModalCont-fecha_informacion_conpleta").html(gl_solicitudes[id_sol]['FECHAS_INFORMACION_COMPLETA']);
     $("#ModalCont-categoria_solicitada").html(gl_solicitudes[id_sol]['CATEGORIA_SOLICITUD']);
     $("#ModalCont-puesto_solicitado").html(gl_solicitudes[id_sol]['PUESTO_SOLICITUD']);
     $("#ModalCont-salario_solicitado").html('$ '+formatoMoneda(gl_solicitudes[id_sol]['SALARIO_SOLICITUD']));
