@@ -682,6 +682,9 @@
             $id_dependencia = \Session::get('id_dependencia')[0];
             $fuente_recursos = $request['fuente_recursos'];
 
+            //archivos
+            
+
             $datos_solicitud = array(
                 'candidato' => $candidato,
                 'id_dependencia' => $id_dependencia,

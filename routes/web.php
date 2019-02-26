@@ -131,6 +131,10 @@ Route::post('/refrescar/listado_completo', 'SolicitudesController@RefrescarLista
 //mails
 Route::get('/enviamail','MailsController@pruebamail');
 
+//archivos
+
+//descargas
+Route::get('/descargas/anexo_plantilla','ArchivosController@DescargarAnexoPlantilla');
 
 /*Route::get('/lock','SolicitudesController@BloquearSql');
 Route::get('/unlock','SolicitudesController@DesbloquearSql');//*/

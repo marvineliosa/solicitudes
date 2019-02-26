@@ -81,9 +81,14 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-3 control-label">Plantilla de Personal*</label>
+            <label class="col-sm-3 control-label">Plantilla de Personal*
+              <!--<br>
+              <a href="#">Descargar Formato</a>-->
+            </label>
             <div class="col-sm-9">
               <input type="file" class="form-control-file" id="archivo-plantilla">
+              <br>
+              <a href="/descargas/anexo_plantilla" target="_blank">DESCARGAR ANEXO DE PLANTILLA</a>
             </div>
           </div>
           <div class="form-group">
