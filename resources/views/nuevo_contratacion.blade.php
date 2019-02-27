@@ -74,10 +74,11 @@
             </div>
           </div>
           <hr>
+          <!-- ARCHIVOS -->
           <div class="form-group">
             <label class="col-sm-3 control-label">Organigrama*</label>
             <div class="col-sm-9">
-              <input type="file" class="form-control-file" id="archivo-organigrama">
+              <input type="file" class="form-control-file" accept="application/pdf" id="archivo-organigrama">
             </div>
           </div>
           <div class="form-group">
@@ -86,7 +87,7 @@
               <a href="#">Descargar Formato</a>-->
             </label>
             <div class="col-sm-9">
-              <input type="file" class="form-control-file" id="archivo-plantilla">
+              <input type="file" class="form-control-file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" id="archivo-plantilla">
               <br>
               <a href="/descargas/anexo_plantilla" target="_blank">DESCARGAR ANEXO DE PLANTILLA</a>
             </div>
@@ -94,27 +95,30 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">Descripción del Puesto a Cubrir*</label>
             <div class="col-sm-9">
-              <input type="file" class="form-control-file" id="archivo-descripcion">
+              <input type="file" class="form-control-file" accept="application/pdf" id="archivo-descripcion">
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-3 control-label">Curriculum Actualizado*</label>
             <div class="col-sm-9">
-              <input type="file" class="form-control-file" id="archivo-curriculum">
+              <input type="file" class="form-control-file" accept="application/pdf" id="archivo-curriculum">
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-3 control-label">Mapa de Ubicación Física</label>
             <div class="col-sm-9">
-              <input type="file" class="form-control-file" id="archivo-mapa_ubicacion">
+              <input type="file" class="form-control-file" accept="application/pdf" id="archivo-mapa_ubicacion">
             </div>
           </div>
 
           <hr>
           <div class="form-group">
             <label class="col-sm-2 control-label"></label>
-            <div class="col-sm-2">
+            <div class="col-sm-2" id="btn_registrar">
               <button type="button" class="btn btn-primary" onclick="AlmacenarSolicitud()">Registrar</button>
+            </div>
+            <div class="col-sm-2" hidden="true" id="btn_regresar">
+              <button type="button" class="btn btn-primary" onclick="Regresar()">Salir</button>
             </div>
           </div>
         </div>
@@ -127,8 +131,9 @@
 @section('script')
   <script type="text/javascript">
     autollenado();
-    function listado(){
-      location.href="/listado/completo";
+
+    function Regresar(){
+      location.href='/listado/dependencia';
     }
 
     id_dependencia = <?php echo json_encode(\Session::get('id_dependencia')[0]) ?>;
@@ -192,11 +197,19 @@
         dataForm.append('archivo_plantilla',archivo_plantilla.files[0]);
         dataForm.append('archivo_descripcion',archivo_descripcion.files[0]);
         dataForm.append('archivo_curriculum',archivo_curriculum.files[0]);
+
+        if(archivo_mapa_ubicacion.value !=''){
+          dataForm.append('archivo_mapa_ubicacion',archivo_mapa_ubicacion.files[0]);
+        }else{
+          dataForm.append('archivo_mapa_ubicacion',null);
+        }
         //lamando al metodo ajax
         metodoAjax(url,dataForm,function(success){
           //aquí se escribe todas las operaciones que se harían en el succes
           //la variable success es el json que recibe del servidor el método AJAX
           var mensaje = "El número de solicitud asignado es: "+success['solicitud'];
+          $("#btn_registrar").remove();
+          $("#btn_regresar").show();
           MensajeModal("¡Solicitud almacenada!",mensaje);
         });//*/
       }

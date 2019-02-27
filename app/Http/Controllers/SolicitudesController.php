@@ -393,6 +393,12 @@
             echo json_encode($data);//*/
         }
 
+        public function VistaCrearCambioAdscripcion(){
+            $dependencias = DependenciasController::ObtenerSoloDependencias();
+            return view('nuevo_cambio_adscripcion') ->with ("dependencias",$dependencias);
+
+        }
+
         public function VistaUsuarios(){
             $dependencias = DependenciasController::ObtenerSoloDependencias();
             $usuarios = DB::table('SOLICITUDES_LOGIN')
@@ -667,6 +673,26 @@
             return $sol;
         }
 
+        public function AlmacenaArchivoBD($id_solicitud,$path,$tipo){
+            date_default_timezone_set('America/Mexico_City');
+            $id_archivo = DB::table('SOLICITUDES_ARCHIVOS')->insertGetId(
+                [
+                    'ARCHIVOS_RUTA' => $path,
+                    'ARCHIVOS_NOMBRE' => str_replace('/', '-', $id_solicitud).'_'.$tipo ,
+                    'ARCHIVOS_MENSAJE' => '',
+                    'created_at' => date('Y-m-d H:i:s')
+                ]
+            );
+            $insert_rel = DB::table('REL_ARCHIVOS_SOLICITUD')->insert(
+                [
+                    'FK_ARCHIVO' => $id_archivo,
+                    'FK_SOLICITUD_ID' => $id_solicitud,
+                    'TIPO_ARCHIVO' => $tipo,
+                ]
+            );
+            return $insert_rel;
+        }
+
         public function AlmacenarContratacion(Request $request){
             date_default_timezone_set('America/Mexico_City');
             //dd($request);
@@ -682,9 +708,7 @@
             $id_dependencia = \Session::get('id_dependencia')[0];
             $fuente_recursos = $request['fuente_recursos'];
 
-            //archivos
-            
-
+            //se crea un array para enviar por parametro
             $datos_solicitud = array(
                 'candidato' => $candidato,
                 'id_dependencia' => $id_dependencia,
@@ -697,12 +721,29 @@
                 'tipo_solicitud' => 'CONTRATACIÓN',
                 'fuente_recursos' => $fuente_recursos
             );
-            //dd($datos_solicitud);
+            //almacenando solicitud
             $sol = SolicitudesController::AlmacenarSolicitud($datos_solicitud);
-            //dd($sol);
-            SolicitudesController::InsertarRelacionDependenciaSolicitud($id_dependencia,$sol);//*/
-            //dd('Listo: '.$sol);
-            //dd($descripciones);
+            //Insertando relacion con la dependencia
+            SolicitudesController::InsertarRelacionDependenciaSolicitud($id_dependencia,$sol);
+
+            //Insertar Archivos
+            $path = Storage::putFile('public/organigramas', $request->file('archivo_organigrama'));
+            SolicitudesController::AlmacenaArchivoBD($sol,$path,'ORGANIGRAMA');
+
+            $path = Storage::putFile('public/plantillas', $request->file('archivo_plantilla'));
+            SolicitudesController::AlmacenaArchivoBD($sol,$path,'PLANTILLA DE PERSONAL');
+
+            $path = Storage::putFile('public/descripciones_puestos', $request->file('archivo_descripcion'));
+            SolicitudesController::AlmacenaArchivoBD($sol,$path,'DESCRIPCION DE PUESTO');
+
+            $path = Storage::putFile('public/curriculum', $request->file('archivo_curriculum'));
+            SolicitudesController::AlmacenaArchivoBD($sol,$path,'CURRICULUM');
+
+            if ($request->hasFile('archivo_mapa_ubicacion')){
+                $path = Storage::putFile('public/mapas_ubicacion', $request->file('archivo_mapa_ubicacion'));
+                SolicitudesController::AlmacenaArchivoBD($sol,$path,'MAPA DE UBICACIÓN');
+            }
+
             $data = array(
                 "solicitud"=>$sol
             );
@@ -744,6 +785,7 @@
             );
             //dd($datos_solicitud);
             $sol = SolicitudesController::AlmacenarSolicitud($datos_solicitud);
+            SolicitudesController::InsertarRelacionDependenciaSolicitud($id_dependencia,$sol);
 
             DB::table('SOLICITUDES_SUSTITUCION')->insert(
                 [
@@ -756,6 +798,24 @@
                      'created_at' => date('Y-m-d H:i:s')
                 ]
             );
+
+            //Insertar Archivos
+            $path = Storage::putFile('public/organigramas', $request->file('archivo_organigrama'));
+            SolicitudesController::AlmacenaArchivoBD($sol,$path,'ORGANIGRAMA');
+
+            $path = Storage::putFile('public/plantillas', $request->file('archivo_plantilla'));
+            SolicitudesController::AlmacenaArchivoBD($sol,$path,'PLANTILLA DE PERSONAL');
+
+            $path = Storage::putFile('public/descripciones_puestos', $request->file('archivo_descripcion'));
+            SolicitudesController::AlmacenaArchivoBD($sol,$path,'DESCRIPCION DE PUESTO');
+
+            $path = Storage::putFile('public/curriculum', $request->file('archivo_curriculum'));
+            SolicitudesController::AlmacenaArchivoBD($sol,$path,'CURRICULUM');
+
+            if ($request->hasFile('archivo_mapa_ubicacion')){
+                $path = Storage::putFile('public/mapas_ubicacion', $request->file('archivo_mapa_ubicacion'));
+                SolicitudesController::AlmacenaArchivoBD($sol,$path,'MAPA DE UBICACIÓN');
+            }
             //dd('Listo: '.$sol);
             //dd($descripciones);
             $data = array(
@@ -799,6 +859,7 @@
             );
             //dd($datos_solicitud);
             $sol = SolicitudesController::AlmacenarSolicitud($datos_solicitud);
+            SolicitudesController::InsertarRelacionDependenciaSolicitud($id_dependencia,$sol);
 
             DB::table('SOLICITUDES_PROMOCION')->insert(
                 [
@@ -810,6 +871,24 @@
                      'created_at' => date('Y-m-d H:i:s')
                 ]
             );
+
+            //Insertar Archivos
+            $path = Storage::putFile('public/organigramas', $request->file('archivo_organigrama'));
+            SolicitudesController::AlmacenaArchivoBD($sol,$path,'ORGANIGRAMA');
+
+            $path = Storage::putFile('public/plantillas', $request->file('archivo_plantilla'));
+            SolicitudesController::AlmacenaArchivoBD($sol,$path,'PLANTILLA DE PERSONAL');
+
+            $path = Storage::putFile('public/descripciones_puestos', $request->file('archivo_descripcion'));
+            SolicitudesController::AlmacenaArchivoBD($sol,$path,'DESCRIPCION DE PUESTO');
+
+            $path = Storage::putFile('public/curriculum', $request->file('archivo_curriculum'));
+            SolicitudesController::AlmacenaArchivoBD($sol,$path,'CURRICULUM');
+
+            if ($request->hasFile('archivo_mapa_ubicacion')){
+                $path = Storage::putFile('public/mapas_ubicacion', $request->file('archivo_mapa_ubicacion'));
+                SolicitudesController::AlmacenaArchivoBD($sol,$path,'MAPA DE UBICACIÓN');
+            }
             //dd('Listo: '.$sol);
             //dd($descripciones);
             $data = array(
@@ -829,7 +908,7 @@
             $ActividadesActuales = $request['ActividadesActuales'];
             $SalarioActual = $request['SalarioActual'];
 
-            $DependenciaDestino = 120;//<<<<<<<AQUI HAY QUE OBTENERLO DE LA VISTA
+            $DependenciaDestino = $request['DependenciaDestino'];
             $CategoriaNueva = $request['CategoriaNueva'];
             $PuestoNuevo = $request['PuestoNuevo'];
             $ActividadesNuevas = $request['ActividadesNuevas'];
@@ -854,6 +933,7 @@
             );
             //dd($datos_solicitud);
             $sol = SolicitudesController::AlmacenarSolicitud($datos_solicitud);
+            SolicitudesController::InsertarRelacionDependenciaSolicitud($id_dependencia,$sol);
 
             DB::table('SOLICITUDES_CAMBIO_ADSCRIPCION')->insert(
                 [
@@ -866,6 +946,27 @@
                      'created_at' => date('Y-m-d H:i:s')
                 ]
             );
+
+            //Insertar Archivos
+            $path = Storage::putFile('public/organigramas', $request->file('archivo_organigrama'));
+            SolicitudesController::AlmacenaArchivoBD($sol,$path,'ORGANIGRAMA');
+
+            $path = Storage::putFile('public/plantillas', $request->file('archivo_plantilla'));
+            SolicitudesController::AlmacenaArchivoBD($sol,$path,'PLANTILLA DE PERSONAL');
+
+            $path = Storage::putFile('public/descripciones_puestos', $request->file('archivo_descripcion'));
+            SolicitudesController::AlmacenaArchivoBD($sol,$path,'DESCRIPCION DE PUESTO');
+
+            $path = Storage::putFile('public/descripciones_puestos', $request->file('archivo_descripcion_destino'));
+            SolicitudesController::AlmacenaArchivoBD($sol,$path,'DESCRIPCION DE PUESTO DESTINO');
+
+            $path = Storage::putFile('public/curriculum', $request->file('archivo_curriculum'));
+            SolicitudesController::AlmacenaArchivoBD($sol,$path,'CURRICULUM');
+
+            if ($request->hasFile('archivo_mapa_ubicacion')){
+                $path = Storage::putFile('public/mapas_ubicacion', $request->file('archivo_mapa_ubicacion'));
+                SolicitudesController::AlmacenaArchivoBD($sol,$path,'MAPA DE UBICACIÓN');
+            }
             //dd('Listo: '.$sol);
             //dd($descripciones);
             $data = array(

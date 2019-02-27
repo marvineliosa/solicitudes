@@ -112,25 +112,6 @@
     <link href="{{asset('js/datatables/dataTables.bootstrap4.css')}}" rel="stylesheet" />
 
     <!-- modales -->
-    <!-- Modal mensaje -->
-    <div class="modal fade" id="ModalMensaje" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h2 class="modal-title" id="TituloModalMensaje" align="center"></h2>
-            <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>-->
-          </div>
-          <div class="modal-body">
-            <h3  id="CuerpoModalMensaje" align="center"> </h3>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- MODAL MOSTRAR CONTRATACION -->
     <!-- Modal -->
@@ -199,12 +180,116 @@
       </div>
     </div>
 
+    <!-- Modal mensaje -->
+    <div class="modal fade" id="ModalArchivos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title" id="TituloModalArchivos" align="center">Archivos</h2>
+            <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>-->
+          </div>
+          <div class="modal-body">
+            <h3  id="CuerpoModalArchivos" align="center"> </h3>
+            <table class="table table-bordered">
+              <thead id="HeadTablaArchivos">
+                <tr>
+                  <th scope="col" style="width: 30%">Archivo</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="CuerpoTablaArchivos">
+                
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal mensaje -->
+    <div class="modal fade" id="ModalMensaje" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title" id="TituloModalMensaje" align="center"></h2>
+            <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>-->
+          </div>
+          <div class="modal-body">
+            <h3  id="CuerpoModalMensaje" align="center"> </h3>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </body>
 
 </html>
 
 
 <script type="text/javascript">
+
+  function guardarComentario(id_archivo){
+    var mensaje = $("#mensaje_archivo_"+id_archivo).val();
+    //console.log(mensaje);
+    var success;
+    var url = "/archivos/agregar_mensaje";
+    var dataForm = new FormData();
+    dataForm.append('id_archivo',id_archivo);
+    dataForm.append('mensaje',mensaje);
+    //lamando al metodo ajax
+    metodoAjax(url,dataForm,function(success){
+      //aquí se escribe todas las operaciones que se harían en el succes
+      //la variable success es el json que recibe del servidor el método AJAX
+      MensajeModal("¡EXITO!","El mensaje se ha guardado correctamente");
+    });//*/
+  }
+
+  function modalArchivos(id_solicitud){
+    
+    var success;
+    var url = "/archivos/obtener_archivos";
+    var dataForm = new FormData();
+    dataForm.append('id_solicitud',id_solicitud);
+    //lamando al metodo ajax
+    metodoAjax(url,dataForm,function(success){
+      //aquí se escribe todas las operaciones que se harían en el succes
+      //la variable success es el json que recibe del servidor el método AJAX
+      $("#TituloModalArchivos").text('Archivos de la solicitud '+id_solicitud);
+      $("#CuerpoTablaArchivos").html('');
+      for(i=0;i<success['archivos'].length;i++){
+        var textarea = '<textarea class="form-control" placeholder="Ingrese un comentario" id="mensaje_archivo_'+success['archivos'][i]['ID_ARCHIVO']+'">'+
+                          success['archivos'][i]['MENSAJE_ARCHIVO']+
+                        '</textarea><br>';
+        var button = '<button type="button" class="btn btn-primary pull-right" onclick="guardarComentario('+success['archivos'][i]['ID_ARCHIVO']+')">'+
+                        'Guardar Comentario'+
+                      '</button>';
+        $("#CuerpoTablaArchivos").append(
+          '<tr>'+
+            '<td scope="col" rowspan="2" style="vertical-align: middle;">'+success['archivos'][i]['TIPO_ARCHIVO']+'</td>'+
+            '<td>'+'Descargar: '+'<a href="/descargas/archivo/'+success['archivos'][i]['ID_ARCHIVO']+'"  target="_blank">'+success['archivos'][i]['TIPO_ARCHIVO']+'</a>'+'</td>'+
+          '</tr>'+
+          '<tr>'+
+            '<td>'+
+              textarea+
+              button+
+            '</td>'+
+          '</tr>'
+        );
+      }
+      $("#ModalArchivos").modal();
+    });
+  }
+
+
   crearDatatable();
   function crearDatatable(){
     $('#tabla_datos').DataTable({

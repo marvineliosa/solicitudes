@@ -11,7 +11,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Dependencia</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" placeholder="Dependencia" id="Dependencia">
+              <input type="text" class="form-control" placeholder="Dependencia" id="nombre_dependencia" value="" disabled>
             </div>
           </div>
           <div class="form-group">
@@ -83,6 +83,42 @@
               <textarea class="form-control ckeditor" name="editor1" rows="6" placeholder="Justificación de la solicitud de promoción" id="Promocion-Justificacion"></textarea>
             </div>
           </div>
+          <!-- ARCHIVOS -->
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Organigrama*</label>
+            <div class="col-sm-9">
+              <input type="file" class="form-control-file" accept="application/pdf" id="archivo-organigrama">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Plantilla de Personal*
+              <!--<br>
+              <a href="#">Descargar Formato</a>-->
+            </label>
+            <div class="col-sm-9">
+              <input type="file" class="form-control-file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" id="archivo-plantilla">
+              <br>
+              <a href="/descargas/anexo_plantilla" target="_blank">DESCARGAR ANEXO DE PLANTILLA</a>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Descripción del Puesto del Candidato*</label>
+            <div class="col-sm-9">
+              <input type="file" class="form-control-file" accept="application/pdf" id="archivo-descripcion">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Curriculum Actualizado del Candidato*</label>
+            <div class="col-sm-9">
+              <input type="file" class="form-control-file" accept="application/pdf" id="archivo-curriculum">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Mapa de Ubicación Física</label>
+            <div class="col-sm-9">
+              <input type="file" class="form-control-file" accept="application/pdf" id="archivo-mapa_ubicacion">
+            </div>
+          </div>
           <div class="form-group">
             <label class="col-sm-2 control-label"></label>
             <div class="col-sm-2">
@@ -98,6 +134,7 @@
 
 @section('script')
   <script type="text/javascript">
+    id_dependencia = <?php echo json_encode(\Session::get('id_dependencia')[0]) ?>;
     autollenado();
     function autollenado(){
       $("#Promocion-Candidato").val('Marvin Eliosa Abaroa');
@@ -146,6 +183,23 @@
 
       dataForm.append('nomina',nomina);
       dataForm.append('justificacion',justificacion);
+
+      //archivos
+      var archivo_organigrama = document.getElementById('archivo-organigrama');
+      var archivo_plantilla = document.getElementById('archivo-plantilla');
+      var archivo_descripcion = document.getElementById('archivo-descripcion');
+      var archivo_curriculum = document.getElementById('archivo-curriculum');
+      var archivo_mapa_ubicacion = document.getElementById('archivo-mapa_ubicacion');
+
+        dataForm.append('archivo_organigrama',archivo_organigrama.files[0]);
+        dataForm.append('archivo_plantilla',archivo_plantilla.files[0]);
+        dataForm.append('archivo_descripcion',archivo_descripcion.files[0]);
+        dataForm.append('archivo_curriculum',archivo_curriculum.files[0]);
+      if(archivo_mapa_ubicacion.value !=''){
+        dataForm.append('archivo_mapa_ubicacion',archivo_mapa_ubicacion.files[0]);
+      }else{
+        dataForm.append('archivo_mapa_ubicacion',null);
+      }
       //lamando al metodo ajax
       metodoAjax(url,dataForm,function(success){
         //aquí se escribe todas las operaciones que se harían en el succes
@@ -155,7 +209,21 @@
       });
     }
 
-
+    ObtenerNombreDependencia();
+    function ObtenerNombreDependencia(){
+      var success;
+      var url = "/dependencias/obtener_nombre";
+      var dataForm = new FormData();
+      dataForm.append('id_dependencia',id_dependencia);
+      //lamando al metodo ajax
+      metodoAjax(url,dataForm,function(success){
+        //aquí se escribe todas las operaciones que se harían en el succes
+        //la variable success es el json que recibe del servidor el método AJAX
+        //MensajeModal("TITULO DEL MODAL","MENSAJE DEL MODAL");
+        //console.log(success['dependencia']);
+        $("#nombre_dependencia").val(success['dependencia']['NOMBRE_DEPENDENCIA']);
+      });
+    }
 
     function ejemploAjax(){
       var success;

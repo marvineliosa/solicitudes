@@ -33,9 +33,12 @@
 		              	@if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN')==0)
 		                	<a class="btn btn-primary" href="#" onclick="AbreModalContratacion('{{$solicitud->ID_SOLICITUD}}')"><i class="icon_info_alt"></i></a>
 		              	@endif
+		              	@if(strcmp($solicitud->ESTATUS_SOLICITUD,'VALIDACIÓN DE INFORMACIÓN')==0)
+							<a class="btn btn-warning" href="#" onclick="modalArchivosDependencia('{{$solicitud->ID_SOLICITUD}}')"><i class="icon_link_alt"></i></a>	
+							</div>
+						@endif
 		                @if(strcmp($solicitud->ESTATUS_SOLICITUD,'FIRMAS')==0)
 		                	<a class="btn btn-danger" href="#" onclick="modalConfig('{{$solicitud->ID_SOLICITUD}}','{{$solicitud->ESTATUS_SOLICITUD}}')"><i class="icon_adjust-vert"></i></a>
-		               	
 		                @endif
 		              </div>
 		          </td>
@@ -239,7 +242,7 @@
 @section('script')
 	<script type="text/javascript">
 		var gl_solicitudes = <?php echo json_encode($solicitudes) ?>;
-    	console.log(gl_solicitudes);
+    	//console.log(gl_solicitudes);
     	function modalConfig(id_sol){
     		var estatus_sol = gl_solicitudes[id_sol]['ESTATUS_SOLICITUD'];
     		//if(estatus)
@@ -269,6 +272,43 @@
 				//console.log(gl_solicitudes);
 				MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente.");
 			});//*/
+    	}
+    	//$("#ModalArchivos").modal();
+
+    	function modalArchivosDependencia(id_solicitud){
+		    var success;
+		    var url = "/archivos/obtener_archivos";
+		    var dataForm = new FormData();
+		    dataForm.append('id_solicitud',id_solicitud);
+		    //lamando al metodo ajax
+		    metodoAjax(url,dataForm,function(success){
+		      //aquí se escribe todas las operaciones que se harían en el succes
+		      //la variable success es el json que recibe del servidor el método AJAX
+		      $("#TituloModalArchivos").text('Archivos de la solicitud '+id_solicitud);
+		      $("#CuerpoTablaArchivos").html('');
+
+		      for(i=0;i<success['archivos'].length;i++){
+
+		        var mensaje = ((success['archivos'][i]['MENSAJE_ARCHIVO']!='')?success['archivos'][i]['MENSAJE_ARCHIVO']:'Sin mensaje')+'<hr style="border: 1px solid #DDDDDD;">';
+
+		        var input = '<input type="file" class="form-control-file" accept="application/pdf" id="archivo-organigrama" style="width:400px" id="file_modal_'+success['archivos'][i]['ID_ARCHIVO']+'"><br>'+
+        					'<button type="button" class="btn btn-primary" center="center" onclick="'+success['archivos'][i]['ID_ARCHIVO']+'">Sustituir Archivo</button>';
+
+		        $("#CuerpoTablaArchivos").append(
+		          '<tr>'+
+		            '<td scope="col" rowspan="2" style="vertical-align: middle;">'+success['archivos'][i]['TIPO_ARCHIVO']+'</td>'+
+		            '<td>'+'Descargar: '+'<a href="/descargas/archivo/'+success['archivos'][i]['ID_ARCHIVO']+'"  target="_blank">'+success['archivos'][i]['TIPO_ARCHIVO']+'</a>'+'</td>'+
+		          '</tr>'+
+		          '<tr>'+
+		            '<td>'+
+		              mensaje+
+		              input+
+		            '</td>'+
+		          '</tr>'
+		        );
+		      }
+		      $("#ModalArchivos").modal();
+		    });
     	}
 
 

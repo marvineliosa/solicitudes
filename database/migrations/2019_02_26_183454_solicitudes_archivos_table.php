@@ -17,7 +17,7 @@ class SolicitudesArchivosTable extends Migration
             $table->increments('ARCHIVOS_ID');
             $table->text('ARCHIVOS_RUTA');
             $table->string('ARCHIVOS_NOMBRE');
-            $table->text('ARCHIVOS_MENSAJE');
+            $table->text('ARCHIVOS_MENSAJE')->nullable();
             $table->timestamps();
         });
     }

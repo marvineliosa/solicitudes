@@ -24,9 +24,10 @@ Route::get('/solicitudes/sustitucion', function () {
 Route::get('/solicitudes/promocion', function () {
     return view('nuevo_promocion');
 });
-Route::get('/solicitudes/cambio_adscripcion', function () {
+/*Route::get('/solicitudes/cambio_adscripcion', function () {
     return view('nuevo_cambio_adscripcion');
-});
+});//*/
+Route::get('/solicitudes/cambio_adscripcion', 'SolicitudesController@VistaCrearCambioAdscripcion');
 //listados
 /*Route::get('/listado/completo', function () {
     return view('listado_completo');
@@ -135,6 +136,11 @@ Route::get('/enviamail','MailsController@pruebamail');
 
 //descargas
 Route::get('/descargas/anexo_plantilla','ArchivosController@DescargarAnexoPlantilla');
+Route::get('/descargas/archivo/{id_archivo}','ArchivosController@DescargarArchivo');
+
+//archivos
+Route::post('/archivos/obtener_archivos','ArchivosController@RegresarArchivosSolicitud');
+Route::post('/archivos/agregar_mensaje','ArchivosController@AgregarMensaje');
 
 /*Route::get('/lock','SolicitudesController@BloquearSql');
 Route::get('/unlock','SolicitudesController@DesbloquearSql');//*/

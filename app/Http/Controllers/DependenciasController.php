@@ -100,13 +100,24 @@
         }
 
         public static function ObtenerNombreDependencia($id_dependencia){
-            $dependencia = DB::table('SOLICITUDES_DEPENDENCIA')
-                ->where('DEPENDENCIA_ID',$id_dependencia)
-                ->select(
-                            'DEPENDENCIA_CODIGO as CODIGO_DEPENDENCIA',
-                            'DEPENDENCIA_NOMBRE as NOMBRE_DEPENDENCIA'
-                        )
-                ->get();
+            $fl_sistema = SolicitudesController::DatosGenerales();
+            $dependencias = null;
+            if($fl_sistema['institucional']){
+                $dependencia = DB::table('SOLICITUDES_DEPENDENCIA')
+                    ->where('DEPENDENCIA_ID',$id_dependencia)
+                    ->select(
+                                'DEPENDENCIA_CODIGO as CODIGO_DEPENDENCIA',
+                                'DEPENDENCIA_NOMBRE as NOMBRE_DEPENDENCIA'
+                            )
+                    ->get();
+            }else{
+                $dependencia = DB::table('SOLICITUDES_DEPENDENCIA')
+                    ->where('DEPENDENCIA_ID',$id_dependencia)
+                    ->select(
+                                'DEPENDENCIA_CODIGO as NOMBRE_DEPENDENCIA'
+                            )
+                    ->get();
+            }
             return $dependencia;
 
         }
@@ -117,13 +128,25 @@
         }
 
         public static function ObtenerSoloDependencias(){
-            $dependencias = DB::table('SOLICITUDES_DEPENDENCIA')
-                ->select(
-                            'DEPENDENCIA_ID as ID_DEPENDENCIA',
-                            'DEPENDENCIA_CODIGO as CODIGO_DEPENDENCIA',
-                            'DEPENDENCIA_NOMBRE as NOMBRE_DEPENDENCIA'
-                        )
-                ->get();
+            $fl_sistema = SolicitudesController::DatosGenerales();
+            $dependencias = null;
+            if($fl_sistema['institucional']){
+                $dependencias = DB::table('SOLICITUDES_DEPENDENCIA')
+                    ->select(
+                                'DEPENDENCIA_ID as ID_DEPENDENCIA',
+                                'DEPENDENCIA_CODIGO as CODIGO_DEPENDENCIA',
+                                'DEPENDENCIA_NOMBRE as NOMBRE_DEPENDENCIA'
+                            )
+                    ->get();
+            }else{
+                $dependencias = DB::table('SOLICITUDES_DEPENDENCIA')
+                    ->select(
+                                'DEPENDENCIA_ID as ID_DEPENDENCIA',
+                                'DEPENDENCIA_CODIGO as NOMBRE_DEPENDENCIA'
+                            )
+                    ->orderBy('DEPENDENCIA_CODIGO', 'asc')
+                    ->get();
+            }
             return $dependencias;
         }
 
