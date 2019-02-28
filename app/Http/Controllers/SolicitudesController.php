@@ -16,6 +16,84 @@
          * @return Response
          */
 
+        public function ObtenerSustitucion(Request $request){
+            $solicitud = SolicitudesController::ObtenerSolicitudId($request['id_sol']);
+            $sustitucion = SolicitudesController::ObtenerDatosSustitucion($request['id_sol']);
+            //dd($solicitud);
+            $cabeceras = array(
+                'Número de Solicitud',
+                'Candidato',
+                'Dependencia',
+                'Fecha de Solicitud',
+                'Fecha de información completa', 
+                'Categoría Solicitada',
+                'Puesto Solicitado',
+                'Salario Solicitado',
+                'Actividades',
+                'Nombre de quien causa baja',
+                'Categoría de quien causa baja',
+                'Puesto de quien causa baja',
+                'Actividades de quien causa baja', 
+                'Salario de quien causa baja',
+            );
+            $datos_tabla = array(
+                'Número de Solicitud' => $solicitud->ID_SOLICITUD,
+                'Candidato' => $sustitucion->NUEVO_CANDIDATO,//
+                'Dependencia' => $solicitud->NOMBRE_DEPENDENCIA,
+                'Fecha de Solicitud' => $solicitud->FECHA_CREACION,
+                'Fecha de información completa' => $solicitud->FECHAS_INFORMACION_COMPLETA, 
+                'Categoría Solicitada' => $sustitucion->NUEVA_CATEGORIA,//
+                'Puesto Solicitado' => $sustitucion->PUESTO_NUEVO,//
+                'Salario Solicitado' => number_format($sustitucion->NUEVO_SALARIO,2),//
+                'Actividades' => $sustitucion->NUEVAS_ACTIVIDADES,
+                'Nombre de quien causa baja' => $solicitud->NOMBRE_SOLICITUD,
+                'Categoría de quien causa baja' => $solicitud->CATEGORIA_SOLICITUD,
+                'Puesto de quien causa baja' => $solicitud->PUESTO_SOLICITUD,
+                'Actividades de quien causa baja' => $solicitud->ACTIVIDADES_SOLICITUD, 
+                'Salario de quien causa baja' => $solicitud->SALARIO_FORMATO,
+            );//*/
+            //dd($sustitucion);
+            $data = array(
+                "cabeceras"=>$cabeceras,
+                "datos"=>$datos_tabla
+            );
+
+            echo json_encode($data);//*/
+        }
+
+        public function ObtenerContratacion(Request $request){
+            //$arreglos = SolicitudesController::ObtenerDatosSolicitudModal($request['id_sol']);
+            //dd($solicitud);
+            $solicitud = SolicitudesController::ObtenerSolicitudId($request['id_sol']);
+            $cabeceras = array(
+                'Número de Solicitud', 
+                'Candidato', 
+                'Dependencia',  
+                'Fecha de Solicitud',  
+                'Fecha de información completa',  
+                'Categoría Solicitada',  
+                'Puesto Solicitado',  
+                'Salario Solicitado',  
+                'Actividades',
+            );
+            $datos_tabla = array(
+                'Número de Solicitud' => $solicitud->ID_SOLICITUD, 
+                'Candidato' => $solicitud->NOMBRE_SOLICITUD, 
+                'Dependencia' => $solicitud->NOMBRE_DEPENDENCIA,  
+                'Fecha de Solicitud' => $solicitud->FECHA_CREACION,  
+                'Fecha de información completa' => $solicitud->FECHAS_INFORMACION_COMPLETA,  
+                'Categoría Solicitada' => $solicitud->CATEGORIA_SOLICITUD,  
+                'Puesto Solicitado' => $solicitud->PUESTO_SOLICITUD,  
+                'Actividades' => $solicitud->ACTIVIDADES_SOLICITUD
+            );//*/
+            $data = array(
+                "cabeceras"=>$cabeceras,
+                "datos"=>$datos_tabla
+            );
+
+            echo json_encode($data);//*/
+        }
+
         public function AsignarAnalista(Request $request){
             date_default_timezone_set('America/Mexico_City');
             $IdAnalista = $request['analista'];
@@ -83,8 +161,76 @@
             //return view('error.404') ->with ("solicitud",$solicitud);
         }
 
-        public function GuardaDatosCGA(Request $request){
-            //dd($request);
+        public function GuardaDatosCambioAdscripcion(Request $request){
+            //dd($request['actividades']);
+            $update = SolicitudesController::UpdateDatosCGA($request);
+
+            $update = DB::table('SOLICITUDES_CAMBIO_ADSCRIPCION')
+                ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                ->update([
+                            'CAMBIO_ADSCRIPCION_ACTIVIDADES_NUEVAS' => $request['actividades'],
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]);
+            $data = array(
+                "update"=>$update
+            );
+            echo json_encode($data);//*/
+
+        }
+
+        public function GuardaDatosPromocion(Request $request){
+            //dd($request['actividades']);
+            $update = SolicitudesController::UpdateDatosCGA($request);
+
+            $update = DB::table('SOLICITUDES_PROMOCION')
+                ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                ->update([
+                            'PROMOCION_ACTIVIDADES_NUEVAS' => $request['actividades'],
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]);
+            $data = array(
+                "update"=>$update
+            );
+            echo json_encode($data);//*/
+
+        }
+
+        public function GuardaDatosSustitucion(Request $request){
+            //dd($request['actividades']);
+            $update = SolicitudesController::UpdateDatosCGA($request);
+
+            $update = DB::table('SOLICITUDES_SUSTITUCION')
+                ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                ->update([
+                            'SUSTITUCION_ACTIVIDADES_NUEVAS' => $request['actividades'],
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]);
+            $data = array(
+                "update"=>$update
+            );
+            echo json_encode($data);//*/
+
+        }
+
+        public function GuardaDatosContratacion(Request $request){
+            //dd($request['actividades']);
+            $update = SolicitudesController::UpdateDatosCGA($request);
+            //dd($request['actividades']);
+            $update = DB::table('SOLICITUDES_SOLICITUD')
+                ->where('SOLICITUD_ID', $request['id_sol'])
+                ->update([
+                            'SOLICITUD_ACTIVIDADES' => $request['actividades'],
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]);
+
+            $data = array(
+                "update"=>$update
+            );
+            echo json_encode($data);//*/
+        }
+
+        public function UpdateDatosCGA($request){
+            //dd($request['actividades']);
             date_default_timezone_set('America/Mexico_City');
             $update = DB::table('SOLICITUDES_DATOS_CGA')
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])
@@ -98,14 +244,11 @@
                             'DATOS_CGA_CATEGORIA_SUPERIOR' => $request['categoria_superior'],
                             'DATOS_CGA_SALARIO_INFERIOR' => $request['salario_inferior'],
                             'DATOS_CGA_CATEGORIA_INFERIOR' => $request['categoria_inferior'],
+                            'DATOS_CGA_AHORRO' => $request['ahorro_solicitud'],
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
 
-            $data = array(
-                "update"=>$update
-            );
-
-            echo json_encode($data);//*/
+            return $update;
         }
 
         public function AbrirContratacion($id_solicitud){
@@ -115,6 +258,75 @@
             return view('edicion_contratacion') ->with ("solicitud",$solicitud);
             //dd($id_solicitud);
 
+        }
+
+        public function AbrirContratacionSustitucion($id_solicitud){
+            $id_solicitud = str_replace('_','/',$id_solicitud);
+            $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+            $datos_extra = SolicitudesController::ObtenerDatosSustitucion($id_solicitud);
+            //dd($datos_extra);
+            return view('edicion_contratacion_sustitucion') ->with (["solicitud"=>$solicitud,"datos_extra"=>$datos_extra]);
+        }
+
+        public function AbrirPromocion($id_solicitud){
+            $id_solicitud = str_replace('_','/',$id_solicitud);
+            $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+            $datos_extra = SolicitudesController::ObtenerDatosPromocion($id_solicitud);
+            //dd($datos_extra);
+            return view('edicion_promocion') ->with (["solicitud"=>$solicitud,"datos_extra"=>$datos_extra]);
+        }
+
+        public function AbrirCambioAdscripcion($id_solicitud){
+            //dd($id_solicitud);
+            $id_solicitud = str_replace('_','/',$id_solicitud);
+            $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+            $datos_extra = SolicitudesController::ObtenerDatosCambioAdscripcion($id_solicitud);
+            //dd($datos_extra);
+            return view('edicion_cambio_adscripcion') ->with (["solicitud"=>$solicitud,"datos_extra"=>$datos_extra]);//*/
+        }
+
+        public function ObtenerDatosCambioAdscripcion($id_solicitud){
+            $datos = DB::table('SOLICITUDES_CAMBIO_ADSCRIPCION')
+                ->where('FK_SOLICITUD_ID', $id_solicitud)
+                ->select(
+                            'CAMBIO_ADSCRIPCION_DEPENDENCIA_DESTINO as NUEVA_DEPENDENCIA',
+                            'CAMBIO_ADSCRIPCION_CATEGORIA_NUEVA as NUEVA_CATEGORIA',
+                            'CAMBIO_ADSCRIPCION_PUESTO_NUEVO as PUESTO_NUEVO',
+                            'CAMBIO_ADSCRIPCION_ACTIVIDADES_NUEVAS as NUEVAS_ACTIVIDADES',
+                            'CAMBIO_ADSCRIPCION_SALARIO_NUEVO as NUEVO_SALARIO'
+                        )
+                ->get();
+            $dependencia = DependenciasController::ObtenerNombreDependencia($datos[0]->NUEVA_DEPENDENCIA);
+            $datos[0]->NUEVA_DEPENDENCIA = $dependencia[0]->NOMBRE_DEPENDENCIA;
+            //dd($datos[0]->NUEVA_DEPENDENCIA);
+            return $datos[0];
+         }
+
+        public function ObtenerDatosPromocion($id_solicitud){
+            $datos = DB::table('SOLICITUDES_PROMOCION')
+                ->where('FK_SOLICITUD_ID', $id_solicitud)
+                ->select(
+                            'PROMOCION_CATEGORIA_SOLICITADA as NUEVA_CATEGORIA',
+                            'PROMOCION_PUESTO_NUEVO as PUESTO_NUEVO',
+                            'PROMOCION_ACTIVIDADES_NUEVAS as NUEVAS_ACTIVIDADES',
+                            'PROMOCION_SALARIO_NUEVO as NUEVO_SALARIO'
+                        )
+                ->get();
+            return $datos[0];
+         }
+
+        public function ObtenerDatosSustitucion($id_solicitud){
+            $datos = DB::table('SOLICITUDES_SUSTITUCION')
+                ->where('FK_SOLICITUD_ID', $id_solicitud)
+                ->select(
+                            'SUSTITUCION_CANDIDATO_NUEVO as NUEVO_CANDIDATO',
+                            'SUSTITUCION_CATEGORIA_NUEVA as NUEVA_CATEGORIA',
+                            'SUSTITUCION_PUESTO_NUEVO as PUESTO_NUEVO',
+                            'SUSTITUCION_ACTIVIDADES_NUEVAS as NUEVAS_ACTIVIDADES',
+                            'SUSTITUCION_SALARIO_NUEVO as NUEVO_SALARIO'
+                        )
+                ->get();
+            return $datos[0];
         }
 
         public function ObtenerSolicitudId($id_solicitud){
@@ -175,6 +387,7 @@
             $solicitud[0]->CATEGORIA_INFERIOR = $datos_cga[0]->DATOS_CGA_CATEGORIA_INFERIOR;
             $solicitud[0]->SALARIO_INFERIOR = $datos_cga[0]->DATOS_CGA_SALARIO_INFERIOR;
             $solicitud[0]->ESTATUS_SOLICITUD = $datos_cga[0]->DATOS_CGA_ESTATUS;
+            $solicitud[0]->AHORRO_SOLICITUD = $datos_cga[0]->DATOS_CGA_AHORRO;
             $solicitud[0]->HOY = date('d/m/Y');
 
             $rel_analista = DB::table('REL_SOLICITUDES_ANALISTA')

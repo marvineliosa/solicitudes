@@ -76,7 +76,14 @@ Route::get('/salir', function () {
 /*Route::get('/solicitud/contratacion/{id_solicitud}', function () {
     return view('edicion_contratacion');
 });//*/
+//vistas de edicion de informacion para llenar cuadros
 Route::get('/solicitud/contratacion/{id_solicitud}', 'SolicitudesController@AbrirContratacion');
+
+Route::get('/solicitud/contratacion_sustitucion/{id_solicitud}', 'SolicitudesController@AbrirContratacionSustitucion');
+
+Route::get('/solicitud/promocion/{id_solicitud}', 'SolicitudesController@AbrirPromocion');
+
+Route::get('/solicitud/cambio_adscripcion/{id_solicitud}', 'SolicitudesController@AbrirCambioAdscripcion');
 
 //solicitudes en revision de informaicon
 Route::post('/revision_informacion/actualiza_estado', 'SolicitudesController@MarcarInformacionCorrecta');
@@ -87,16 +94,19 @@ Route::post('/nuevas/turnar_cga', 'SolicitudesController@TurnarSolicitudCGA');
 
 //contrataciones
 Route::post('/contratacion/insertar', 'SolicitudesController@AlmacenarContratacion');
-Route::post('/contratacion/guardar_datos_cga', 'SolicitudesController@GuardaDatosCGA');
+Route::post('/contratacion/guardar_datos_contratacion', 'SolicitudesController@GuardaDatosContratacion');
 
 //Contrataciones por sustitucion
 Route::post('/contratacion_sustitucion/insertar', 'SolicitudesController@AlmacenarContratacionSustitucion');
+Route::post('/contratacion_sustitucion/guardar_datos_sustitucion', 'SolicitudesController@GuardaDatosSustitucion');
 
 //promociones
 Route::post('/promocion/insertar', 'SolicitudesController@AlmacenarPromocion');
+Route::post('/promocion/guardar_datos_promocion', 'SolicitudesController@GuardaDatosPromocion');
 
 //cambio de adscripcion
 Route::post('/cambio_adscripcion/insertar', 'SolicitudesController@AlmacenarCambioAdscripcion');
+Route::post('/cambio_adscripcion/guardar_datos_cambio_adscripcion', 'SolicitudesController@GuardaDatosCambioAdscripcion');
 
 //solicitudes
 Route::post('/solicitud/cambiar_estado', 'SolicitudesController@CambiarEstadoCGA');
@@ -106,6 +116,10 @@ Route::post('/solicitud/validacion_cga', 'SolicitudesController@ValidarSolicitud
 Route::post('/solicitud/validacion_rectoria', 'SolicitudesController@ValidacionRectoria');
 Route::post('/solicitudes/cambiar_prioridad', 'SolicitudesController@CambiarPrioridad');
 Route::post('/solicitud/asignar_analista', 'SolicitudesController@AsignarAnalista');
+
+//obtencion de datos para los modales de informacion
+Route::post('/solicitud/obtener_datos_contratacion', 'SolicitudesController@ObtenerContratacion');
+Route::post('/solicitud/obtener_datos_sustitucion', 'SolicitudesController@ObtenerSustitucion');
 
 
 //CUADROS

@@ -4,7 +4,7 @@
 	<div class="col-lg-12">
 		<section class="panel">
 		  <header class="panel-heading">
-		    Llenado de información de Contrataciones
+		    Llenado de información de Contrataciones por Sustitución
 		  </header>
 		  <div class="panel-body">
         <form class="form-horizontal " method="get">
@@ -27,27 +27,58 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Candidato</label>
+            <label class="col-sm-2 control-label">Nombre de quien causa baja</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" placeholder="Nombre del Candidato" value="{{$solicitud->NOMBRE_SOLICITUD}}" disabled>
+              <input type="text" class="form-control" placeholder="Nombre de la persona que causa baja" id="Sustitucion-PersonaAnterior" value="{{$solicitud->NOMBRE_SOLICITUD}}" disabled>
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Categoría</label>
+            <label class="col-sm-2 control-label">Categoría de quien causa baja</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" placeholder="Categoría solicitada" value="{{$solicitud->CATEGORIA_SOLICITUD}}" disabled>
+              <input type="text" class="form-control" placeholder="Categoría de la persona que causa baja" id="Sustitucion-CategoriaAnterior" value="{{$solicitud->CATEGORIA_SOLICITUD}}" disabled>
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Puesto</label>
+            <label class="col-sm-2 control-label">Puesto de quien causa baja</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" placeholder="Puesto del Candidato" value="{{$solicitud->PUESTO_SOLICITUD}}" disabled>
+              <input type="text" class="form-control" placeholder="Puesto de la persona anterior" id="Sustitucion-PuestoAnterior" value="{{$solicitud->PUESTO_SOLICITUD}}" disabled>
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Actividades</label>
+            <label class="col-sm-2 control-label">Actividades de quien causa baja</label>
             <div class="col-sm-6">
-              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeñará" id="Actividades_candidato">{{$solicitud->ACTIVIDADES_SOLICITUD}}</textarea>
+              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeñába la persona anterior" id="Sustitucion-ActividadesAnteriores" disabled>{{$solicitud->ACTIVIDADES_SOLICITUD}}</textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Salario neto de quien causa baja</label>
+            <div class="col-sm-6">
+              <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" step=".01" id="Sustitucion-SalarioAnterior" value="{{$solicitud->SALARIO_SOLICITUD}}" disabled>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Candidato Solicitado</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" placeholder="Nombre del Candidato" value="{{$datos_extra->NUEVO_CANDIDATO}}" disabled>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Categoría Solicitada</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" placeholder="Categoría solicitada" value="{{$datos_extra->NUEVA_CATEGORIA}}" disabled>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Puesto Solicitado</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" placeholder="Puesto del Candidato" value="{{$datos_extra->PUESTO_NUEVO}}" disabled>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Actividades Solicitadas</label>
+            <div class="col-sm-6">
+              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeñará" id="Actividades_candidato">{{$datos_extra->NUEVAS_ACTIVIDADES}}</textarea>
             </div>
           </div>
           <div class="form-group">
@@ -59,7 +90,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Salario Neto Solicitado</label>
             <div class="col-sm-6">
-              <input type="number" class="form-control" placeholder="Puesto del Candidato" value="{{$solicitud->SALARIO_SOLICITUD}}" step=".01" disabled>
+              <input type="number" class="form-control" placeholder="Puesto del Candidato" value="{{$datos_extra->NUEVO_SALARIO}}" step=".01" disabled>
             </div>
           </div>
           <div class="form-group">
@@ -194,7 +225,7 @@
       var ahorro_solicitud = $("#ahorro_solicitud").val();
       //console.log(ahorro_solicitud);
       var success;
-      var url = "/contratacion/guardar_datos_contratacion";
+      var url = "/contratacion_sustitucion/guardar_datos_sustitucion";
       var dataForm = new FormData();
       dataForm.append('id_sol',id_solicitud);
       dataForm.append('actividades',actividades);

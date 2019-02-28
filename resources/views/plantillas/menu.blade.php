@@ -126,47 +126,16 @@
           </div>
           <div class="modal-body">
             <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Concepto</th>
-              <th scope="col">Descripción</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">Número de Solicitud</th>
-              <td id="ModalCont-id_sol"></td>
-            </tr>
-            <tr>
-              <th scope="row">Candidato</th>
-              <td id="ModalCont-candidato"></td>
-            </tr>
-            <tr>
-              <th scope="row">Dependencia</th>
-              <td id="ModalCont-dependencia"></td>
-            </tr>
-            <tr>
-              <th scope="row">Fecha de Solicitud</th>
-              <td id="ModalCont-fehca_solicitud"></td>
-            </tr>
-            <tr>
-              <th scope="row">Fecha de información completa</th>
-              <td id="ModalCont-fecha_informacion_conpleta"></td>
-            </tr>
-            <tr>
-              <th scope="row">Categoría Solicitada</th>
-              <td id="ModalCont-categoria_solicitada"></td>
-            </tr>
-            <tr>
-              <th scope="row">Puesto Solicitado</th>
-              <td id="ModalCont-puesto_solicitado"></td>
-            </tr>
-            <tr>
-              <th scope="row">Salario Solicitado</th>
-              <td id="ModalCont-salario_solicitado"></td>
-            </tr>
-          </tbody>
-        </table>
+              <thead>
+                <tr>
+                  <th scope="col">Concepto</th>
+                  <th scope="col">Descripción</th>
+                </tr>
+              </thead>
+              <tbody id="CuerpoTablaInformacion">
+
+              </tbody>
+            </table>
         <div align="center">
           <a href="" target="_blank" id="verCuadro">Ver cuadro</a>
           
@@ -289,6 +258,29 @@
     });
   }
 
+  function modalArchivosGeneral(id_solicitud){
+    var success;
+    var url = "/archivos/obtener_archivos";
+    var dataForm = new FormData();
+    dataForm.append('id_solicitud',id_solicitud);
+    //lamando al metodo ajax
+    metodoAjax(url,dataForm,function(success){
+      //aquí se escribe todas las operaciones que se harían en el succes
+      //la variable success es el json que recibe del servidor el método AJAX
+      $("#TituloModalArchivos").text('Archivos de la solicitud '+id_solicitud);
+      $("#CuerpoTablaArchivos").html('');
+      for(i=0;i<success['archivos'].length;i++){
+        $("#CuerpoTablaArchivos").append(
+          '<tr>'+
+            '<td scope="col" style="vertical-align: middle; width: 5%;">'+success['archivos'][i]['TIPO_ARCHIVO']+'</td>'+
+            '<td>'+'Descargar: '+'<a href="/descargas/archivo/'+success['archivos'][i]['ID_ARCHIVO']+'"  target="_blank">'+success['archivos'][i]['TIPO_ARCHIVO']+'</a>'+'</td>'+
+          '</tr>'
+        );
+      }
+      $("#ModalArchivos").modal();
+    });
+  }
+
 
   crearDatatable();
   function crearDatatable(){
@@ -362,6 +354,7 @@
           success: function (response) {
               $('.collapse').collapse('show');
               $('#div_tabla_datos').html(response);
+              //console.log(response);
               crearDatatable();
           },                               
       }); 
@@ -390,18 +383,64 @@
     return numero;
   }
 
+  function AbreModalInformacion(id_solicitud,tipo_solicitud){
+    //console.log(tipo_solicitud);
+    if(tipo_solicitud=='CONTRATACIÓN'){
+      AbreModalContratacion(id_solicitud);
+    }
+    if(tipo_solicitud=='CONTRATACIÓN POR SUSTITUCIÓN'){
+      AbreModalSustitucion(id_solicitud);
+    }
+  }
+
   function AbreModalContratacion(id_sol){
-    console.log(gl_solicitudes[id_sol]);
-    $("#ModalCont-id_sol").html(gl_solicitudes[id_sol]['ID_SOLICITUD']);
-    $("#ModalCont-candidato").html(gl_solicitudes[id_sol]['NOMBRE_SOLICITUD']);
-    $("#ModalCont-dependencia").html(gl_solicitudes[id_sol]['NOMBRE_DEPENDENCIA']);
-    $("#ModalCont-fehca_solicitud").html(gl_solicitudes[id_sol]['FECHA_CREACION']);
-    $("#ModalCont-fecha_informacion_conpleta").html(gl_solicitudes[id_sol]['FECHAS_INFORMACION_COMPLETA']);
-    $("#ModalCont-categoria_solicitada").html(gl_solicitudes[id_sol]['CATEGORIA_SOLICITUD']);
-    $("#ModalCont-puesto_solicitado").html(gl_solicitudes[id_sol]['PUESTO_SOLICITUD']);
-    $("#ModalCont-salario_solicitado").html('$ '+formatoMoneda(gl_solicitudes[id_sol]['SALARIO_SOLICITUD']));
-    $("#verCuadro").attr('href','/cuadro/contratacion/'+gl_solicitudes[id_sol]['ID_ESCAPE']);
-    $("#ModalDetalleContratacion").modal();
+    var success;
+    var url = "/solicitud/obtener_datos_contratacion";
+    var dataForm = new FormData();
+    dataForm.append('id_sol',id_sol);
+    //lamando al metodo ajax
+
+    metodoAjax(url,dataForm,function(success){
+      //aquí se escribe todas las operaciones que se harían en el succes
+      //la variable success es el json que recibe del servidor el método AJAX
+      console.log(success);
+      $("#CuerpoTablaInformacion").html('');
+      for(var i = 0; i < success['cabeceras'].length; i++){
+        console.log(success['cabeceras'][i]);
+        $("#CuerpoTablaInformacion").append(
+          '<tr>'+
+            '<th scope="row">' + success['cabeceras'][i] + '</th>'+
+            '<td id="ModalCont-id_sol">'+ success['datos'][success['cabeceras'][i]] +'</td>'+
+          '</tr>'
+        );
+      }
+      $("#ModalDetalleContratacion").modal();
+    });//*/
+  }
+
+  function AbreModalSustitucion(id_sol){
+    var success;
+    var url = "/solicitud/obtener_datos_sustitucion";
+    var dataForm = new FormData();
+    dataForm.append('id_sol',id_sol);
+    //lamando al metodo ajax
+
+    metodoAjax(url,dataForm,function(success){
+      //aquí se escribe todas las operaciones que se harían en el succes
+      //la variable success es el json que recibe del servidor el método AJAX
+      console.log(success);
+      $("#CuerpoTablaInformacion").html('');
+      for(var i = 0; i < success['cabeceras'].length; i++){
+        console.log(success['cabeceras'][i]);
+        $("#CuerpoTablaInformacion").append(
+          '<tr>'+
+            '<th scope="row">' + success['cabeceras'][i] + '</th>'+
+            '<td id="ModalCont-id_sol">'+ success['datos'][success['cabeceras'][i]] +'</td>'+
+          '</tr>'
+        );
+      }
+      $("#ModalDetalleContratacion").modal();
+    });//*/
   }
 
 </script>

@@ -34,8 +34,7 @@
 		                	<a class="btn btn-primary" href="#" onclick="AbreModalContratacion('{{$solicitud->ID_SOLICITUD}}')"><i class="icon_info_alt"></i></a>
 		              	@endif
 		              	@if(strcmp($solicitud->ESTATUS_SOLICITUD,'VALIDACIÓN DE INFORMACIÓN')==0)
-							<a class="btn btn-warning" href="#" onclick="modalArchivosDependencia('{{$solicitud->ID_SOLICITUD}}')"><i class="icon_link_alt"></i></a>	
-							</div>
+							<a class="btn btn-warning" href="#" onclick="modalArchivosDependencia('{{$solicitud->ID_SOLICITUD}}')"><i class="icon_link_alt"></i></a>
 						@endif
 		                @if(strcmp($solicitud->ESTATUS_SOLICITUD,'FIRMAS')==0)
 		                	<a class="btn btn-danger" href="#" onclick="modalConfig('{{$solicitud->ID_SOLICITUD}}','{{$solicitud->ESTATUS_SOLICITUD}}')"><i class="icon_adjust-vert"></i></a>

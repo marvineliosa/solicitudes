@@ -21,9 +21,15 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Dependencia</label>
+            <label class="col-sm-2 control-label">Dependencia actual</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Dependencia" value="{{$solicitud->NOMBRE_DEPENDENCIA}}" disabled>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Dependencia destino</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" placeholder="Dependencia" value="{{$datos_extra->NUEVA_DEPENDENCIA}}" disabled>
             </div>
           </div>
           <div class="form-group">
@@ -33,35 +39,55 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Categoría</label>
+            <label class="col-sm-2 control-label">Categoría actual</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Categoría solicitada" value="{{$solicitud->CATEGORIA_SOLICITUD}}" disabled>
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Puesto</label>
+            <label class="col-sm-2 control-label">Puesto actual</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Puesto del Candidato" value="{{$solicitud->PUESTO_SOLICITUD}}" disabled>
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Actividades</label>
+            <label class="col-sm-2 control-label">Actividades actuales</label>
             <div class="col-sm-6">
-              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeñará" id="Actividades_candidato">{{$solicitud->ACTIVIDADES_SOLICITUD}}</textarea>
+              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeñará" id="" disabled>{{$solicitud->ACTIVIDADES_SOLICITUD}}</textarea>
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Nómina</label>
-            <div class="col-sm-6">
-              <input type="text" class="form-control" placeholder="Nómina" value="{{$solicitud->NOMINA_SOLICITUD}}" disabled>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label">Salario Neto Solicitado</label>
+            <label class="col-sm-2 control-label">Salario actual</label>
             <div class="col-sm-6">
               <input type="number" class="form-control" placeholder="Puesto del Candidato" value="{{$solicitud->SALARIO_SOLICITUD}}" step=".01" disabled>
             </div>
           </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Categoría solicitada</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" placeholder="Categoría solicitada" id="CambioAdscripcion-CategoriaNueva" value="{{$datos_extra->NUEVA_CATEGORIA}}" disabled>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Puesto solicitado</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" placeholder="Puesto del Candidato" id="CambioAdscripcion-PuestoNuevo" value="{{$datos_extra->PUESTO_NUEVO}}" disabled>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Nuevas actividades</label>
+            <div class="col-sm-6">
+              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeña" id="Actividades_candidato">{{$datos_extra->NUEVAS_ACTIVIDADES}}</textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Salario neto solicitado</label>
+            <div class="col-sm-6">
+              <input type="number" class="form-control" placeholder="Puesto del Candidato" id="CambioAdscripcion-SalarioSolicitado" step=".01" value="{{$datos_extra->NUEVO_SALARIO}}" disabled>
+            </div>
+          </div>
+          
           <div class="form-group">
             <label class="col-sm-2 control-label">Justificación</label>
             <div class="col-sm-6">
@@ -194,7 +220,7 @@
       var ahorro_solicitud = $("#ahorro_solicitud").val();
       //console.log(ahorro_solicitud);
       var success;
-      var url = "/contratacion/guardar_datos_contratacion";
+      var url = "/cambio_adscripcion/guardar_datos_cambio_adscripcion";
       var dataForm = new FormData();
       dataForm.append('id_sol',id_solicitud);
       dataForm.append('actividades',actividades);

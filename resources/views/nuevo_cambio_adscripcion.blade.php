@@ -56,6 +56,7 @@
               <input type="number" class="form-control" placeholder="Puesto del Candidato" value="0.00" id="CambioAdscripcion-SalarioActual" step=".01">
             </div>
           </div>
+
           <div class="form-group">
             <label class="col-sm-2 control-label">Nueva categoría</label>
             <div class="col-sm-6">
@@ -80,6 +81,7 @@
               <input type="number" class="form-control" placeholder="Puesto del Candidato" value="0.00" id="CambioAdscripcion-SalarioSolicitado" step=".01">
             </div>
           </div>
+          
           <div class="form-group">
             <label class="col-sm-2 control-label">Justificación</label>
             <div class="col-sm-6">
