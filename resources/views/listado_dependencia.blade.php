@@ -286,13 +286,18 @@
 		      //la variable success es el json que recibe del servidor el método AJAX
 		      $("#TituloModalArchivos").text('Archivos de la solicitud '+id_solicitud);
 		      $("#CuerpoTablaArchivos").html('');
-
+		      //console.log(success)
 		      for(i=0;i<success['archivos'].length;i++){
 
-		        var mensaje = ((success['archivos'][i]['MENSAJE_ARCHIVO']!='')?success['archivos'][i]['MENSAJE_ARCHIVO']:'Sin mensaje')+'<hr style="border: 1px solid #DDDDDD;">';
+		        var mensaje = ((success['archivos'][i]['MENSAJE_ARCHIVO']!='')?'<span style="color: black;">Mensaje: '+success['archivos'][i]['MENSAJE_ARCHIVO']+'</span>':'Sin mensaje')+'<hr style="border: 1px solid #DDDDDD;">';
 
-		        var input = '<input type="file" class="form-control-file" accept="application/pdf" id="archivo-organigrama" style="width:400px" id="file_modal_'+success['archivos'][i]['ID_ARCHIVO']+'"><br>'+
-        					'<button type="button" class="btn btn-primary" center="center" onclick="'+success['archivos'][i]['ID_ARCHIVO']+'">Sustituir Archivo</button>';
+		        if(success['archivos'][i]['TIPO_ARCHIVO']=='PLANTILLA DE PERSONAL'){
+		        	var input = '<input type="file" class="form-control-file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" style="width:400px" id="file_modal_'+success['archivos'][i]['ID_ARCHIVO']+'"><br>'+
+	        					'<button type="button" class="btn btn-primary" center="center" onclick="ActualizarArchivo('+success['archivos'][i]['ID_ARCHIVO']+')">Actualizar Archivo</button>';
+		        }else{
+			        var input = '<input type="file" class="form-control-file" accept="application/pdf" style="width:400px" id="file_modal_'+success['archivos'][i]['ID_ARCHIVO']+'"><br>'+
+	        					'<button type="button" class="btn btn-primary" center="center" onclick="ActualizarArchivo('+success['archivos'][i]['ID_ARCHIVO']+')">Actualizar Archivo</button>';
+	        	}
 
 		        $("#CuerpoTablaArchivos").append(
 		          '<tr>'+
@@ -309,6 +314,29 @@
 		      }
 		      $("#ModalArchivos").modal();
 		    });
+    	}
+
+    	function ActualizarArchivo(id_archivo){
+    		//console.log(id_archivo);
+    		var archivo = document.getElementById('file_modal_'+id_archivo);
+    		//console.log(archivo.files[0]);
+    		//console.log(estatus);
+    		if(archivo.value!=''){
+	    		var success;
+				var url = "/archivos/actualizar_archivo";
+				var dataForm = new FormData();
+				dataForm.append('id_archivo',id_archivo);
+				dataForm.append('archivo',archivo.files[0]);
+				//lamando al metodo ajax
+
+				metodoAjax(url,dataForm,function(success){
+					//aquí se escribe todas las operaciones que se harían en el succes
+					//la variable success es el json que recibe del servidor el método AJAX
+					MensajeModal("¡EXITO!","El archivo se ha actualizado correctamente");
+				});//*/
+    		}else{
+    			MensajeModal("¡ATENCIÓN!","No se ha seleccionado ningún archivo");
+    		}
     	}
 
 

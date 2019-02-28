@@ -141,6 +141,7 @@ Route::get('/descargas/archivo/{id_archivo}','ArchivosController@DescargarArchiv
 //archivos
 Route::post('/archivos/obtener_archivos','ArchivosController@RegresarArchivosSolicitud');
 Route::post('/archivos/agregar_mensaje','ArchivosController@AgregarMensaje');
+Route::post('/archivos/actualizar_archivo','ArchivosController@ActualizaArchivo');
 
 /*Route::get('/lock','SolicitudesController@BloquearSql');
 Route::get('/unlock','SolicitudesController@DesbloquearSql');//*/
