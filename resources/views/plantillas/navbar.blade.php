@@ -14,7 +14,18 @@
               <ul class="sub">
                 @if(strcmp(\Session::get('categoria')[0],'ADMINISTRADOR_CGA')==0 || strcmp(\Session::get('categoria')[0],'ANALISTA_CGA')==0)
                   <li><a class="" href="/listado/revision_informacion">Revision de Información</a></li>
-                  <li><a class="" href="/listado/completo">Listado Completo</a></li>
+                  @if(strcmp(\Session::get('categoria')[0],'ADMINISTRADOR_CGA')==0)
+                    <li><a class="" href="/listado/completo">Listado Completo</a></li>
+                  @else
+                    <li><a class="" href="/listado/analista">Listado Completo</a></li>
+                  @endif
+                  <li><a class="" href="/listado/estatus/recibido">Recibido</a></li>
+                  <li><a class="" href="/listado/estatus/levantamiento">Levantamiento</a></li>
+                  <li><a class="" href="/listado/estatus/analisis">Análisis</a></li>
+                  <li><a class="" href="/listado/estatus/revision">Revisión</a></li>
+                  <li><a class="" href="/listado/estatus/firmas">Firmas</a></li>
+                  <li><a class="" href="/listado/estatus/turnado_spr">Turnado a SPR</a></li>
+                  <li><a class="" href="/listado/estatus/completado_rector">Completado por Rector</a></li>
                   <!--<li><a class="" href="/listado/contratacion">Contratación</a></li>
                   <li><a class="" href="/listado/contratacion_sustitucion">Sustitución</a></li>
                   <li><a class="" href="/listado/promocion">Promoción</a></li>

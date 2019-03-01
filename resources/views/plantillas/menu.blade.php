@@ -114,12 +114,12 @@
     <!-- modales -->
 
     <!-- MODAL MOSTRAR CONTRATACION -->
-    <!-- Modal -->
+    <!-- Modal Detalle de solicitudes-->
     <div class="modal fade" id="ModalDetalleContratacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Detalle de Contratación</h5>
+            <h5 class="modal-title" id="TituloModalInformacion" align="center"></h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -149,7 +149,7 @@
       </div>
     </div>
 
-    <!-- Modal mensaje -->
+    <!-- Modal Archivos -->
     <div class="modal fade" id="ModalArchivos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -386,16 +386,30 @@
   function AbreModalInformacion(id_solicitud,tipo_solicitud){
     //console.log(tipo_solicitud);
     if(tipo_solicitud=='CONTRATACIÓN'){
-      AbreModalContratacion(id_solicitud);
+      var titulo = 'Detalle de Contratación';
+      var url = "/solicitud/obtener_datos_contratacion";
+      AbreModalInfo(id_solicitud,url,titulo);
     }
     if(tipo_solicitud=='CONTRATACIÓN POR SUSTITUCIÓN'){
-      AbreModalSustitucion(id_solicitud);
+      var titulo = 'Detalle de Contratación por Sustitución';
+      var url = "/solicitud/obtener_datos_sustitucion";
+      AbreModalInfo(id_solicitud,url,titulo);
+    }
+    if(tipo_solicitud=='PROMOCION'){
+      var titulo = 'Detalle de Promoción';
+      var url = "/solicitud/obtener_datos_promocion";
+      AbreModalInfo(id_solicitud,url,titulo);
+    }
+    if(tipo_solicitud=='CAMBIO DE ADSCRIPCIÓN'){
+      var titulo = 'Detalle de Cambio de Adscripción';
+      var url = "/solicitud/obtener_datos_cambio_adscripcion";
+      AbreModalInfo(id_solicitud,url,titulo);
     }
   }
 
-  function AbreModalContratacion(id_sol){
+  function AbreModalInfo(id_sol,url,titulo){
     var success;
-    var url = "/solicitud/obtener_datos_contratacion";
+    //var url = "/solicitud/obtener_datos_contratacion";
     var dataForm = new FormData();
     dataForm.append('id_sol',id_sol);
     //lamando al metodo ajax
@@ -414,34 +428,11 @@
           '</tr>'
         );
       }
+      $("#TituloModalInformacion").text(titulo);
       $("#ModalDetalleContratacion").modal();
     });//*/
   }
 
-  function AbreModalSustitucion(id_sol){
-    var success;
-    var url = "/solicitud/obtener_datos_sustitucion";
-    var dataForm = new FormData();
-    dataForm.append('id_sol',id_sol);
-    //lamando al metodo ajax
-
-    metodoAjax(url,dataForm,function(success){
-      //aquí se escribe todas las operaciones que se harían en el succes
-      //la variable success es el json que recibe del servidor el método AJAX
-      console.log(success);
-      $("#CuerpoTablaInformacion").html('');
-      for(var i = 0; i < success['cabeceras'].length; i++){
-        console.log(success['cabeceras'][i]);
-        $("#CuerpoTablaInformacion").append(
-          '<tr>'+
-            '<th scope="row">' + success['cabeceras'][i] + '</th>'+
-            '<td id="ModalCont-id_sol">'+ success['datos'][success['cabeceras'][i]] +'</td>'+
-          '</tr>'
-        );
-      }
-      $("#ModalDetalleContratacion").modal();
-    });//*/
-  }
 
 </script>
 @yield('script');

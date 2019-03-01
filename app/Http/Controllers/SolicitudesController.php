@@ -16,41 +16,138 @@
          * @return Response
          */
 
+        public function ObtenerCambioAdscripcion(Request $request){
+            $solicitud = SolicitudesController::ObtenerSolicitudId($request['id_sol']);
+            $cambio_adscripcion = SolicitudesController::ObtenerDatosCambioAdscripcion($request['id_sol']);
+            //dd($cambio_adscripcion);
+            $cabeceras = array(
+                'Número de solicitud', 
+                'Candidato', 
+                'Dependencia',  
+                'Fecha de solicitud',  
+                'Fecha de información completa',
+
+                'Dependencia destino',
+                'Categoría solicitada',  
+                'Puesto solicitado',  
+                'Salario solicitado',  
+                'Actividades solicitadas',
+
+                'Categoría actual',  
+                'Puesto actual',  
+                'Salario actual',  
+                'Actividades actuales',
+                'Justificación'
+            );
+            $datos_tabla = array(
+                'Número de solicitud' => $solicitud->ID_SOLICITUD,
+                'Candidato' => $solicitud->NOMBRE_SOLICITUD,
+                'Dependencia' => $solicitud->NOMBRE_DEPENDENCIA,
+                'Fecha de solicitud' => $solicitud->FECHA_CREACION,
+                'Fecha de información completa' => $solicitud->FECHAS_INFORMACION_COMPLETA,
+
+                'Dependencia destino' => $cambio_adscripcion->NUEVA_DEPENDENCIA,
+                'Categoría solicitada' => $cambio_adscripcion->NUEVA_CATEGORIA,  
+                'Puesto solicitado' => $cambio_adscripcion->PUESTO_NUEVO,  
+                'Salario solicitado' => number_format($cambio_adscripcion->NUEVO_SALARIO,2),  
+                'Actividades solicitadas' => $cambio_adscripcion->NUEVAS_ACTIVIDADES,
+
+                'Categoría actual' => $solicitud->CATEGORIA_SOLICITUD,  
+                'Puesto actual' => $solicitud->PUESTO_SOLICITUD,  
+                'Salario actual' => $solicitud->SALARIO_FORMATO,  
+                'Actividades actuales' => $solicitud->ACTIVIDADES_SOLICITUD,
+                'Justificación' => $solicitud->JUSTIFICACION_SOLICITUD
+            );//*/
+            $data = array(
+                "cabeceras"=>$cabeceras,
+                "datos"=>$datos_tabla
+            );
+
+            echo json_encode($data);//*/
+        }
+
+        public function ObtenerPromocion(Request $request){
+            $solicitud = SolicitudesController::ObtenerSolicitudId($request['id_sol']);
+            $promocion = SolicitudesController::ObtenerDatosPromocion($request['id_sol']);
+            //dd($promocion);
+            $cabeceras = array(
+                'Número de solicitud',
+                'Candidato',
+                'Dependencia',
+                'Fecha de solicitud',
+                'Fecha de información completa',
+                'Categoría solicitada',
+                'Puesto solicitado',
+                'Nuevas actividades',
+                'Salario solicitado',
+                'Categoría actual',
+                'Puesto actual',
+                'Salario actual',
+                'Actividades actuales',
+                'Justificación'
+            );
+            $datos_tabla = array(
+                'Número de solicitud' => $solicitud->ID_SOLICITUD,
+                'Candidato' => $solicitud->NOMBRE_SOLICITUD,
+                'Dependencia' => $solicitud->NOMBRE_DEPENDENCIA,
+                'Fecha de solicitud' => $solicitud->FECHA_CREACION,
+                'Fecha de información completa' => $solicitud->FECHAS_INFORMACION_COMPLETA,
+                'Categoría solicitada' => $promocion->NUEVA_CATEGORIA,
+                'Puesto solicitado' => $promocion->PUESTO_NUEVO,
+                'Nuevas actividades' => $promocion->NUEVAS_ACTIVIDADES,
+                'Salario solicitado' => number_format($promocion->NUEVO_SALARIO,2),
+                'Categoría actual' => $solicitud->CATEGORIA_SOLICITUD,
+                'Puesto actual' => $solicitud->PUESTO_SOLICITUD,
+                'Salario actual' => $solicitud->SALARIO_FORMATO,
+                'Actividades actuales' => $solicitud->ACTIVIDADES_SOLICITUD,
+                'Justificación' => $solicitud->JUSTIFICACION_SOLICITUD
+            );//*/
+            //dd($sustitucion);
+            $data = array(
+                "cabeceras"=>$cabeceras,
+                "datos"=>$datos_tabla
+            );
+
+            echo json_encode($data);//*/
+        }
+
         public function ObtenerSustitucion(Request $request){
             $solicitud = SolicitudesController::ObtenerSolicitudId($request['id_sol']);
             $sustitucion = SolicitudesController::ObtenerDatosSustitucion($request['id_sol']);
             //dd($solicitud);
             $cabeceras = array(
-                'Número de Solicitud',
+                'Número de solicitud',
                 'Candidato',
                 'Dependencia',
-                'Fecha de Solicitud',
+                'Fecha de solicitud',
                 'Fecha de información completa', 
-                'Categoría Solicitada',
-                'Puesto Solicitado',
-                'Salario Solicitado',
+                'Categoría solicitada',
+                'Puesto solicitado',
+                'Salario solicitado',
                 'Actividades',
                 'Nombre de quien causa baja',
                 'Categoría de quien causa baja',
                 'Puesto de quien causa baja',
                 'Actividades de quien causa baja', 
                 'Salario de quien causa baja',
+                'Justificación'
             );
             $datos_tabla = array(
-                'Número de Solicitud' => $solicitud->ID_SOLICITUD,
+                'Número de solicitud' => $solicitud->ID_SOLICITUD,
                 'Candidato' => $sustitucion->NUEVO_CANDIDATO,//
                 'Dependencia' => $solicitud->NOMBRE_DEPENDENCIA,
-                'Fecha de Solicitud' => $solicitud->FECHA_CREACION,
+                'Fecha de solicitud' => $solicitud->FECHA_CREACION,
                 'Fecha de información completa' => $solicitud->FECHAS_INFORMACION_COMPLETA, 
-                'Categoría Solicitada' => $sustitucion->NUEVA_CATEGORIA,//
-                'Puesto Solicitado' => $sustitucion->PUESTO_NUEVO,//
-                'Salario Solicitado' => number_format($sustitucion->NUEVO_SALARIO,2),//
+                'Categoría solicitada' => $sustitucion->NUEVA_CATEGORIA,//
+                'Puesto solicitado' => $sustitucion->PUESTO_NUEVO,//
+                'Salario solicitado' => number_format($sustitucion->NUEVO_SALARIO,2),//
                 'Actividades' => $sustitucion->NUEVAS_ACTIVIDADES,
                 'Nombre de quien causa baja' => $solicitud->NOMBRE_SOLICITUD,
                 'Categoría de quien causa baja' => $solicitud->CATEGORIA_SOLICITUD,
                 'Puesto de quien causa baja' => $solicitud->PUESTO_SOLICITUD,
                 'Actividades de quien causa baja' => $solicitud->ACTIVIDADES_SOLICITUD, 
                 'Salario de quien causa baja' => $solicitud->SALARIO_FORMATO,
+                'Justificación' => $solicitud->JUSTIFICACION_SOLICITUD
             );//*/
             //dd($sustitucion);
             $data = array(
@@ -66,25 +163,28 @@
             //dd($solicitud);
             $solicitud = SolicitudesController::ObtenerSolicitudId($request['id_sol']);
             $cabeceras = array(
-                'Número de Solicitud', 
+                'Número de solicitud', 
                 'Candidato', 
                 'Dependencia',  
-                'Fecha de Solicitud',  
+                'Fecha de solicitud',  
                 'Fecha de información completa',  
-                'Categoría Solicitada',  
-                'Puesto Solicitado',  
-                'Salario Solicitado',  
+                'Categoría solicitada',  
+                'Puesto solicitado',  
+                'Salario solicitado',  
                 'Actividades',
+                'Justificación'
             );
             $datos_tabla = array(
-                'Número de Solicitud' => $solicitud->ID_SOLICITUD, 
+                'Número de solicitud' => $solicitud->ID_SOLICITUD, 
                 'Candidato' => $solicitud->NOMBRE_SOLICITUD, 
                 'Dependencia' => $solicitud->NOMBRE_DEPENDENCIA,  
-                'Fecha de Solicitud' => $solicitud->FECHA_CREACION,  
+                'Fecha de solicitud' => $solicitud->FECHA_CREACION,  
                 'Fecha de información completa' => $solicitud->FECHAS_INFORMACION_COMPLETA,  
-                'Categoría Solicitada' => $solicitud->CATEGORIA_SOLICITUD,  
-                'Puesto Solicitado' => $solicitud->PUESTO_SOLICITUD,  
-                'Actividades' => $solicitud->ACTIVIDADES_SOLICITUD
+                'Categoría solicitada' => $solicitud->CATEGORIA_SOLICITUD,  
+                'Puesto solicitado' => $solicitud->PUESTO_SOLICITUD,
+                'Salario solicitado' => $solicitud->SALARIO_FORMATO, 
+                'Actividades' => $solicitud->ACTIVIDADES_SOLICITUD,
+                'Justificación' => $solicitud->JUSTIFICACION_SOLICITUD
             );//*/
             $data = array(
                 "cabeceras"=>$cabeceras,
@@ -367,11 +467,10 @@
             $fechas = DB::table('SOLICITUDES_FECHAS')
                 ->where('FK_SOLICITUD_ID',$id_solicitud)
                 ->get();
-            //dd($fechas);
-            $solicitud[0]->FECHA_CREACION = $fechas[0]->FECHAS_CREACION_SOLICITUD;
-            $solicitud[0]->FECHAS_INFORMACION_COMPLETA = $fechas[0]->FECHAS_INFORMACION_COMPLETA;
-            $solicitud[0]->FECHA_TURNADO_CGA = $fechas[0]->FECHAS_TURNADO_CGA;
-            $solicitud[0]->FECHA_ENVIO = $fechas[0]->FECHAS_TURNADO_SPR;
+            $solicitud[0]->FECHA_CREACION = date("d/m/Y", strtotime($fechas[0]->FECHAS_CREACION_SOLICITUD));
+            $solicitud[0]->FECHAS_INFORMACION_COMPLETA = date("d/m/Y", strtotime($fechas[0]->FECHAS_INFORMACION_COMPLETA));
+            $solicitud[0]->FECHA_TURNADO_CGA = date("d/m/Y", strtotime($fechas[0]->FECHAS_TURNADO_CGA));
+            $solicitud[0]->FECHA_ENVIO = date("d/m/Y", strtotime($fechas[0]->FECHAS_TURNADO_SPR));
 
             $datos_cga = DB::table('SOLICITUDES_DATOS_CGA')
                 ->where('FK_SOLICITUD_ID',$id_solicitud)
@@ -717,6 +816,106 @@
             /*return view('listado_usuarios') ->with (["usuarios"=>$usuarios,"dependencias"=>$dependencias]);//*/
         }
 
+        public function VistaGeneralEstatus($estatus){
+
+            if(strcasecmp($estatus, 'turnado_spr')==0){
+                $estatus = 'turnado a spr';
+            }else if(strcasecmp($estatus, 'completado_rector')==0){
+                $estatus = 'completado por rector';
+            }
+            //dd($estatus);
+            $permitidos = ['recibido','levantamiento','analisis','revision','firmas','turnado a spr','completado por rector'];
+            if(in_array($estatus, $permitidos)){
+                $analista = \Session::get('usuario')[0];
+                $categoria = \Session::get('categoria')[0];
+                if(strcmp($categoria, 'ADMINISTRADOR_CGA')==0){
+                    $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus(strtoupper($estatus));
+                }else{
+                    $solicitudes = SolicitudesController::ObtenerSolicitudesEstatusAnalista($analista,strtoupper($estatus));
+
+                }
+                $modulo = ucfirst($estatus);
+                //$solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('RECIBIDO');
+                $analistas = LoginController::ObtenerListadoAnalistas();
+                //return view('listado_general_estatus') ->with ("solicitudes",$solicitudes);
+                return view('listado_general_estatus') ->with (["solicitudes"=>$solicitudes,"analistas"=>$analistas,"modulo"=>$modulo]);
+            }else{
+                return view('errors.404');
+            }
+        }
+
+        /*public function VistaRecibidos(){
+            $analista = \Session::get('usuario')[0];
+            $categoria = \Session::get('categoria')[0];
+            if(strcmp($categoria, 'ADMINISTRADOR_CGA')==0){
+                $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('RECIBIDO');
+            }else{
+                $solicitudes = SolicitudesController::ObtenerSolicitudesAnalista($analista);
+
+            }
+            $modulo = 'Recibido';
+            //$solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('RECIBIDO');
+            $analistas = LoginController::ObtenerListadoAnalistas();
+            //return view('listado_general_estatus') ->with ("solicitudes",$solicitudes);
+            return view('listado_general_estatus') ->with (["solicitudes"=>$solicitudes,"analistas"=>$analistas,"modulo"=>$modulo]);
+        }
+
+        public function VistaLevantamiento(){
+            $analista = \Session::get('usuario')[0];
+            $categoria = \Session::get('categoria')[0];
+            if(strcmp($categoria, 'ADMINISTRADOR_CGA')==0){
+                $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('LEVANTAMIENTO');
+            }else{
+                $solicitudes = SolicitudesController::ObtenerSolicitudesAnalista($analista);
+
+            }
+            $modulo = 'Levantamiento';
+            $analistas = LoginController::ObtenerListadoAnalistas();
+            return view('listado_general_estatus') ->with (["solicitudes"=>$solicitudes,"analistas"=>$analistas,"modulo"=>$modulo]);
+        }
+
+        public function VistaAnalisis(){
+            $analista = \Session::get('usuario')[0];
+            $categoria = \Session::get('categoria')[0];
+            if(strcmp($categoria, 'ADMINISTRADOR_CGA')==0){
+                $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('ANALISIS');
+            }else{
+                $solicitudes = SolicitudesController::ObtenerSolicitudesAnalista($analista);
+
+            }
+            $modulo = 'Analisis';
+            $analistas = LoginController::ObtenerListadoAnalistas();
+            return view('listado_general_estatus') ->with (["solicitudes"=>$solicitudes,"analistas"=>$analistas,"modulo"=>$modulo]);
+        }
+
+        public function VistaRevision(){
+            $analista = \Session::get('usuario')[0];
+            $categoria = \Session::get('categoria')[0];
+            if(strcmp($categoria, 'ADMINISTRADOR_CGA')==0){
+                $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('REVISION');
+            }else{
+                $solicitudes = SolicitudesController::ObtenerSolicitudesAnalista($analista);
+
+            }
+            $modulo = 'Revision';
+            $analistas = LoginController::ObtenerListadoAnalistas();
+            return view('listado_general_estatus') ->with (["solicitudes"=>$solicitudes,"analistas"=>$analistas,"modulo"=>$modulo]);
+        }
+
+        public function VistaRevision(){
+            $analista = \Session::get('usuario')[0];
+            $categoria = \Session::get('categoria')[0];
+            if(strcmp($categoria, 'ADMINISTRADOR_CGA')==0){
+                $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('REVISION');
+            }else{
+                $solicitudes = SolicitudesController::ObtenerSolicitudesAnalista($analista);
+
+            }
+            $modulo = 'Revision';
+            $analistas = LoginController::ObtenerListadoAnalistas();
+            return view('listado_general_estatus') ->with (["solicitudes"=>$solicitudes,"analistas"=>$analistas,"modulo"=>$modulo]);
+        }//*/
+
         public function VistaListadoAnalista(){
             $analista = \Session::get('usuario')[0];
             $solicitudes = SolicitudesController::ObtenerSolicitudesAnalista($analista);
@@ -736,6 +935,34 @@
             //dd($solicitud);
                 $solicitudes[$solicitud->FK_SOLICITUD_ID] = SolicitudesController::ObtenerSolicitudId($solicitud->FK_SOLICITUD_ID);
             }
+            //dd($solicitudes);
+            return $solicitudes;
+
+        }
+
+        public function ObtenerSolicitudesEstatusAnalista($analista,$estatus){
+            //dd($estatus);
+            $solicitudes = array();
+            $id_sol = array();
+            //dd($id_dependencia);
+            $rel_solicitudes = DB::table('REL_SOLICITUDES_ANALISTA')
+                ->where('FK_USUARIO',$analista)
+                ->get();
+            //dd($rel_solicitudes);
+            //$solicitudes_estatus = SolicitudesController::ObtenerSolicitudesEstatus($estatus);
+            foreach ($rel_solicitudes as $solicitud) {
+            //dd($solicitud);
+                $tmp_solicitud = DB::table('SOLICITUDES_DATOS_CGA')
+                    ->select('FK_SOLICITUD_ID')
+                    ->where('DATOS_CGA_ESTATUS', $estatus)
+                    ->where('FK_SOLICITUD_ID', $solicitud->FK_SOLICITUD_ID)
+                    ->get();
+                //$id_sol[]=$tmp_solicitud[0]->FK_SOLICITUD_ID;
+                if(count($tmp_solicitud)>0){
+                    $solicitudes[$solicitud->FK_SOLICITUD_ID] = SolicitudesController::ObtenerSolicitudId($tmp_solicitud[0]->FK_SOLICITUD_ID);
+                }
+            }
+            //dd($solicitudes);
             //dd($solicitudes);
             return $solicitudes;
 
@@ -1211,6 +1438,20 @@
             }
             //dd($solicitudes);
             return View('tablas.listado_completo') ->with ("solicitudes",$solicitudes);
+            //return View::make("tablas.listado_completo", ["solicitudes" => $solicitudes]);
+        }
+
+        public function RefrescarListadoGeneralEstatus($modulo){
+            $analista = \Session::get('usuario')[0];
+            $categoria = \Session::get('categoria')[0];
+            if(strcmp($categoria, 'ADMINISTRADOR_CGA')==0){
+                $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus(strtoupper($modulo));
+            }else{
+                $solicitudes = SolicitudesController::ObtenerSolicitudesAnalista($analista);
+
+            }
+            //dd($solicitudes);
+            return View('tablas.listado_general_estatus') ->with ("solicitudes",$solicitudes);
             //return View::make("tablas.listado_completo", ["solicitudes" => $solicitudes]);
         }
 

@@ -9,7 +9,7 @@
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="img/favicon.png">
 
-    <title>404 | Creative - Bootstrap 3 Responsive Admin Template</title>
+    <title>404 | Página No Encontrada</title>
 
     <!-- Bootstrap CSS -->
     <link href="{{asset('css/bootstrap.min.css')}}" rel="stylesheet">
@@ -41,7 +41,7 @@
     <div class="page-404">
       <p class="text-404">404</p>
       <h2>¡Error!</h2>
-      <p>La página no existe. <br><a href="index.html">Regresar</a></p>
+      <p>La página no existe. <br><a href="/">Regresar</a></p>
     </div>
       <br>
       <br>

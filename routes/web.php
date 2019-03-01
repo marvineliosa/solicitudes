@@ -57,6 +57,15 @@ Route::get('/listado/analista', 'SolicitudesController@VistaListadoAnalista');
 
 //listado CGA
 Route::get('/listado/coordinacion', 'SolicitudesController@VistaListadoCGA');
+//Listado por estatus
+/*Route::get('/listado/recibido', 'SolicitudesController@VistaRecibidos');
+Route::get('/listado/levantamiento', 'SolicitudesController@VistaLevantamiento');
+Route::get('/listado/analisis', 'SolicitudesController@VistaAnalisis');
+Route::get('/listado/revision', 'SolicitudesController@VistaRevision');
+Route::get('/listado/firmas', 'SolicitudesController@VistaAnalisis');
+Route::get('/listado/turnado_spr', 'SolicitudesController@VistaAnalisis');
+Route::get('/listado/completado_rector', 'SolicitudesController@VistaAnalisis');//*/
+Route::get('/listado/estatus/{estatus}', 'SolicitudesController@VistaGeneralEstatus');
 
 Route::get('/listado/contratacion_sustitucion', function () {
     return view('listado_contratacion_sustitucion');
@@ -120,6 +129,8 @@ Route::post('/solicitud/asignar_analista', 'SolicitudesController@AsignarAnalist
 //obtencion de datos para los modales de informacion
 Route::post('/solicitud/obtener_datos_contratacion', 'SolicitudesController@ObtenerContratacion');
 Route::post('/solicitud/obtener_datos_sustitucion', 'SolicitudesController@ObtenerSustitucion');
+Route::post('/solicitud/obtener_datos_promocion', 'SolicitudesController@ObtenerPromocion');
+Route::post('/solicitud/obtener_datos_cambio_adscripcion', 'SolicitudesController@ObtenerCambioAdscripcion');
 
 
 //CUADROS
@@ -142,6 +153,7 @@ Route::post('/usuarios/eliminar','LoginController@EliminarUsuario');
 
 //refrescando tablas
 Route::post('/refrescar/listado_completo', 'SolicitudesController@RefrescarListadoCompleto');
+Route::post('/refrescar/listado_general/{modulo}', 'SolicitudesController@RefrescarListadoGeneralEstatus');
 
 //mails
 Route::get('/enviamail','MailsController@pruebamail');
