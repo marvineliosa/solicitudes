@@ -1442,12 +1442,13 @@
         }
 
         public function RefrescarListadoGeneralEstatus($modulo){
+            //dd($modulo);
             $analista = \Session::get('usuario')[0];
             $categoria = \Session::get('categoria')[0];
             if(strcmp($categoria, 'ADMINISTRADOR_CGA')==0){
                 $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus(strtoupper($modulo));
             }else{
-                $solicitudes = SolicitudesController::ObtenerSolicitudesAnalista($analista);
+                $solicitudes = SolicitudesController::ObtenerSolicitudesEstatusAnalista($analista,$modulo);
 
             }
             //dd($solicitudes);

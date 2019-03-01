@@ -151,7 +151,8 @@
 			dataForm.append('id_sol',id_sol);
 			dataForm.append('estatus',estatus);
 			//lamando al metodo ajax
-
+			console.log(gl_modulo);
+			console.log('/refrescar/listado_general/'+gl_modulo);
 			metodoAjax(url,dataForm,function(success){
 				//aquí se escribe todas las operaciones que se harían en el succes
 				//la variable success es el json que recibe del servidor el método AJAX
