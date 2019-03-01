@@ -22,19 +22,21 @@
         <td>
             <div class="btn-group">
               	<a class="btn btn-primary" href="javascript:void(0)" onclick="AbreModalInformacion('{{$solicitud->ID_SOLICITUD}}','{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}')"><i class="icon_info_alt"></i></a>
-              <a class="btn btn-warning" href="javascript:void(0)" onclick="modalArchivosGeneral('{{$solicitud->ID_SOLICITUD}}')"><i class="icon_link_alt"></i></a>  
-            	@if(strcmp($solicitud->ESTATUS_SOLICITUD,'ANÁLISIS')==0 || strcmp($solicitud->ESTATUS_SOLICITUD,'REVISIÓN')==0)
-                @if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN')==0)
-            		  <a class="btn btn-success" href="/solicitud/contratacion/{{$solicitud->ID_ESCAPE}}"><i class="icon_pencil"></i></a>
-                @elseif(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN POR SUSTITUCIÓN')==0)
-                  <a class="btn btn-success" href="/solicitud/contratacion_sustitucion/{{$solicitud->ID_ESCAPE}}"><i class="icon_pencil"></i></a>
-                @elseif(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'PROMOCION')==0)
-                  <a class="btn btn-success" href="/solicitud/promocion/{{$solicitud->ID_ESCAPE}}"><i class="icon_pencil"></i></a>
-                @elseif(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CAMBIO DE ADSCRIPCIÓN')==0)
-                  <a class="btn btn-success" href="/solicitud/cambio_adscripcion/{{$solicitud->ID_ESCAPE}}"><i class="icon_pencil"></i></a>
-                @endif
-            	@endif
-            	<a class="btn btn-danger" href="javascript:void(0)" onclick="modalConfig('{{$solicitud->ID_SOLICITUD}}','{{$solicitud->ESTATUS_SOLICITUD}}')"><i class="icon_adjust-vert"></i></a>
+              <a class="btn btn-warning" href="javascript:void(0)" onclick="modalArchivosGeneral('{{$solicitud->ID_SOLICITUD}}')"><i class="icon_link_alt"></i></a>
+              @if(strcmp(\Session::get('categoria')[0],'COORDINADOR_CGA')!=0)
+              	@if(strcmp($solicitud->ESTATUS_SOLICITUD,'ANÁLISIS')==0 || strcmp($solicitud->ESTATUS_SOLICITUD,'REVISIÓN')==0)
+                  @if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN')==0)
+              		  <a class="btn btn-success" href="/solicitud/contratacion/{{$solicitud->ID_ESCAPE}}"><i class="icon_pencil"></i></a>
+                  @elseif(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN POR SUSTITUCIÓN')==0)
+                    <a class="btn btn-success" href="/solicitud/contratacion_sustitucion/{{$solicitud->ID_ESCAPE}}"><i class="icon_pencil"></i></a>
+                  @elseif(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'PROMOCION')==0)
+                    <a class="btn btn-success" href="/solicitud/promocion/{{$solicitud->ID_ESCAPE}}"><i class="icon_pencil"></i></a>
+                  @elseif(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CAMBIO DE ADSCRIPCIÓN')==0)
+                    <a class="btn btn-success" href="/solicitud/cambio_adscripcion/{{$solicitud->ID_ESCAPE}}"><i class="icon_pencil"></i></a>
+                  @endif
+              	@endif
+              	<a class="btn btn-danger" href="javascript:void(0)" onclick="modalConfig('{{$solicitud->ID_SOLICITUD}}','{{$solicitud->ESTATUS_SOLICITUD}}')"><i class="icon_adjust-vert"></i></a>
+              @endif
             </div>
         </td>
       </tr>

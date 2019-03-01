@@ -551,6 +551,9 @@
                     $update = DB::table('SOLICITUDES_DATOS_CGA')
                         ->where('FK_SOLICITUD_ID', $request['id_sol'])
                         ->update(['DATOS_CGA_ESTATUS' => 'TURNADO A SPR']);
+                    $update = DB::table('SOLICITUDES_FECHAS')
+                        ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                        ->update(['FECHAS_TURNADO_SPR' => date('Y-m-d H:i:s')]);
                 }else{
                     //dd('FALTAN FIRMAS');
                 }
@@ -595,6 +598,9 @@
                     $update = DB::table('SOLICITUDES_DATOS_CGA')
                         ->where('FK_SOLICITUD_ID', $request['id_sol'])
                         ->update(['DATOS_CGA_ESTATUS' => 'TURNADO A SPR']);
+                    $update = DB::table('SOLICITUDES_FECHAS')
+                        ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                        ->update(['FECHAS_TURNADO_SPR' => date('Y-m-d H:i:s')]);
                 }else{
                     //dd('FALTAN FIRMAS');
                 }
@@ -645,6 +651,9 @@
                     $update = DB::table('SOLICITUDES_DATOS_CGA')
                         ->where('FK_SOLICITUD_ID', $request['id_sol'])
                         ->update(['DATOS_CGA_ESTATUS' => 'TURNADO A SPR']);
+                    $update = DB::table('SOLICITUDES_FECHAS')
+                        ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                        ->update(['FECHAS_TURNADO_SPR' => date('Y-m-d H:i:s')]);
                 }else{
                     //dd('FALTAN FIRMAS');
                 }
@@ -656,7 +665,6 @@
             );
 
             echo json_encode($data);//*/
-
         }
 
         public function CambiarEstadoCGA(Request $request){
@@ -705,10 +713,42 @@
             echo json_encode($data);//*/
         }
 
-        public function VistaCrearCambioAdscripcion(){
-            $dependencias = DependenciasController::ObtenerSoloDependencias();
-            return view('nuevo_cambio_adscripcion') ->with ("dependencias",$dependencias);
+        public function VistaCrearContratacion(){
+            $categoria = \Session::get('categoria')[0];
+            if(strcmp($categoria, 'TITULAR')==0){
+                return view('nuevo_contratacion');
+            }else{
+                return view('errors.505');
+            }
+        }
 
+        public function VistaCrearSustitucion(){
+            $categoria = \Session::get('categoria')[0];
+            if(strcmp($categoria, 'TITULAR')==0){
+                return view('nuevo_sustitucion');
+            }else{
+                return view('errors.505');
+            }
+        }
+
+        public function VistaCrearPromocion(){
+            $categoria = \Session::get('categoria')[0];
+            if(strcmp($categoria, 'TITULAR')==0){
+                $dependencias = DependenciasController::ObtenerSoloDependencias();
+                return view('nuevo_promocion');
+            }else{
+                return view('errors.505');
+            }
+        }
+
+        public function VistaCrearCambioAdscripcion(){
+            $categoria = \Session::get('categoria')[0];
+            if(strcmp($categoria, 'TITULAR')==0){
+                $dependencias = DependenciasController::ObtenerSoloDependencias();
+                return view('nuevo_cambio_adscripcion') ->with ("dependencias",$dependencias);
+            }else{
+                return view('errors.505');
+            }
         }
 
         public function VistaUsuarios(){
@@ -768,8 +808,13 @@
 
         
         public function VistaListadoRevisionInformacion(){
-            $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('VALIDACION DE INFORMACION');
-            return view('listado_revision_informacion') ->with ("solicitudes",$solicitudes);
+            $categoria = \Session::get('categoria')[0];
+            if(in_array($categoria, ['ADMINISTRADOR_CGA','ANALISTA_CGA'])){
+                $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('VALIDACION DE INFORMACION');
+                return view('listado_revision_informacion') ->with ("solicitudes",$solicitudes);
+            }else{
+                return view('errors.505');
+            }
         }
         
         public function VistaListadoDependencia(){
@@ -784,13 +829,18 @@
         }
         
         public function VistaListadoCGA(){
-            $solicitudes = SolicitudesController::ObtenerSolicitudes();
+            $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('FIRMAS');
             return view('listado_cga')->with("solicitudes",$solicitudes);
         }
 
         public function VistaListadoEnProceso(){
-            $solicitudes = SolicitudesController::ObtenerSolicitudes();
-            return view('listado_en_proceso') ->with ("solicitudes",$solicitudes);
+            $categoria = \Session::get('categoria')[0];
+            if(in_array($categoria, ['TRABAJADOR_SPR'])){
+                $solicitudes = SolicitudesController::ObtenerSolicitudes();
+                return view('listado_en_proceso') ->with ("solicitudes",$solicitudes);
+            }else{
+                return view('errors.505');
+            }
         }
 
 
@@ -808,12 +858,14 @@
 
 
         public function VistaListadoCompleto(){
-            $solicitudes = SolicitudesController::ObtenerSolicitudes();
-            $analistas = LoginController::ObtenerListadoAnalistas();
-            //dd($analistas);
-            return view('listado_completo') ->with (["solicitudes"=>$solicitudes,"analistas"=>$analistas]);
-
-            /*return view('listado_usuarios') ->with (["usuarios"=>$usuarios,"dependencias"=>$dependencias]);//*/
+            $categoria = \Session::get('categoria')[0];
+            if(in_array($categoria, ['ADMINISTRADOR_CGA','COORDINADOR_CGA'])){
+                $solicitudes = SolicitudesController::ObtenerSolicitudes();
+                $analistas = LoginController::ObtenerListadoAnalistas();
+                return view('listado_completo') ->with (["solicitudes"=>$solicitudes,"analistas"=>$analistas]);
+            }else{
+                return view('errors.505');
+            }
         }
 
         public function VistaGeneralEstatus($estatus){
@@ -843,78 +895,6 @@
                 return view('errors.404');
             }
         }
-
-        /*public function VistaRecibidos(){
-            $analista = \Session::get('usuario')[0];
-            $categoria = \Session::get('categoria')[0];
-            if(strcmp($categoria, 'ADMINISTRADOR_CGA')==0){
-                $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('RECIBIDO');
-            }else{
-                $solicitudes = SolicitudesController::ObtenerSolicitudesAnalista($analista);
-
-            }
-            $modulo = 'Recibido';
-            //$solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('RECIBIDO');
-            $analistas = LoginController::ObtenerListadoAnalistas();
-            //return view('listado_general_estatus') ->with ("solicitudes",$solicitudes);
-            return view('listado_general_estatus') ->with (["solicitudes"=>$solicitudes,"analistas"=>$analistas,"modulo"=>$modulo]);
-        }
-
-        public function VistaLevantamiento(){
-            $analista = \Session::get('usuario')[0];
-            $categoria = \Session::get('categoria')[0];
-            if(strcmp($categoria, 'ADMINISTRADOR_CGA')==0){
-                $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('LEVANTAMIENTO');
-            }else{
-                $solicitudes = SolicitudesController::ObtenerSolicitudesAnalista($analista);
-
-            }
-            $modulo = 'Levantamiento';
-            $analistas = LoginController::ObtenerListadoAnalistas();
-            return view('listado_general_estatus') ->with (["solicitudes"=>$solicitudes,"analistas"=>$analistas,"modulo"=>$modulo]);
-        }
-
-        public function VistaAnalisis(){
-            $analista = \Session::get('usuario')[0];
-            $categoria = \Session::get('categoria')[0];
-            if(strcmp($categoria, 'ADMINISTRADOR_CGA')==0){
-                $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('ANALISIS');
-            }else{
-                $solicitudes = SolicitudesController::ObtenerSolicitudesAnalista($analista);
-
-            }
-            $modulo = 'Analisis';
-            $analistas = LoginController::ObtenerListadoAnalistas();
-            return view('listado_general_estatus') ->with (["solicitudes"=>$solicitudes,"analistas"=>$analistas,"modulo"=>$modulo]);
-        }
-
-        public function VistaRevision(){
-            $analista = \Session::get('usuario')[0];
-            $categoria = \Session::get('categoria')[0];
-            if(strcmp($categoria, 'ADMINISTRADOR_CGA')==0){
-                $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('REVISION');
-            }else{
-                $solicitudes = SolicitudesController::ObtenerSolicitudesAnalista($analista);
-
-            }
-            $modulo = 'Revision';
-            $analistas = LoginController::ObtenerListadoAnalistas();
-            return view('listado_general_estatus') ->with (["solicitudes"=>$solicitudes,"analistas"=>$analistas,"modulo"=>$modulo]);
-        }
-
-        public function VistaRevision(){
-            $analista = \Session::get('usuario')[0];
-            $categoria = \Session::get('categoria')[0];
-            if(strcmp($categoria, 'ADMINISTRADOR_CGA')==0){
-                $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('REVISION');
-            }else{
-                $solicitudes = SolicitudesController::ObtenerSolicitudesAnalista($analista);
-
-            }
-            $modulo = 'Revision';
-            $analistas = LoginController::ObtenerListadoAnalistas();
-            return view('listado_general_estatus') ->with (["solicitudes"=>$solicitudes,"analistas"=>$analistas,"modulo"=>$modulo]);
-        }//*/
 
         public function VistaListadoAnalista(){
             $analista = \Session::get('usuario')[0];
@@ -1463,6 +1443,5 @@
                         );
             return $datos;
         }
-
 
     }

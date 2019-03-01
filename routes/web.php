@@ -15,29 +15,19 @@
 Route::get('/', function () {
     return view('login');
 });
-Route::get('/solicitudes/contratacion', function () {
-    return view('nuevo_contratacion');
-});
-Route::get('/solicitudes/sustitucion', function () {
-    return view('nuevo_sustitucion');
-});
-Route::get('/solicitudes/promocion', function () {
-    return view('nuevo_promocion');
-});
-/*Route::get('/solicitudes/cambio_adscripcion', function () {
-    return view('nuevo_cambio_adscripcion');
-});//*/
-Route::get('/solicitudes/cambio_adscripcion', 'SolicitudesController@VistaCrearCambioAdscripcion');
-//listados
-/*Route::get('/listado/completo', function () {
-    return view('listado_completo');
-});//*/
-Route::get('/listado/completo', 'SolicitudesController@VistaListadoCompleto');
 
-Route::get('/listado/en_proceso', 'SolicitudesController@VistaListadoEnProceso');
+//SOLICITUDES DE CONTRATACION - ACCESO VALIDADO
+Route::get('/solicitudes/contratacion', 'SolicitudesController@VistaCrearContratacion');
+Route::get('/solicitudes/sustitucion', 'SolicitudesController@VistaCrearSustitucion');
+Route::get('/solicitudes/promocion', 'SolicitudesController@VistaCrearPromocion');
+Route::get('/solicitudes/cambio_adscripcion', 'SolicitudesController@VistaCrearCambioAdscripcion');
+
+//LISTADOS
+Route::get('/listado/completo', 'SolicitudesController@VistaListadoCompleto');//VALIDADO
+Route::get('/listado/en_proceso', 'SolicitudesController@VistaListadoEnProceso');//VALIDADO
 
 //listado revision informacion
-Route::get('/listado/revision_informacion', 'SolicitudesController@VistaListadoRevisionInformacion');
+Route::get('/listado/revision_informacion', 'SolicitudesController@VistaListadoRevisionInformacion');//VALIDADO
 
 //listado nuevas en SPR
 Route::get('/listado/nuevas', 'SolicitudesController@VistaNuevasSPR');

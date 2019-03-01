@@ -40,6 +40,10 @@
                 @if(strcmp(\Session::get('categoria')[0],'SECRETARIO_PARTICULAR')==0)
                   <li><a class="" href="/listado/spr">Solicitudes (SPR)</a></li>
                 @endif
+                @if(strcmp(\Session::get('categoria')[0],'COORDINADOR_CGA')==0)
+                  <li><a class="" href="/listado/completo">Listado Completo</a></li>
+                  <li><a class="" href="/listado/coordinacion">En firmas</a></li>
+                @endif
               </ul>
             </li>
           @endif
