@@ -448,6 +448,7 @@
                                 'SOLICITUD_SALARIO as SALARIO_SOLICITUD',
                                 'SOLICITUD_JUSTIFICACION as JUSTIFICACION_SOLICITUD',
                                 'SOLICITUD_TIPO_SOLICITUD as TIPO_SOLICITUD_SOLICITUD',
+                                'SOLICITUD_FUENTE_RECURSOS as FUENTE_RECURSOS_SOLICITUD',
                                 'SOLICITUD_URGENCIA as PRIORIDAD_SOLICITUD'
                             )
                     ->get();
@@ -478,7 +479,7 @@
 
             $solicitud[0]->CATEGORIA_PROPUESTA = $datos_cga[0]->DATOS_CGA_CATEGORIA_PROPUESTA;
             $solicitud[0]->PUESTO_PROPUESTO = $datos_cga[0]->DATOS_CGA_PUESTO_PROPUESTO;
-            $solicitud[0]->SALARIO_PROPUESTO = $datos_cga[0]->DATOS_CGA_SALARIO_PROPUESTO;
+            $solicitud[0]->SALARIO_PROPUESTO = number_format($datos_cga[0]->DATOS_CGA_SALARIO_PROPUESTO,2);
             $solicitud[0]->ESTATUS_PROCEDE = $datos_cga[0]->DATOS_CGA_PROCEDENTE;
             $solicitud[0]->RESPUESTA_CGA = $datos_cga[0]->DATOS_CGA_RESPUESTA;
             $solicitud[0]->CATEGORIA_SUPERIOR = $datos_cga[0]->DATOS_CGA_CATEGORIA_SUPERIOR;

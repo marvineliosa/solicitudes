@@ -28,23 +28,23 @@
 	</style>
 </head>
 <body style="size: landscape">
-	<div id="div-dependencia" align="center" class=""><h3>{{$solicitud->NOMBRE_DEPENDENCIA}}</h3></div>
+	<div id="div-dependencia" align="center" class=""><h4>{{$solicitud->NOMBRE_DEPENDENCIA}}</h4></div>
 	@if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN')==0||strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN POR SUSTITUCIÓN')==0)
 		<div id="div-subtitulo" align="center" class="">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}} EN NÓMINA {{$solicitud->NOMINA_SOLICITUD}}</div>
 	@else
 		<div id="div-subtitulo" align="center" class="">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}</div>
 	@endif
-	<div id="div-fecha" align="right" class="">FECHA: {{$solicitud->HOY}}</div>
-	<div id="div-solicitud" align="right" class="">SOLICITUD: {{$solicitud->ID_SOLICITUD}}</div>
+	<div id="div-fecha" align="right" class="" style="font-size: 13px;">FECHA: {{$solicitud->HOY}}</div>
+	<div id="div-solicitud" align="right" class="" style="font-size: 13px;">SOLICITUD: {{$solicitud->ID_SOLICITUD}}</div>
 	<div id="div-tabla_datos" align="right" class="">
 		<table style="width:100%;" class="table table-bordered">
 		  <tr>
-		    <th style="font-size: 13px;border:1px solid black;" class="bloque">NOMBRE</th>
-		    <th style="font-size: 13px;border:1px solid black;" class="bloque">FUNCIONES</th> 
-		    <th style="font-size: 13px;border:1px solid black;" class="bloque">CATEGORÍA/PUESTO SOLICITADO</th>
-		    <th style="font-size: 13px;border:1px solid black;" class="bloque">SALARIO NETO SOLICITADO</th>
-		    <th style="font-size: 13px;border:1px solid black;" class="bloque">DIFERENCIA QUINCENAL</th>
-		    <th style="font-size: 13px;border:1px solid black;" class="bloque">% DIFERENCIA</th>
+		    <th style="font-size: 10px;border:1px solid black;" class="bloque">NOMBRE</th>
+		    <th style="font-size: 10px;border:1px solid black;" class="bloque">FUNCIONES</th> 
+		    <th style="font-size: 10px;border:1px solid black;" class="bloque">CATEGORÍA/PUESTO SOLICITADO</th>
+		    <th style="font-size: 10px;border:1px solid black;" class="bloque">SALARIO NETO SOLICITADO</th>
+		    <th style="font-size: 10px;border:1px solid black;" class="bloque">DIFERENCIA QUINCENAL</th>
+		    <th style="font-size: 10px;border:1px solid black;" class="bloque">% DIFERENCIA</th>
 		  </tr>
 		  <tr>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$solicitud->NOMBRE_SOLICITUD}}</td>
@@ -57,7 +57,7 @@
 		</table>
 	</div>
 	<div id="div-tabla_cantidades" align="right" class="">
-		<table style="width:75%" class="table table-bordered" align="center">
+		<table style="width:75%" class="table table" align="center">
 		  <tr>
 		    <th style="font-size: 8px;border:1px solid black; visibility: hidden" class="bloque"></th>
 		    <th style="font-size: 8px;border:1px solid black;" class="bloque">CATEGORÍAS INMEDIATAS</th> 
@@ -72,10 +72,14 @@
 		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center"></td>
 		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center"></td>
 		  </tr>
+		  <tr>
+		    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="right" colspan="3">Fuente de Recursos:</td>
+		    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="left" colspan="2">{{ucwords(strtolower($solicitud->FUENTE_RECURSOS_SOLICITUD))}}</td>
+		  </tr>
 		</table>
 	</div>
 	<div id="div-tabla_respuesta" align="right" class="">
-		<table style="width:100%" class="table table" border="0">
+		<table style="width:100%" class="" border="0">
 		  <tr>
 		    <th style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" class="">NOTA:</th>
 		  </tr>
@@ -84,9 +88,11 @@
 		  </tr>
 		</table>
 	</div>
+	<br>
+	<br>
 	
 		<div id="div-tabla_sellos" align="right" class="">
-			<table style="width:100%" class="table table" border="0">
+			<table style="width:100%" class="table" border="0">
 			  <tr>
 			  	<td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
 			  		<img src="img/qr_titular.png" width="100" height="100">
