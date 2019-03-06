@@ -47,7 +47,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Actividades actuales</label>
             <div class="col-sm-6">
-              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeña" id="CambioAdscripcion-ActividadesActuales"></textarea>
+              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeña" id="CambioAdscripcion-ActividadesActuales" maxlength="830"></textarea>
             </div>
           </div>
           <div class="form-group">
@@ -72,7 +72,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Nuevas actividades</label>
             <div class="col-sm-6">
-              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeña" id="CambioAdscripcion-ActividadesNuevas"></textarea>
+              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeña" id="CambioAdscripcion-ActividadesNuevas" maxlength="830"></textarea>
             </div>
           </div>
           <div class="form-group">

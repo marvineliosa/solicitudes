@@ -53,7 +53,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Actividades actuales</label>
             <div class="col-sm-6">
-              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeñará" id="" disabled>{{$solicitud->ACTIVIDADES_SOLICITUD}}</textarea>
+              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeñará" id="" maxlength="830" disabled>{{$solicitud->ACTIVIDADES_SOLICITUD}}</textarea>
             </div>
           </div>
           <div class="form-group">
@@ -78,7 +78,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Nuevas actividades</label>
             <div class="col-sm-6">
-              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeña" id="Actividades_candidato">{{$datos_extra->NUEVAS_ACTIVIDADES}}</textarea>
+              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeña" id="Actividades_candidato" maxlength="830">{{$datos_extra->NUEVAS_ACTIVIDADES}}</textarea>
             </div>
           </div>
           <div class="form-group">
@@ -109,7 +109,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Salario Neto Propuesto</label>
             <div class="col-sm-6">
-              <input type="number" class="form-control" placeholder="Puesto del Candidato" value="{{$solicitud->SALARIO_PROPUESTO}}" id="propuesta-salario" step=".01">
+              <input type="number" class="form-control" placeholder="Puesto del Candidato" value="{{$solicitud->SALARIO_PROPUESTO_SF}}" id="propuesta-salario" step=".01">
             </div>
           </div>
           <div class="form-group">
@@ -189,7 +189,7 @@
 
     function verCuadro(id_solicitud){
       //location.href='/cuadro/contratacion/'+id_solicitud;
-      window.open('/cuadro/contratacion/'+id_solicitud,'_blank');
+      window.open('/cuadro/cambio_adscripcion/'+id_solicitud,'_blank');
 
     }
 

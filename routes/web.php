@@ -129,6 +129,7 @@ Route::get('/cuadro/{id_solicitud}', 'SolicitudesController@VerCuadroElaborado')
 Route::get('/cuadro/contratacion/{id_solicitud}', 'SolicitudesController@PDFContratacion');
 Route::get('/cuadro/contratacion_sustitucion/{id_solicitud}', 'SolicitudesController@PDFSustitucion');
 Route::get('/cuadro/promocion/{id_solicitud}', 'SolicitudesController@PDFPromocion');
+Route::get('/cuadro/cambio_adscripcion/{id_solicitud}', 'SolicitudesController@PDFCambioAdscripcion');
 
 
 

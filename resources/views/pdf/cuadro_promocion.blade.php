@@ -28,11 +28,11 @@
 	</style>
 </head>
 <body style="height:420px; overflow:auto;">
-	<div id="div-dependencia" align="center" class=""><h4>{{$solicitud->NOMBRE_DEPENDENCIA}}</h4></div>
+	<div id="div-dependencia" align="center" class=""><h5>{{$solicitud->NOMBRE_DEPENDENCIA}}</h5></div>
 	@if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN')==0||strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN POR SUSTITUCIÓN')==0)
 		<div id="div-subtitulo" align="center" class="">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}} EN NÓMINA {{$solicitud->NOMINA_SOLICITUD}}</div>
 	@else
-		<div id="div-subtitulo" align="center" class="">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}</div>
+		<div id="div-subtitulo" align="center" class="" style="font-size: 10px;">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}</div>
 	@endif
 	<div id="div-fecha" align="right" class="" style="font-size: 13px;">FECHA: {{$solicitud->HOY}}</div>
 	<div id="div-solicitud" align="right" class="" style="font-size: 13px;">SOLICITUD: {{$solicitud->ID_SOLICITUD}}</div>
@@ -78,13 +78,14 @@
 		    <td style="font-size: 8px;border:1px solid black;" align="center">PROPUESTA DE LA COORDINACIÓN GENERAL ADMINISTRATIVA</td>
 		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{$solicitud->CATEGORIA_PROPUESTA}}</td>
 		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{'$ '.$solicitud->SALARIO_PROPUESTO}}</td>
-		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center"><!--{{$dif_quincenal = $solicitud->SALARIO_SOLICITUD - $solicitud->SALARIO_PROPUESTO_SF}} -->{{number_format($dif_quincenal,2)}}</td>
+		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center"><!--{{$dif_quincenal = $solicitud->SALARIO_PROPUESTO_SF - $solicitud->SALARIO_SOLICITUD}} -->{{number_format($dif_quincenal,2)}}</td>
 		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{(($solicitud->SALARIO_SOLICITUD!=0)?(round((($dif_quincenal/$solicitud->SALARIO_SOLICITUD)*100),1)).'%':'')}}</td>
 		    @if($solicitud->COMPENSACION_SOLICITUD)
 		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{'$ '.number_format($solicitud->COMPENSACION_SOLICITUD,2)}}</td>
 		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{'$ '.number_format(($solicitud->COMPENSACION_SOLICITUD + $solicitud->SALARIO_PROPUESTO_SF),2)}}</td>
 		    @endif
 		  </tr>
+		  @if(false)
 		  <tr><!-- fuente de recursos -->
 		  	@if($solicitud->COMPENSACION_SOLICITUD)
 		    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="right" colspan="4">Fuente de Recursos:</td>
@@ -94,6 +95,7 @@
 		    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="left" colspan="2">{{$solicitud->FUENTE_RECURSOS_SOLICITUD}}</td>
 		    @endif
 		  </tr>
+		  @endif
 		</table>
 	</div>
 	<div id="div-tabla_respuesta" align="right" class="">
@@ -130,5 +132,5 @@
     var gl_solicitud = <?php echo json_encode($solicitud) ?>;
     //console.log(gl_solicitud);
     var gl_promocion = <?php echo json_encode($promocion) ?>;
-    console.log(gl_promocion);
+    //console.log(gl_promocion);
 </script>

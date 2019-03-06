@@ -28,9 +28,9 @@
 	</style>
 </head>
 <body style="height:420px; overflow:auto;">
-	<div id="div-dependencia" align="center" class=""><h4>{{$solicitud->NOMBRE_DEPENDENCIA}}</h4></div>
+	<div id="div-dependencia" align="center" class=""><h5>{{$solicitud->NOMBRE_DEPENDENCIA}}</h5></div>
 	@if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN')==0||strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN POR SUSTITUCIÓN')==0)
-		<div id="div-subtitulo" align="center" class="">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}} EN NÓMINA {{$solicitud->NOMINA_SOLICITUD}}</div>
+		<div id="div-subtitulo" align="center" class="" style="font-size: 10px;">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}} EN NÓMINA {{$solicitud->NOMINA_SOLICITUD}}</div>
 	@else
 		<div id="div-subtitulo" align="center" class="">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}</div>
 	@endif

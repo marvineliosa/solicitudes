@@ -248,12 +248,21 @@
         public function VerCuadroElaborado($id_solicitud){
             $sustitucion = array();
             $promocion = array();
+            $adscripcion = array();
             $id_solicitud = str_replace('_','/',$id_solicitud);
             $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
             //$sustitucion = SolicitudesController::ObtenerDatosSustitucion($id_solicitud);
-            $promocion = SolicitudesController::ObtenerDatosPromocion($id_solicitud);
+            //$promocion = SolicitudesController::ObtenerDatosPromocion($id_solicitud);
+            $adscripcion = SolicitudesController::ObtenerDatosCambioAdscripcion($id_solicitud);
             //dd($solicitud);
-            return view('pdf.cuadro_promocion') ->with (["solicitud"=>$solicitud,"promocion"=>$promocion]);
+            $datos = SolicitudesController::DatosGenerales();
+            //dd($datos);
+            if($datos['institucional']){
+                return view('pdf.cuadro_cambio_adscripcion_institucional') ->with (["solicitud"=>$solicitud,"adscripcion"=>$adscripcion]);
+            }else{
+                return view('pdf.cuadro_cambio_adscripcion_nps') ->with (["solicitud"=>$solicitud,"adscripcion"=>$adscripcion]);
+            }
+            //return view('pdf.cuadro_cambio_adscripcion_nps') ->with (["solicitud"=>$solicitud,"adscripcion"=>$adscripcion]);
         }
 
         public function PDFContratacion($id_solicitud){
@@ -293,6 +302,28 @@
             //dd($promocion);
             if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD, 'PROMOCION')==0){
                 $pdf = \PDF::loadView('pdf.cuadro_promocion',['solicitud'=>$solicitud,'promocion'=>$promocion])->setPaper('letter', 'landscape');
+                //return $pdf->download($descripcion['DATOS']->NOM_DESC.'.pdf');
+                return $pdf->stream($id_solicitud.'.pdf', array("Attachment" => 0));
+            }else{
+                return view('errors.404');
+            }
+        }
+
+        public function PDFCambioAdscripcion($id_solicitud){
+            $id_solicitud = str_replace('_','/',$id_solicitud);
+            //hay que validar que exista la solicitud
+            $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+            $adscripcion = SolicitudesController::ObtenerDatosCambioAdscripcion($id_solicitud);
+            //dd($promocion);
+            if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD, 'CAMBIO DE ADSCRIPCIÓN')==0){
+
+                $datos = SolicitudesController::DatosGenerales();   
+                if($datos['institucional']){
+                    $pdf = \PDF::loadView('pdf.cuadro_cambio_adscripcion_institucional',['solicitud'=>$solicitud,'adscripcion'=>$adscripcion]);
+                }else{
+                    $pdf = \PDF::loadView('pdf.cuadro_cambio_adscripcion_nps',['solicitud'=>$solicitud,'adscripcion'=>$adscripcion]);
+                }
+                //$pdf = \PDF::loadView('pdf.cuadro_cambio_adscripcion',['solicitud'=>$solicitud,'adscripcion'=>$adscripcion]);
                 //return $pdf->download($descripcion['DATOS']->NOM_DESC.'.pdf');
                 return $pdf->stream($id_solicitud.'.pdf', array("Attachment" => 0));
             }else{
