@@ -136,10 +136,11 @@
 
               </tbody>
             </table>
-        <div align="center">
-          <a href="" target="_blank" id="verCuadro">Ver cuadro</a>
-          
-        </div>
+            <div align="center" id="div_cuadro" hidden="true">
+                <a href="" target="_blank" id="verCuadro">Ver cuadro</a>
+
+              
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -172,6 +173,89 @@
                 
               </tbody>
             </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal mensajes -->
+    <div class="modal fade" id="ModalComentarios" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title" id="TituloModalMensajes" align="center">Comentarios</h2>
+            <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>-->
+          </div>
+          <div class="modal-body">
+            <input type="" name="" style="display: none" id="comentario_num_oficio" value="">
+            <h3  id="CuerpoModalComentarios" align="center"> </h3>
+            
+            <b>Comentarios Generales:</b> 
+            <div class="form-check form-check-inline">
+              <textarea class="form-control ckeditor" name="editor1" rows="2" placeholder="Este mensaje podrá ser visto por todos los usuarios excepto las dependencias" id="TextComentarioGeneral"></textarea>
+              <br>
+              <button type="button" class="btn btn-primary pull-right " onclick="GuardarComentario()">Guardar comentario</button>
+            </div>
+            <br>
+            <br>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th scope="col">Comentario</th>
+                  <th scope="col" style="width: 20%">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="CuerpoTablaComentariosGenerales">
+                
+              </tbody>
+            </table>
+            @if(in_array(\Session::get('categoria')[0],['COORDINADOR_CGA','ANALISTA_CGA','ADMINISTRADOR_CGA']))
+              <b>Comentarios CGA:</b> 
+              <div class="form-check form-check-inline">
+                <textarea class="form-control ckeditor" name="editor1" rows="2" placeholder="Este mensaje solo será visto por el personal de la CGA" id="TextComentarioCGA"></textarea>
+                <br>
+                <button type="button" class="btn btn-primary pull-right " onclick="GuardarComentarioCGA()">Guardar comentario</button>
+              </div>
+              <br>
+              <br>
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th scope="col">Comentario</th>
+                    <th scope="col" style="width: 20%">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="CuerpoTablaComentariosCGA">
+                  
+                </tbody>
+              </table>
+            @endif
+            @if(in_array(\Session::get('categoria')[0],['SECRETARIO_PARTICULAR','TRABAJADOR_SPR']))
+              <b>Comentarios SPR:</b> 
+              <div class="form-check form-check-inline">
+                <textarea class="form-control ckeditor" name="editor1" rows="2" placeholder="Este mensaje solo será visto por el personal de SPR" id="TextComentarioSPR"></textarea>
+                <br>
+                <button type="button" class="btn btn-primary pull-right " onclick="GuardarComentarioSPR()">Guardar comentario</button>
+              </div>
+              <br>
+              <br>
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th scope="col">Comentario</th>
+                    <th scope="col" style="width: 20%">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="CuerpoTablaComentariosSPR">
+                  
+                </tbody>
+              </table>
+            @endif
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -214,6 +298,9 @@
 
 
 <script type="text/javascript">
+
+  var gl_categoria = <?php echo json_encode(\Session::get('categoria')[0]) ?>;
+  console.log(gl_categoria);
 
   function guardarComentario(id_archivo){
     var mensaje = $("#mensaje_archivo_"+id_archivo).val();
@@ -397,26 +484,27 @@
     if(tipo_solicitud=='CONTRATACIÓN'){
       var titulo = 'Detalle de Contratación';
       var url = "/solicitud/obtener_datos_contratacion";
-      AbreModalInfo(id_solicitud,url,titulo);
+      AbreModalInfo(id_solicitud,url,titulo,tipo_solicitud);
     }
     if(tipo_solicitud=='CONTRATACIÓN POR SUSTITUCIÓN'){
       var titulo = 'Detalle de Contratación por Sustitución';
       var url = "/solicitud/obtener_datos_sustitucion";
-      AbreModalInfo(id_solicitud,url,titulo);
+      AbreModalInfo(id_solicitud,url,titulo,tipo_solicitud);
     }
     if(tipo_solicitud=='PROMOCION'){
       var titulo = 'Detalle de Promoción';
       var url = "/solicitud/obtener_datos_promocion";
-      AbreModalInfo(id_solicitud,url,titulo);
+      AbreModalInfo(id_solicitud,url,titulo,tipo_solicitud);
     }
     if(tipo_solicitud=='CAMBIO DE ADSCRIPCIÓN'){
       var titulo = 'Detalle de Cambio de Adscripción';
       var url = "/solicitud/obtener_datos_cambio_adscripcion";
-      AbreModalInfo(id_solicitud,url,titulo);
+      AbreModalInfo(id_solicitud,url,titulo,tipo_solicitud);
     }
   }
 
-  function AbreModalInfo(id_sol,url,titulo){
+  function AbreModalInfo(id_sol,url,titulo,tipo_solicitud){
+    $("#div_cuadro").hide();
     var success;
     //var url = "/solicitud/obtener_datos_contratacion";
     var dataForm = new FormData();
@@ -429,17 +517,213 @@
       console.log(success);
       $("#CuerpoTablaInformacion").html('');
       for(var i = 0; i < success['cabeceras'].length; i++){
-        console.log(success['cabeceras'][i]);
-        $("#CuerpoTablaInformacion").append(
-          '<tr>'+
-            '<th scope="row">' + success['cabeceras'][i] + '</th>'+
-            '<td id="ModalCont-id_sol"  style="word-wrap: break-word;">'+ success['datos'][success['cabeceras'][i]] +'</td>'+
-          '</tr>'
-        );
+        //console.log(success['cabeceras'][i]);
+        if(success['cabeceras'][i]!='Escape'){
+          $("#CuerpoTablaInformacion").append(
+            '<tr>'+
+              '<th scope="row">' + success['cabeceras'][i] + '</th>'+
+              '<td id="ModalCont-id_sol"  style="word-wrap: break-word;">'+ success['datos'][success['cabeceras'][i]] +'</td>'+
+            '<  /tr>'
+          );
+        }
       }
+      var array_cga = ['COORDINADOR_CGA','ANALISTA_CGA','ADMINISTRADOR_CGA','ADMINISTRADOR_CGA'];
+      var permitidos_cga = ['RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN','FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR'];
+      //console.log(permitidos_cga.includes(success['datos']['Estatus']));
+      if(array_cga.includes(gl_categoria)){
+        if(tipo_solicitud == 'CONTRATACIÓN' && permitidos_cga.includes(success['datos']['Estatus'])){
+          $("#verCuadro").attr('href','/cuadro/contratacion/'+success['datos']['Escape']);
+        }else if(tipo_solicitud == 'CONTRATACIÓN POR SUSTITUCIÓN' && permitidos_cga.includes(success['datos']['Estatus'])){
+          $("#verCuadro").attr('href','/cuadro/contratacion_sustitucion/'+success['datos']['Escape']);
+        }else if(tipo_solicitud == 'PROMOCION' && permitidos_cga.includes(success['datos']['Estatus'])){
+          $("#verCuadro").attr('href','/cuadro/promocion/'+success['datos']['Escape']);
+        }else if(tipo_solicitud == 'CAMBIO DE ADSCRIPCIÓN' && permitidos_cga.includes(success['datos']['Estatus'])){
+          $("#verCuadro").attr('href','/cuadro/cambio_adscripcion/'+success['datos']['Escape']);
+        }
+        $("#div_cuadro").show();
+      }
+      var array_spr = ['SECRETARIO_PARTICULAR','TRABAJADOR_SPR'];
+      var permitidos_spr = ['FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR'];
+      if(array_spr.includes(gl_categoria)){
+        if(tipo_solicitud == 'CONTRATACIÓN' && permitidos_spr.includes(success['datos']['Estatus'])){
+          $("#verCuadro").attr('href','/cuadro/contratacion/'+success['datos']['Escape']);
+          $("#div_cuadro").show();
+        }else if(tipo_solicitud == 'CONTRATACIÓN POR SUSTITUCIÓN' && permitidos_spr.includes(success['datos']['Estatus'])){
+          $("#verCuadro").attr('href','/cuadro/contratacion_sustitucion/'+success['datos']['Escape']);
+          $("#div_cuadro").show();
+        }else if(tipo_solicitud == 'PROMOCION' && permitidos_spr.includes(success['datos']['Estatus'])){
+          $("#verCuadro").attr('href','/cuadro/promocion/'+success['datos']['Escape']);
+          $("#div_cuadro").show();
+        }else if(tipo_solicitud == 'CAMBIO DE ADSCRIPCIÓN' && permitidos_spr.includes(success['datos']['Estatus'])){
+          $("#verCuadro").attr('href','/cuadro/cambio_adscripcion/'+success['datos']['Escape']);
+          $("#div_cuadro").show();
+        }
+      }
+      var array_titular = ['TITULAR'];
+      var permitidos_titular = ['FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR'];
+      if(array_titular.includes(gl_categoria)){
+        if(tipo_solicitud == 'CONTRATACIÓN' && permitidos_titular.includes(success['datos']['Estatus'])){
+          $("#verCuadro").attr('href','/cuadro/contratacion/'+success['datos']['Escape']);
+          $("#div_cuadro").show();
+        }else if(tipo_solicitud == 'CONTRATACIÓN POR SUSTITUCIÓN' && permitidos_titular.includes(success['datos']['Estatus'])){
+          $("#verCuadro").attr('href','/cuadro/contratacion_sustitucion/'+success['datos']['Escape']);
+          $("#div_cuadro").show();
+        }else if(tipo_solicitud == 'PROMOCION' && permitidos_titular.includes(success['datos']['Estatus'])){
+          $("#verCuadro").attr('href','/cuadro/promocion/'+success['datos']['Escape']);
+          $("#div_cuadro").show();
+        }else if(tipo_solicitud == 'CAMBIO DE ADSCRIPCIÓN' && permitidos_titular.includes(success['datos']['Estatus'])){
+          $("#verCuadro").attr('href','/cuadro/cambio_adscripcion/'+success['datos']['Escape']);
+          $("#div_cuadro").show();
+        }
+      }
+      //$("#verCuadro").attr('href','/algo/algo')
       $("#TituloModalInformacion").text(titulo);
       $("#ModalDetalleContratacion").modal();
     });//*/
+  }
+
+  function modalComentarios(id_solicitud){
+    $("#comentario_num_oficio").val(id_solicitud);
+    var comentario = $("#TextComentarioGeneral").val('');
+    var comentario = $("#TextComentarioCGA").val('');
+    var comentario = $("#TextComentarioSPR").val('');
+    var success;
+    var url = '/comentarios/traer';
+    //var url = "/solicitud/obtener_datos_contratacion";
+    var dataForm = new FormData();
+    dataForm.append('id_solicitud',id_solicitud);
+    //lamando al metodo ajax
+
+    metodoAjax(url,dataForm,function(success){
+      //aquí se escribe todas las operaciones que se harían en el succes
+      //la variable success es el json que recibe del servidor el método AJAX
+      //console.log(success);
+      $("#CuerpoTablaComentariosGenerales").html("");
+      $("#CuerpoTablaComentariosCGA").html("");
+      $("#CuerpoTablaComentariosSPR").html("");
+      for(var i = 0; i < success['comentarios'].length; i++){
+        //console.log(success['cabeceras'][i]);
+        $("#CuerpoTablaComentariosGenerales").append(
+          '<tr id="ComentarioGral_'+success['comentarios'][i]['ID_OBSERVACION']+'">'+
+            '<td>' + success['comentarios'][i]['OBSERVACION'] + '</td>'+
+            '<td>'+ '<a href="javascript:void(0);" onclick="eliminarComentario('+success['comentarios'][i]['ID_OBSERVACION']+',1)">Eliminar</a>' +'</td>'+
+          '</tr>'
+        );
+      }
+      for(var i = 0; i < success['comentariosInternos'].length; i++){
+        //console.log(success['cabeceras'][i]);
+        if(success['rol']==2){
+          $("#CuerpoTablaComentariosCGA").append(
+            '<tr id="ComentarioCGA_'+success['comentariosInternos'][i]['ID_OBSERVACION']+'">'+
+              '<td>' + success['comentariosInternos'][i]['OBSERVACION'] + '</td>'+
+              '<td>'+ '<a href="javascript:void(0);" onclick="eliminarComentario('+success['comentariosInternos'][i]['ID_OBSERVACION']+',2)">Eliminar</a>' +'</td>'+
+            '</tr>'
+          );
+        }else{
+          $("#CuerpoTablaComentariosSPR").append(
+            '<tr id="ComentarioSPR_'+success['comentariosInternos'][i]['ID_OBSERVACION']+'">'+
+              '<td>' + success['comentariosInternos'][i]['OBSERVACION'] + '</td>'+
+              '<td>'+ '<a href="javascript:void(0);" onclick="eliminarComentario('+success['comentariosInternos'][i]['ID_OBSERVACION']+',3)">Eliminar</a>' +'</td>'+
+            '</tr>'
+          );
+        }
+      }
+    });//*/
+    $("#ModalComentarios").modal();
+  }
+
+  function eliminarComentario(id_comentario,tipo_comentario){
+    var id_solicitud = $("#comentario_num_oficio").val();
+    var success;
+    var url = '/comentarios/eliminar';
+    //var url = "/solicitud/obtener_datos_contratacion";
+    var dataForm = new FormData();
+    dataForm.append('id_comentario',id_comentario);
+    dataForm.append('tipo_comentario',tipo_comentario);
+    metodoAjax(url,dataForm,function(success){
+      //console.log(success);
+      if(tipo_comentario==1){
+        $("#ComentarioGral_"+id_comentario).remove();
+      }else if(tipo_comentario==2){
+        $("#ComentarioCGA_"+id_comentario).remove();
+      }else if(tipo_comentario==3){
+        $("#ComentarioSPR_"+id_comentario).remove();
+      }
+      MensajeModal('¡EXITO!','El comentario ha sido eliminado correctamente');
+    });//*/
+
+  }
+
+  function GuardarComentario(){
+    var id_solicitud = $("#comentario_num_oficio").val();
+    var comentario = $("#TextComentarioGeneral").val();
+    if(comentario!=''){
+      var success;
+      var url = '/comentarios/guardar_general';
+      //var url = "/solicitud/obtener_datos_contratacion";
+      var dataForm = new FormData();
+      dataForm.append('id_solicitud',id_solicitud);
+      dataForm.append('comentario',comentario);
+      metodoAjax(url,dataForm,function(success){
+        //console.log(success);
+        $("#CuerpoTablaComentariosGenerales").append(
+          '<tr id="ComentarioGral_'+success['id_comentario']+'">'+
+            '<td>' + comentario + '</td>'+
+            '<td>'+ '<a href="javascript:void(0);" onclick="eliminarComentario('+success['id_comentario']+',1)">Eliminar</a>' +'</td>'+
+          '</tr>'
+        );//
+        MensajeModal('¡EXITO!','El comentario ha sido almacenado correctamente');
+      });//*/
+    }
+    //console.log(id_solicitud);
+  }
+
+  function GuardarComentarioCGA(){
+    var id_solicitud = $("#comentario_num_oficio").val();
+    var comentario = $("#TextComentarioCGA").val();
+    if(comentario!=''){
+      var success;
+      var url = '/comentarios/guardar_cga';
+      //var url = "/solicitud/obtener_datos_contratacion";
+      var dataForm = new FormData();
+      dataForm.append('id_solicitud',id_solicitud);
+      dataForm.append('comentario',comentario);
+      metodoAjax(url,dataForm,function(success){
+        //console.log(success);
+        $("#CuerpoTablaComentariosCGA").append(
+          '<tr id="ComentarioCGA_'+success['id_comentario']+'">'+
+            '<td>' + comentario + '</td>'+
+            '<td>'+ '<a href="javascript:void(0);" onclick="eliminarComentario('+success['id_comentario']+',2)">Eliminar</a>' +'</td>'+
+          '</tr>'
+        );//
+        MensajeModal('¡EXITO!','El comentario ha sido almacenado correctamente');
+      });//*/
+    }
+    //console.log(id_solicitud);
+  }
+
+  function GuardarComentarioSPR(){
+    var id_solicitud = $("#comentario_num_oficio").val();
+    var comentario = $("#TextComentarioSPR").val();
+    if(comentario!=''){
+      var success;
+      var url = '/comentarios/guardar_spr';
+      //var url = "/solicitud/obtener_datos_contratacion";
+      var dataForm = new FormData();
+      dataForm.append('id_solicitud',id_solicitud);
+      dataForm.append('comentario',comentario);
+      metodoAjax(url,dataForm,function(success){
+        //console.log(success);
+        $("#CuerpoTablaComentariosSPR").append(
+          '<tr id="ComentarioSPR_'+success['id_comentario']+'">'+
+            '<td>' + comentario + '</td>'+
+            '<td>'+ '<a href="javascript:void(0);" onclick="eliminarComentario('+success['id_comentario']+',3)">Eliminar</a>' +'</td>'+
+          '</tr>'
+        );//
+        MensajeModal('¡EXITO!','El comentario ha sido almacenado correctamente');
+      });//*/
+    }
+    //console.log(id_solicitud);
   }
 
 

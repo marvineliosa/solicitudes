@@ -162,6 +162,13 @@ Route::post('/archivos/obtener_archivos','ArchivosController@RegresarArchivosSol
 Route::post('/archivos/agregar_mensaje','ArchivosController@AgregarMensaje');
 Route::post('/archivos/actualizar_archivo','ArchivosController@ActualizaArchivo');
 
+//comentarios
+Route::post('/comentarios/traer','SolicitudesController@RegresarComentarios');
+Route::post('/comentarios/guardar_general','SolicitudesController@GuardarComentarioGeneral');
+Route::post('/comentarios/guardar_cga','SolicitudesController@GuardarComentarioCGA');
+Route::post('/comentarios/guardar_spr','SolicitudesController@GuardarComentarioSPR');
+Route::post('/comentarios/eliminar','SolicitudesController@EliminarComentario');
+
  
 Route::get('qr-code', function () {
     $qr = QrCode::size(100)->generate('Welcome to kerneldev.com!');

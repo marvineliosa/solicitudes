@@ -17,12 +17,179 @@
          * @return Response
          */
 
+        public function GuardarComentarioGeneral(Request $request){
+            $id_comentario = SolicitudesController::GuardaComentario($request['comentario']);
+            DB::table('REL_OBSERVACIONES_GENERALES')->insert(
+                [
+                    'FK_OBSERVACION' => $id_comentario,
+                    'FK_SOLICITUD_ID' => $request['id_solicitud']
+                ]
+            );
+            //dd($request);
+
+            $data = array(
+                "id_comentario"=>$id_comentario
+            );
+
+            echo json_encode($data);//*/
+        }
+
+        public function GuardarComentarioCGA(Request $request){
+            $id_comentario = SolicitudesController::GuardaComentario($request['comentario']);
+            DB::table('REL_OBSERVACIONES_CGA')->insert(
+                [
+                    'FK_OBSERVACION' => $id_comentario,
+                    'FK_SOLICITUD_ID' => $request['id_solicitud']
+                ]
+            );
+            //dd($request);
+
+            $data = array(
+                "id_comentario"=>$id_comentario
+            );
+
+            echo json_encode($data);//*/
+        }
+
+        public function GuardarComentarioSPR(Request $request){
+            $id_comentario = SolicitudesController::GuardaComentario($request['comentario']);
+            DB::table('REL_OBSERVACIONES_SPR')->insert(
+                [
+                    'FK_OBSERVACION' => $id_comentario,
+                    'FK_SOLICITUD_ID' => $request['id_solicitud']
+                ]
+            );
+            //dd($request);
+
+            $data = array(
+                "id_comentario"=>$id_comentario
+            );
+
+            echo json_encode($data);//*/
+        }
+
+        public function GuardaComentario($comentario){
+            date_default_timezone_set('America/Mexico_City');
+            $id_comentario = DB::table('SOLICITUDES_OBSERVACIONES')->insertGetId(
+                [
+                    'OBSERVACIONES_OBSERVACION' => $comentario,
+                    'created_at' => date('Y-m-d H:i:s')
+                ]
+            );
+            return $id_comentario;
+        }
+
+        public function EliminarComentario(Request $request){
+            //dd($request);
+            if($request['tipo_comentario']==1){
+                //dd('comentario general');
+                DB::table('REL_OBSERVACIONES_GENERALES')->where('FK_OBSERVACION', $request['id_comentario'])->delete();
+            }else if($request['tipo_comentario']==2){
+                DB::table('REL_OBSERVACIONES_CGA')->where('FK_OBSERVACION', $request['id_comentario'])->delete();
+            }else{
+                DB::table('REL_OBSERVACIONES_SPR')->where('FK_OBSERVACION', $request['id_comentario'])->delete();
+            }
+            $delete = DB::table('SOLICITUDES_OBSERVACIONES')->where('OBSERVACIONES_ID', $request['id_comentario'])->delete();
+            $data = array(
+                "delete"=>$delete
+            );
+
+            echo json_encode($data);//*/
+        }
+
+        public function RegresarComentarios(Request $request){
+            $comentarios = SolicitudesController::ObtenerComentariosGenerales($request['id_solicitud']);
+            if(in_array(\Session::get('categoria')[0],['COORDINADOR_CGA','ANALISTA_CGA','ADMINISTRADOR_CGA'])){
+                $comentariosInternos = SolicitudesController::ObtenerComentariosCGA($request['id_solicitud']);
+                $rol = 2;
+            }
+            if(in_array(\Session::get('categoria')[0],['SECRETARIO_PARTICULAR','TRABAJADOR_SPR'])){
+                $comentariosInternos = SolicitudesController::ObtenerComentariosSPR($request['id_solicitud']);
+                $rol = 3;
+            }
+
+            $data = array(
+                "comentarios"=>$comentarios,
+                "comentariosInternos"=>$comentariosInternos,
+                "rol"=>$rol,
+            );
+
+            echo json_encode($data);//*/
+        }
+
+        public function ObtenerComentariosGenerales($id_solicitud){
+            date_default_timezone_set('America/Mexico_City');
+            $comentarios = array();
+            $rel_comentarios = DB::table('REL_OBSERVACIONES_GENERALES')
+                ->select('FK_OBSERVACION')
+                ->where('FK_SOLICITUD_ID',$id_solicitud)
+                ->get();
+            foreach ($rel_comentarios as $relacion) {
+                $comentario = DB::table('SOLICITUDES_OBSERVACIONES')
+                ->select(
+                            'OBSERVACIONES_ID as ID_OBSERVACION',
+                            'OBSERVACIONES_OBSERVACION as OBSERVACION',
+                            'created_at as FECHA_OBSERVACION'
+                        )
+                ->where('OBSERVACIONES_ID',$relacion->FK_OBSERVACION)
+                ->get();
+                $comentarios[] = $comentario[0];
+            }
+            //dd($comentarios);
+            return $comentarios;
+        }
+
+        public function ObtenerComentariosCGA($id_solicitud){
+            date_default_timezone_set('America/Mexico_City');
+            $comentarios = array();
+            $rel_comentarios = DB::table('REL_OBSERVACIONES_CGA')
+                ->select('FK_OBSERVACION')
+                ->where('FK_SOLICITUD_ID',$id_solicitud)
+                ->get();
+            foreach ($rel_comentarios as $relacion) {
+                $comentario = DB::table('SOLICITUDES_OBSERVACIONES')
+                ->select(
+                            'OBSERVACIONES_ID as ID_OBSERVACION',
+                            'OBSERVACIONES_OBSERVACION as OBSERVACION',
+                            'created_at as FECHA_OBSERVACION'
+                        )
+                ->where('OBSERVACIONES_ID',$relacion->FK_OBSERVACION)
+                ->get();
+                $comentarios[] = $comentario[0];
+            }
+            //dd($comentarios);
+            return $comentarios;
+        }
+
+        public function ObtenerComentariosSPR($id_solicitud){
+            date_default_timezone_set('America/Mexico_City');
+            $comentarios = array();
+            $rel_comentarios = DB::table('REL_OBSERVACIONES_SPR')
+                ->select('FK_OBSERVACION')
+                ->where('FK_SOLICITUD_ID',$id_solicitud)
+                ->get();
+            foreach ($rel_comentarios as $relacion) {
+                $comentario = DB::table('SOLICITUDES_OBSERVACIONES')
+                ->select(
+                            'OBSERVACIONES_ID as ID_OBSERVACION',
+                            'OBSERVACIONES_OBSERVACION as OBSERVACION',
+                            'created_at as FECHA_OBSERVACION'
+                        )
+                ->where('OBSERVACIONES_ID',$relacion->FK_OBSERVACION)
+                ->get();
+                $comentarios[] = $comentario[0];
+            }
+            //dd($comentarios);
+            return $comentarios;
+        }
+
         public function ObtenerCambioAdscripcion(Request $request){
             $solicitud = SolicitudesController::ObtenerSolicitudId($request['id_sol']);
             $cambio_adscripcion = SolicitudesController::ObtenerDatosCambioAdscripcion($request['id_sol']);
             //dd($cambio_adscripcion);
             $cabeceras = array(
                 'Número de solicitud', 
+                'Estatus', 
                 'Candidato', 
                 'Dependencia',  
                 'Fecha de solicitud',  
@@ -38,10 +205,12 @@
                 'Puesto actual',  
                 'Salario actual',  
                 'Actividades actuales',
-                'Justificación'
+                'Justificación',
+                'Escape'
             );
             $datos_tabla = array(
                 'Número de solicitud' => $solicitud->ID_SOLICITUD,
+                'Estatus' => $solicitud->ESTATUS_SOLICITUD,
                 'Candidato' => $solicitud->NOMBRE_SOLICITUD,
                 'Dependencia' => $solicitud->NOMBRE_DEPENDENCIA,
                 'Fecha de solicitud' => $solicitud->FECHA_CREACION,
@@ -57,7 +226,8 @@
                 'Puesto actual' => $solicitud->PUESTO_SOLICITUD,  
                 'Salario actual' => $solicitud->SALARIO_FORMATO,  
                 'Actividades actuales' => $solicitud->ACTIVIDADES_SOLICITUD,
-                'Justificación' => $solicitud->JUSTIFICACION_SOLICITUD
+                'Justificación' => $solicitud->JUSTIFICACION_SOLICITUD,
+                'Escape' => $solicitud->ID_ESCAPE
             );//*/
             $data = array(
                 "cabeceras"=>$cabeceras,
@@ -73,6 +243,7 @@
             //dd($promocion);
             $cabeceras = array(
                 'Número de solicitud',
+                'Estatus',
                 'Candidato',
                 'Dependencia',
                 'Fecha de solicitud',
@@ -85,10 +256,12 @@
                 'Puesto actual',
                 'Salario actual',
                 'Actividades actuales',
-                'Justificación'
+                'Justificación',
+                'Escape'
             );
             $datos_tabla = array(
                 'Número de solicitud' => $solicitud->ID_SOLICITUD,
+                'Estatus' => $solicitud->ESTATUS_SOLICITUD,
                 'Candidato' => $solicitud->NOMBRE_SOLICITUD,
                 'Dependencia' => $solicitud->NOMBRE_DEPENDENCIA,
                 'Fecha de solicitud' => $solicitud->FECHA_CREACION,
@@ -101,7 +274,8 @@
                 'Puesto actual' => $solicitud->PUESTO_SOLICITUD,
                 'Salario actual' => $solicitud->SALARIO_FORMATO,
                 'Actividades actuales' => $solicitud->ACTIVIDADES_SOLICITUD,
-                'Justificación' => $solicitud->JUSTIFICACION_SOLICITUD
+                'Justificación' => $solicitud->JUSTIFICACION_SOLICITUD,
+                'Escape' => $solicitud->ID_ESCAPE
             );//*/
             //dd($sustitucion);
             $data = array(
@@ -118,6 +292,7 @@
             //dd($solicitud);
             $cabeceras = array(
                 'Número de solicitud',
+                'Estatus',
                 'Candidato',
                 'Dependencia',
                 'Fecha de solicitud',
@@ -131,10 +306,12 @@
                 'Puesto de quien causa baja',
                 'Actividades de quien causa baja', 
                 'Salario de quien causa baja',
-                'Justificación'
+                'Justificación',
+                'Escape'
             );
             $datos_tabla = array(
                 'Número de solicitud' => $solicitud->ID_SOLICITUD,
+                'Estatus' => $solicitud->ESTATUS_SOLICITUD,
                 'Candidato' => $sustitucion->NUEVO_CANDIDATO,//
                 'Dependencia' => $solicitud->NOMBRE_DEPENDENCIA,
                 'Fecha de solicitud' => $solicitud->FECHA_CREACION,
@@ -148,7 +325,8 @@
                 'Puesto de quien causa baja' => $solicitud->PUESTO_SOLICITUD,
                 'Actividades de quien causa baja' => $solicitud->ACTIVIDADES_SOLICITUD, 
                 'Salario de quien causa baja' => $solicitud->SALARIO_FORMATO,
-                'Justificación' => $solicitud->JUSTIFICACION_SOLICITUD
+                'Justificación' => $solicitud->JUSTIFICACION_SOLICITUD,
+                'Escape' => $solicitud->ID_ESCAPE
             );//*/
             //dd($sustitucion);
             $data = array(
@@ -164,7 +342,8 @@
             //dd($solicitud);
             $solicitud = SolicitudesController::ObtenerSolicitudId($request['id_sol']);
             $cabeceras = array(
-                'Número de solicitud', 
+                'Número de solicitud',
+                'Estatus',
                 'Candidato', 
                 'Dependencia',  
                 'Fecha de solicitud',  
@@ -173,10 +352,12 @@
                 'Puesto solicitado',  
                 'Salario solicitado',  
                 'Actividades',
-                'Justificación'
+                'Justificación',
+                'Escape'
             );
             $datos_tabla = array(
-                'Número de solicitud' => $solicitud->ID_SOLICITUD, 
+                'Número de solicitud' => $solicitud->ID_SOLICITUD,
+                'Estatus' => $solicitud->ESTATUS_SOLICITUD,
                 'Candidato' => $solicitud->NOMBRE_SOLICITUD, 
                 'Dependencia' => $solicitud->NOMBRE_DEPENDENCIA,  
                 'Fecha de solicitud' => $solicitud->FECHA_CREACION,  
@@ -185,7 +366,8 @@
                 'Puesto solicitado' => $solicitud->PUESTO_SOLICITUD,
                 'Salario solicitado' => $solicitud->SALARIO_FORMATO, 
                 'Actividades' => $solicitud->ACTIVIDADES_SOLICITUD,
-                'Justificación' => $solicitud->JUSTIFICACION_SOLICITUD
+                'Justificación' => $solicitud->JUSTIFICACION_SOLICITUD,
+                'Escape' => $solicitud->ID_ESCAPE
             );//*/
             $data = array(
                 "cabeceras"=>$cabeceras,
