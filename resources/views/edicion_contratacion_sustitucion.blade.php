@@ -1,5 +1,5 @@
 @extends('plantillas.menu')
-@section('titulo','Solicitudes')
+@section('titulo','Editar Contratación')
 @section('content')
 	<div class="col-lg-12">
 		<section class="panel">
@@ -114,7 +114,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Salario Neto Propuesto</label>
             <div class="col-sm-6">
-              <input type="number" class="form-control" placeholder="Puesto del Candidato" value="{{$solicitud->SALARIO_PROPUESTO}}" id="propuesta-salario" step=".01">
+              <input type="number" class="form-control" placeholder="Puesto del Candidato" value="{{$solicitud->SALARIO_PROPUESTO_SF}}" id="propuesta-salario" step=".01">
             </div>
           </div>
           <div class="form-group">
@@ -145,6 +145,12 @@
             <label class="col-sm-2 control-label">Ahorro</label>
             <div class="col-sm-6">
               <input type="number" class="form-control" placeholder="Ahorro" value="{{$solicitud->AHORRO_SOLICITUD}}" id="ahorro_solicitud" step=".01">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Compensación</label>
+            <div class="col-sm-6">
+              <input type="number" class="form-control" placeholder="Compensación" value="{{$solicitud->COMPENSACION_SOLICITUD}}" id="compensacion_solicitud" step=".01">
             </div>
           </div>
           <div class="form-group">
@@ -194,7 +200,7 @@
 
     function verCuadro(id_solicitud){
       //location.href='/cuadro/contratacion/'+id_solicitud;
-      window.open('/cuadro/contratacion/'+id_solicitud,'_blank');
+      window.open('/cuadro/contratacion_sustitucion/'+id_solicitud,'_blank');
 
     }
 
@@ -223,6 +229,7 @@
       var categoria_inferior = $("#propuesta-categoria_inferior").val();
 
       var ahorro_solicitud = $("#ahorro_solicitud").val();
+      var compensacion_solicitud = $("#compensacion_solicitud").val();
       //console.log(ahorro_solicitud);
       var success;
       var url = "/contratacion_sustitucion/guardar_datos_sustitucion";
@@ -239,6 +246,7 @@
       dataForm.append('salario_inferior',salario_inferior);
       dataForm.append('categoria_inferior',categoria_inferior);
       dataForm.append('ahorro_solicitud',ahorro_solicitud);
+      dataForm.append('compensacion_solicitud',compensacion_solicitud);
       //lamando al metodo ajax
 
       metodoAjax(url,dataForm,function(success){

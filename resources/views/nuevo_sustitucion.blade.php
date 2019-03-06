@@ -1,5 +1,5 @@
 @extends('plantillas.menu')
-@section('titulo','Solicitudes')
+@section('titulo','Nueva Sustitución')
 @section('content')
 	<div class="col-lg-12">
 		<section class="panel">
@@ -65,7 +65,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Actividades</label>
             <div class="col-sm-6">
-              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeñará" id="Sustitucion-ActividadesNuevas"></textarea>
+              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeñará" id="Sustitucion-ActividadesNuevas" maxlength="830"></textarea>
             </div>
           </div>
           <div class="form-group">

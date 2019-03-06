@@ -1,5 +1,5 @@
 @extends('plantillas.menu')
-@section('titulo','Solicitudes')
+@section('titulo','Nueva Contratación')
 @section('content')
 	<div class="col-lg-12">
 		<section class="panel">
@@ -35,7 +35,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Actividades*</label>
             <div class="col-sm-6">
-              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeñará" id="Contratacion-Actividades"></textarea>
+              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeñará" id="Contratacion-Actividades" maxlength="830"></textarea>
             </div>
           </div>
           <div class="form-group">
@@ -166,8 +166,10 @@
         MensajeModal("¡ATENCIÓN!",'El nombre del candidato es un campo obligatorio');
       }else if(actividades==''){
         MensajeModal("¡ATENCIÓN!",'Las actividades son un campo obligatorio');
-      }else if(fuente_recursos=='SELECCIONAR'){
-        MensajeModal("¡ATENCIÓN!",'La fuente de recursos es un campo obligatorio');
+      }else if(actividades==''){
+        MensajeModal("¡ATENCIÓN!",'Las actividades son un campo obligatorio');
+      }else if(salario==''){
+        MensajeModal("¡ATENCIÓN!",'Debe proponer un salario para el candidato');
       }else if(justificacion==''){
         MensajeModal("¡ATENCIÓN!",'La justificación es un campo obligatorio');
       }else if(archivo_organigrama.value==""){

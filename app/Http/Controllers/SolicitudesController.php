@@ -7,6 +7,7 @@
     use Illuminate\Support\Facades\Storage;//gestion de archivos
     use Illuminate\Support\Facades\DB;//consulta a la base de datos
 
+
     class SolicitudesController extends Controller
     {
         /**
@@ -245,20 +246,58 @@
         }
 
         public function VerCuadroElaborado($id_solicitud){
+            $sustitucion = array();
+            $promocion = array();
             $id_solicitud = str_replace('_','/',$id_solicitud);
             $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
-            return view('pdf.cuadro') ->with ("solicitud",$solicitud);
+            //$sustitucion = SolicitudesController::ObtenerDatosSustitucion($id_solicitud);
+            $promocion = SolicitudesController::ObtenerDatosPromocion($id_solicitud);
+            //dd($solicitud);
+            return view('pdf.cuadro_promocion') ->with (["solicitud"=>$solicitud,"promocion"=>$promocion]);
         }
 
         public function PDFContratacion($id_solicitud){
             $id_solicitud = str_replace('_','/',$id_solicitud);
             //hay que validar que exista la solicitud
             $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
-            $pdf = \PDF::loadView('pdf.cuadro',['solicitud'=>$solicitud])->setPaper('a4', 'landscape');
-            //return $pdf->download($descripcion['DATOS']->NOM_DESC.'.pdf');
-            return $pdf->stream();
+            //dd($solicitud);
+            if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD, 'CONTRATACIÓN')==0){
+                $pdf = \PDF::loadView('pdf.cuadro_contratacion',['solicitud'=>$solicitud])->setPaper('letter', 'landscape');
+                //return $pdf->download($descripcion['DATOS']->NOM_DESC.'.pdf');
+                return $pdf->stream($id_solicitud.'.pdf', array("Attachment" => 0));
+            }else{
+                return view('errors.404');
+            }
+        }
 
-            //return view('error.404') ->with ("solicitud",$solicitud);
+        public function PDFSustitucion($id_solicitud){
+            $id_solicitud = str_replace('_','/',$id_solicitud);
+            //hay que validar que exista la solicitud
+            $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+            $sustitucion = SolicitudesController::ObtenerDatosSustitucion($id_solicitud);
+            //dd($sustitucion);
+            if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD, 'CONTRATACIÓN POR SUSTITUCIÓN')==0){
+                $pdf = \PDF::loadView('pdf.cuadro_sustitucion',['solicitud'=>$solicitud,'sustitucion'=>$sustitucion])->setPaper('letter', 'landscape');
+                //return $pdf->download($descripcion['DATOS']->NOM_DESC.'.pdf');
+                return $pdf->stream($id_solicitud.'.pdf', array("Attachment" => 0));
+            }else{
+                return view('errors.404');
+            }
+        }
+
+        public function PDFPromocion($id_solicitud){
+            $id_solicitud = str_replace('_','/',$id_solicitud);
+            //hay que validar que exista la solicitud
+            $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+            $promocion = SolicitudesController::ObtenerDatosPromocion($id_solicitud);
+            //dd($promocion);
+            if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD, 'PROMOCION')==0){
+                $pdf = \PDF::loadView('pdf.cuadro_promocion',['solicitud'=>$solicitud,'promocion'=>$promocion])->setPaper('letter', 'landscape');
+                //return $pdf->download($descripcion['DATOS']->NOM_DESC.'.pdf');
+                return $pdf->stream($id_solicitud.'.pdf', array("Attachment" => 0));
+            }else{
+                return view('errors.404');
+            }
         }
 
         public function GuardaDatosCambioAdscripcion(Request $request){
@@ -313,7 +352,7 @@
         }
 
         public function GuardaDatosContratacion(Request $request){
-            //dd($request['actividades']);
+            //dd($request['compensacion_solicitud']);
             $update = SolicitudesController::UpdateDatosCGA($request);
             //dd($request['actividades']);
             $update = DB::table('SOLICITUDES_SOLICITUD')
@@ -344,6 +383,7 @@
                             'DATOS_CGA_CATEGORIA_SUPERIOR' => $request['categoria_superior'],
                             'DATOS_CGA_SALARIO_INFERIOR' => $request['salario_inferior'],
                             'DATOS_CGA_CATEGORIA_INFERIOR' => $request['categoria_inferior'],
+                            'DATOS_CGA_COMPENSACION' => $request['compensacion_solicitud'],
                             'DATOS_CGA_AHORRO' => $request['ahorro_solicitud'],
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
@@ -464,6 +504,7 @@
             //dd($dependencia);
             $solicitud[0]->ID_ESCAPE = str_replace('/','_',$solicitud[0]->ID_SOLICITUD);
             $solicitud[0]->SALARIO_FORMATO = number_format($solicitud[0]->SALARIO_SOLICITUD,2);
+            //$solicitud[0]->SALARIO_SOLICITUD = 0;
             //echo 'DE: ', $formatter->formatCurrency($amount, 'EUR'), PHP_EOL;
             $fechas = DB::table('SOLICITUDES_FECHAS')
                 ->where('FK_SOLICITUD_ID',$id_solicitud)
@@ -480,6 +521,7 @@
             $solicitud[0]->CATEGORIA_PROPUESTA = $datos_cga[0]->DATOS_CGA_CATEGORIA_PROPUESTA;
             $solicitud[0]->PUESTO_PROPUESTO = $datos_cga[0]->DATOS_CGA_PUESTO_PROPUESTO;
             $solicitud[0]->SALARIO_PROPUESTO = number_format($datos_cga[0]->DATOS_CGA_SALARIO_PROPUESTO,2);
+            $solicitud[0]->SALARIO_PROPUESTO_SF = $datos_cga[0]->DATOS_CGA_SALARIO_PROPUESTO;
             $solicitud[0]->ESTATUS_PROCEDE = $datos_cga[0]->DATOS_CGA_PROCEDENTE;
             $solicitud[0]->RESPUESTA_CGA = $datos_cga[0]->DATOS_CGA_RESPUESTA;
             $solicitud[0]->CATEGORIA_SUPERIOR = $datos_cga[0]->DATOS_CGA_CATEGORIA_SUPERIOR;
@@ -488,6 +530,7 @@
             $solicitud[0]->SALARIO_INFERIOR = $datos_cga[0]->DATOS_CGA_SALARIO_INFERIOR;
             $solicitud[0]->ESTATUS_SOLICITUD = $datos_cga[0]->DATOS_CGA_ESTATUS;
             $solicitud[0]->AHORRO_SOLICITUD = $datos_cga[0]->DATOS_CGA_AHORRO;
+            $solicitud[0]->COMPENSACION_SOLICITUD = $datos_cga[0]->DATOS_CGA_COMPENSACION;
             $solicitud[0]->HOY = date('d/m/Y');
 
             $rel_analista = DB::table('REL_SOLICITUDES_ANALISTA')
@@ -502,6 +545,15 @@
                 $solicitud[0]->ANALISTA_SOLICITUD = $analista[0]->LOGIN_RESPONSABLE;
             }else{
                 $solicitud[0]->ANALISTA_SOLICITUD = 'SIN ASIGNAR';
+            }
+
+            $firmas = DB::table('SOLICITUDES_FIRMAS')
+                ->where('FK_SOLICITUD_ID',$id_solicitud)
+                ->get();
+            if(count($firmas)>0){
+                $solicitud[0]->FIRMA_CGA = $firmas[0]->FIRMAS_CGA;
+                $solicitud[0]->FIRMA_TITULAR = $firmas[0]->FIRMAS_TITULAR;
+                $solicitud[0]->FIRMA_SPR = $firmas[0]->FIRMAS_SPR;
             }
 
             return $solicitud[0];
@@ -523,7 +575,8 @@
 
         public function ValidarSolicitudDependencia(Request $request){
             date_default_timezone_set('America/Mexico_City');
-            $usuario = 'USUARIO TITULAR';//aqui se debe poner el nombre del usuario de SPR
+            $usuario = \Session::get('responsable')[0];
+            //$usuario = 'USUARIO TITULAR';//aqui se debe poner el nombre del usuario de SPR
 
             $update = DB::table('SOLICITUDES_FECHAS')
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])
@@ -570,7 +623,8 @@
 
         public function ValidarSolicitudCGA(Request $request){
             date_default_timezone_set('America/Mexico_City');
-            $usuario = 'USUARIO COORDINADOR';//aqui se debe poner el nombre del usuario de SPR
+            $usuario = \Session::get('responsable')[0];
+            //$usuario = 'USUARIO COORDINADOR';//aqui se debe poner el nombre del usuario de SPR
 
             $update = DB::table('SOLICITUDES_FECHAS')
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])
@@ -618,7 +672,8 @@
 
         public function ValidarSolicitudSPR(Request $request){
             date_default_timezone_set('America/Mexico_City');
-            $usuario = 'USUARIO SPR';//aqui se debe poner el nombre del usuario de SPR
+            $usuario = \Session::get('responsable')[0];
+            //$usuario = 'USUARIO SPR';//aqui se debe poner el nombre del usuario de SPR
 
             /*$update = DB::table('SOLICITUDES_DATOS_CGA')
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])

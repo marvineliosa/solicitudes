@@ -11,13 +11,13 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Fecha de Recibido</label>
             <div class="col-sm-4">
-              <input type="date" class="form-control" placeholder="Fehca de Recibido" value="{{$solicitud->FECHA_CREACION}}" disabled>
+              <input type="text" class="form-control" placeholder="Fehca de Recibido" value="{{$solicitud->FECHA_CREACION}}" disabled>
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label">Información Completa</label>
             <div class="col-sm-4">
-              <input type="date" class="form-control" placeholder="Fehca de Información Completa" value="{{$solicitud->FECHAS_INFORMACION_COMPLETA}}" disabled>
+              <input type="text" class="form-control" placeholder="Fehca de Información Completa" value="{{$solicitud->FECHAS_INFORMACION_COMPLETA}}" disabled>
             </div>
           </div>
           <div class="form-group">
@@ -47,7 +47,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Actividades</label>
             <div class="col-sm-6">
-              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeñará" id="Actividades_candidato">{{$solicitud->ACTIVIDADES_SOLICITUD}}</textarea>
+              <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeñará" id="Actividades_candidato" maxlength="830">{{$solicitud->ACTIVIDADES_SOLICITUD}}</textarea>
             </div>
           </div>
           <div class="form-group">
@@ -83,7 +83,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Salario Neto Propuesto</label>
             <div class="col-sm-6">
-              <input type="number" class="form-control" placeholder="Puesto del Candidato" value="{{$solicitud->SALARIO_PROPUESTO}}" id="propuesta-salario" step=".01">
+              <input type="number" class="form-control" placeholder="Puesto del Candidato" value="{{$solicitud->SALARIO_PROPUESTO_SF}}" id="propuesta-salario" step=".01">
             </div>
           </div>
           <div class="form-group">
@@ -117,6 +117,12 @@
             </div>
           </div>
           <div class="form-group">
+            <label class="col-sm-2 control-label">Compensación</label>
+            <div class="col-sm-6">
+              <input type="number" class="form-control" placeholder="Compensación" value="{{$solicitud->COMPENSACION_SOLICITUD}}" id="compensacion_solicitud" step=".01">
+            </div>
+          </div>
+          <div class="form-group">
             <label class="col-sm-2 control-label">Procedente</label>
             <div class="col-sm-6">
               <select id="SelectProcede" class="form-control">
@@ -129,7 +135,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Respuesta</label>
             <div class="col-sm-6">
-              <textarea class="form-control ckeditor" name="editor1" rows="6" placeholder="Descripción de la respuesta por parte de la CGA" id="respuesta">{{$solicitud->RESPUESTA_CGA}}</textarea>
+              <textarea class="form-control ckeditor" name="editor1" rows="6" placeholder="Descripción de la respuesta por parte de la CGA" id="respuesta" maxlength="830">{{$solicitud->RESPUESTA_CGA}}</textarea>
             </div>
           </div>
           <div class="form-group">
@@ -192,6 +198,7 @@
       var categoria_inferior = $("#propuesta-categoria_inferior").val();
 
       var ahorro_solicitud = $("#ahorro_solicitud").val();
+      var compensacion_solicitud = $("#compensacion_solicitud").val();
       //console.log(ahorro_solicitud);
       var success;
       var url = "/contratacion/guardar_datos_contratacion";
@@ -208,6 +215,7 @@
       dataForm.append('salario_inferior',salario_inferior);
       dataForm.append('categoria_inferior',categoria_inferior);
       dataForm.append('ahorro_solicitud',ahorro_solicitud);
+      dataForm.append('compensacion_solicitud',compensacion_solicitud);
       //lamando al metodo ajax
 
       metodoAjax(url,dataForm,function(success){

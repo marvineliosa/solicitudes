@@ -127,6 +127,8 @@ Route::post('/solicitud/obtener_datos_cambio_adscripcion', 'SolicitudesControlle
 //Route::get('/cuadro/{id_solicitud}', 'SolicitudesController@VerCuadroElaborado');
 Route::get('/cuadro/{id_solicitud}', 'SolicitudesController@VerCuadroElaborado');
 Route::get('/cuadro/contratacion/{id_solicitud}', 'SolicitudesController@PDFContratacion');
+Route::get('/cuadro/contratacion_sustitucion/{id_solicitud}', 'SolicitudesController@PDFSustitucion');
+Route::get('/cuadro/promocion/{id_solicitud}', 'SolicitudesController@PDFPromocion');
 
 
 
@@ -159,5 +161,10 @@ Route::post('/archivos/obtener_archivos','ArchivosController@RegresarArchivosSol
 Route::post('/archivos/agregar_mensaje','ArchivosController@AgregarMensaje');
 Route::post('/archivos/actualizar_archivo','ArchivosController@ActualizaArchivo');
 
+ 
+Route::get('qr-code', function () {
+    $qr = QrCode::size(100)->generate('Welcome to kerneldev.com!');
+    return $qr;
+});
 /*Route::get('/lock','SolicitudesController@BloquearSql');
 Route::get('/unlock','SolicitudesController@DesbloquearSql');//*/

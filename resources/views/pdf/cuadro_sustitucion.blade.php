@@ -28,9 +28,9 @@
 	</style>
 </head>
 <body style="height:420px; overflow:auto;">
-	<div id="div-dependencia" align="center" class=""><h4>{{$solicitud->NOMBRE_DEPENDENCIA}}</h4></div>
+	<div id="div-dependencia" align="center" class=""><h5>{{$solicitud->NOMBRE_DEPENDENCIA}}</h5></div>
 	@if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN')==0||strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN POR SUSTITUCIÓN')==0)
-		<div id="div-subtitulo" align="center" class="">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}} EN NÓMINA {{$solicitud->NOMINA_SOLICITUD}}</div>
+		<div id="div-subtitulo" align="center" class="" style="font-size: 10px">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}} EN NÓMINA {{$solicitud->NOMINA_SOLICITUD}}</div>
 	@else
 		<div id="div-subtitulo" align="center" class="">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}</div>
 	@endif
@@ -40,19 +40,23 @@
 		<table style="width:100%;" class="table table-bordered">
 		  <tr>
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">NOMBRE</th>
-		    <th style="font-size: 10px;border:1px solid black;" class="bloque">FUNCIONES</th> 
-		    <th style="font-size: 10px;border:1px solid black;" class="bloque">CATEGORÍA/PUESTO SOLICITADO</th>
+		    <th style="width: 100%; font-size: 10px;border:1px solid black;" class="bloque">FUNCIONES</th> 
+		    <th style="font-size: 10px;border:1px solid black;" class="bloque">CATEGORÍA / PUESTO SOLICITADO</th>
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">SALARIO NETO SOLICITADO</th>
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">DIFERENCIA QUINCENAL</th>
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">% DIFERENCIA</th>
+		    <th style="width: 70%; font-size: 8px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENALDE QUIEN SE SUSTITUYE</th>
+		    <th style="font-size: 10px;border:1px solid black;" class="bloque">EN SUSTITUCIÓN DE</th>
 		  </tr>
 		  <tr>
+		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$sustitucion->NUEVO_CANDIDATO}}</td>
+		    <td style="font-size: 8px;border:1px solid black;" align="justify">{{$sustitucion->NUEVAS_ACTIVIDADES}}</td>
+		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$sustitucion->NUEVA_CATEGORIA}}</td>
+		    <td style="font-size: 10px;border:1px solid black;" align="center">{{'$ '.number_format($sustitucion->NUEVO_SALARIO,2)}}</td>
+		    <td style="font-size: 10px;border:1px solid black;" align="center">{{number_format(($sustitucion->NUEVO_SALARIO - $solicitud->SALARIO_SOLICITUD),2)}}</td>
+		    <td style="font-size: 10px;border:1px solid black;" align="center">{{round((($sustitucion->NUEVO_SALARIO - $solicitud->SALARIO_SOLICITUD)/$sustitucion->NUEVO_SALARIO)*100,2).'%'}}</td>
+		    <td style="font-size: 10px;border:1px solid black;" align="center">{{'$ '.$solicitud->SALARIO_FORMATO}}</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$solicitud->NOMBRE_SOLICITUD}}</td>
-		    <td style="font-size: 8px;border:1px solid black;" align="justify">{{$solicitud->ACTIVIDADES_SOLICITUD}}</td>
-		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$solicitud->PUESTO_SOLICITUD}}</td>
-		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$solicitud->SALARIO_FORMATO}}</td>
-		    <td style="font-size: 10px;border:1px solid black;" align="center"></td>
-		    <td style="font-size: 10px;border:1px solid black;" align="center"></td>
 		  </tr>
 		</table>
 	</div>
@@ -65,29 +69,29 @@
 		    <th style="font-size: 8px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL</th>
 		    <th style="font-size: 8px;border:1px solid black;" class="bloque">DIFERENCIA QUINCENAL</th>
 		    <th style="font-size: 8px;border:1px solid black;" class="bloque">% DE DIFERENCIA</th>
-		    @if(false)
+		    @if($solicitud->COMPENSACION_SOLICITUD)
 		    <th style="font-size: 8px;border:1px solid black;" class="bloque">COMPENSACIÓN SALARIAL QUINCENAL</th>
 		    <th style="font-size: 8px;border:1px solid black;" class="bloque">COMPENSACIÓN MÁS SALARIO QUINCENAL</th>
 		    @endif
 		  </tr>
 		  <tr>
 		    <td style="font-size: 8px;border:1px solid black;" align="center">PROPUESTA DE LA COORDINACIÓN GENERAL ADMINISTRATIVA</td>
-		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{$solicitud->PUESTO_PROPUESTO}}</td>
-		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{$solicitud->SALARIO_PROPUESTO}}</td>
-		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center"></td>
-		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center"></td>
-		    @if(false)
-		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center"></td>
-		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center"></td>
+		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{$solicitud->CATEGORIA_PROPUESTA}}</td>
+		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{'$ '.$solicitud->SALARIO_PROPUESTO}}</td>
+		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center"><!--{{$dif_quincenal = (double)((($solicitud->SALARIO_PROPUESTO_SF)?$solicitud->SALARIO_PROPUESTO_SF:0) - (($solicitud->SALARIO_SOLICITUD)?$solicitud->SALARIO_SOLICITUD:0))}} -->{{number_format($dif_quincenal,2)}}</td>
+		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{(($solicitud->SALARIO_SOLICITUD!=0)?(round((($dif_quincenal/$solicitud->SALARIO_SOLICITUD)*100),1)).'%':'')}}</td>
+		    @if($solicitud->COMPENSACION_SOLICITUD)
+		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{'$ '.number_format($solicitud->COMPENSACION_SOLICITUD,2)}}</td>
+		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{'$ '.number_format(($solicitud->COMPENSACION_SOLICITUD + $solicitud->SALARIO_PROPUESTO_SF),2)}}</td>
 		    @endif
 		  </tr>
-		  <tr>
-		  	@if(false)
+		  <tr><!-- fuente de recursos -->
+		  	@if($solicitud->COMPENSACION_SOLICITUD)
 		    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="right" colspan="4">Fuente de Recursos:</td>
-		    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="left" colspan="3">{{ucwords(strtolower($solicitud->FUENTE_RECURSOS_SOLICITUD))}}</td>
+		    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="left" colspan="3">{{$solicitud->FUENTE_RECURSOS_SOLICITUD}}</td>
 		    @else
 		    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="right" colspan="3">Fuente de Recursos:</td>
-		    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="left" colspan="2">{{ucwords(strtolower($solicitud->FUENTE_RECURSOS_SOLICITUD))}}</td>
+		    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="left" colspan="2">{{$solicitud->FUENTE_RECURSOS_SOLICITUD}}</td>
 		    @endif
 		  </tr>
 		</table>
@@ -103,51 +107,28 @@
 		</table>
 	</div>
 	<br>
+	@if(in_array($solicitud->ESTATUS_SOLICITUD, ['TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR']))
 	<div id="div-tabla_sellos" align="right" class="">
 		<table style="width:100%" class="table" border="0">
 		  <tr>
 		  	<td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
-		  		<img src="data:image/png;base64, {{ base64_encode(QrCode::format('png')->size(100)->generate('Make me into an QrCode!')) }} ">
+		  		<img src="data:image/png;base64, {{ base64_encode(QrCode::format('png')->size(100)->generate($solicitud->FIRMA_CGA)) }} ">
 		  	</td>
 		    <td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
-		  		<img src="data:image/png;base64, {{ base64_encode(QrCode::format('png')->size(100)->generate('Make me into an QrCode!')) }} ">
+		  		<img src="data:image/png;base64, {{ base64_encode(QrCode::format('png')->size(100)->generate($solicitud->FIRMA_TITULAR)) }} ">
 		    </td>
 		    <td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
-		  		<img src="data:image/png;base64, {{ base64_encode(QrCode::format('png')->size(100)->generate('Make me into an QrCode!')) }} ">
+		  		<img src="data:image/png;base64, {{ base64_encode(QrCode::format('png')->size(100)->generate($solicitud->FIRMA_SPR)) }} ">
 		    </td>
 		  </tr>
 		</table>
 	</div>
+	@endif
 </body>
 </html>
 <script type="text/javascript">
-    document.getElementById('mydiv1').innerHTML = 'this is a test';
-</script>
-<script type="text/javascript">
     var gl_solicitud = <?php echo json_encode($solicitud) ?>;
-    console.log(gl_solicitud);
-    //sellos();
-    function formatoMoneda(numero) {
-    	numero = '3258.56';
-	    if(numero>999999){
-			  conPunto = numero.substring(0, numero.length-9);
-			  conPunto2 = numero.substring(numero.length-9, numero.length-6);
-			  conPunto3 = numero.substring(numero.length-6, numero.length);
-			  numero = conPunto + ',' + conPunto2 + ',' + conPunto3;
-			}else{
-				if(numero>999){
-				  conPunto = numero.substring(0, numero.length-6);
-				  conPunto2 = numero.substring(numero.length-6, numero.length);
-				  numero = conPunto + ',' + conPunto2;
-				}			 	
-			}
-			return numero;
-	}
-	function sellos(){
-		var sello1 = document.getElementById('sello_titular');
-		sello1.innerHTML='EPALE';
-	}
-
-
-
+    //console.log(gl_solicitud);
+    var gl_sustitucion = <?php echo json_encode($sustitucion) ?>;
+    console.log(gl_sustitucion);
 </script>

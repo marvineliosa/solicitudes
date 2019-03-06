@@ -124,15 +124,15 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">
-            <table class="table">
+          <div class="modal-body table-responsive">
+            <table class="table" width="50%" style="table-layout: fixed;">
               <thead>
                 <tr>
                   <th scope="col">Concepto</th>
                   <th scope="col">Descripción</th>
                 </tr>
               </thead>
-              <tbody id="CuerpoTablaInformacion">
+              <tbody id="CuerpoTablaInformacion" style="padding: 5px !important;">
 
               </tbody>
             </table>
@@ -198,6 +198,15 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal Carga-->
+      <div class="modal fade" id="modalCarga" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div align="center">
+            <img src="{{ asset('img/carga3.gif') }}" class="img-rounded" alt="Cinque Terre">
+          </div>
+        </div>
+      </div>
 
   </body>
 
@@ -424,7 +433,7 @@
         $("#CuerpoTablaInformacion").append(
           '<tr>'+
             '<th scope="row">' + success['cabeceras'][i] + '</th>'+
-            '<td id="ModalCont-id_sol">'+ success['datos'][success['cabeceras'][i]] +'</td>'+
+            '<td id="ModalCont-id_sol"  style="word-wrap: break-word;">'+ success['datos'][success['cabeceras'][i]] +'</td>'+
           '</tr>'
         );
       }
