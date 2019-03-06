@@ -30,23 +30,21 @@ Route::get('/listado/en_proceso', 'SolicitudesController@VistaListadoEnProceso')
 Route::get('/listado/revision_informacion', 'SolicitudesController@VistaListadoRevisionInformacion');//VALIDADO
 
 //listado nuevas en SPR
-Route::get('/listado/nuevas', 'SolicitudesController@VistaNuevasSPR');
-
-//listado nuevas en SPR
-Route::get('/listado/por_revisar', 'SolicitudesController@VistaPorRevisarSPR');
-Route::get('/listado/revisadas', 'SolicitudesController@VistaRevisadasSPR');
+Route::get('/listado/nuevas', 'SolicitudesController@VistaNuevasSPR');//validado
+Route::get('/listado/por_revisar', 'SolicitudesController@VistaPorRevisarSPR');//validado
+Route::get('/listado/revisadas', 'SolicitudesController@VistaRevisadasSPR');//validado
 
 //listado nuevas en dependencia
-Route::get('/listado/dependencia', 'SolicitudesController@VistaListadoDependencia');
+Route::get('/listado/dependencia', 'SolicitudesController@VistaListadoDependencia');//validado
 
 //listado nuevas en dependencia
-Route::get('/listado/spr', 'SolicitudesController@VistaListadoSecretarioParticular');
+Route::get('/listado/spr', 'SolicitudesController@VistaListadoSecretarioParticular');//validado
 
 //listado analista
-Route::get('/listado/analista', 'SolicitudesController@VistaListadoAnalista');
+Route::get('/listado/analista', 'SolicitudesController@VistaListadoAnalista');//validado
 
 //listado CGA
-Route::get('/listado/coordinacion', 'SolicitudesController@VistaListadoCGA');
+Route::get('/listado/coordinacion', 'SolicitudesController@VistaListadoCGA');//validado
 //Listado por estatus
 /*Route::get('/listado/recibido', 'SolicitudesController@VistaRecibidos');
 Route::get('/listado/levantamiento', 'SolicitudesController@VistaLevantamiento');
@@ -55,7 +53,7 @@ Route::get('/listado/revision', 'SolicitudesController@VistaRevision');
 Route::get('/listado/firmas', 'SolicitudesController@VistaAnalisis');
 Route::get('/listado/turnado_spr', 'SolicitudesController@VistaAnalisis');
 Route::get('/listado/completado_rector', 'SolicitudesController@VistaAnalisis');//*/
-Route::get('/listado/estatus/{estatus}', 'SolicitudesController@VistaGeneralEstatus');
+Route::get('/listado/estatus/{estatus}', 'SolicitudesController@VistaGeneralEstatus');//validado
 
 Route::get('/listado/contratacion_sustitucion', function () {
     return view('listado_contratacion_sustitucion');
@@ -69,20 +67,21 @@ Route::get('/listado/promocion', function () {
 Route::get('/listado/cambio_adscripcion', function () {
     return view('listado_cambio_adscripcion');
 });
-Route::get('/salir', function () {
+/*Route::get('/salir', function () {
     return view('login');
-});
+});//*/
+Route::get('/salir','LoginController@cerrarSesion');//validado (no requiere XD)
 /*Route::get('/solicitud/contratacion/{id_solicitud}', function () {
     return view('edicion_contratacion');
 });//*/
 //vistas de edicion de informacion para llenar cuadros
-Route::get('/solicitud/contratacion/{id_solicitud}', 'SolicitudesController@AbrirContratacion');
+Route::get('/solicitud/contratacion/{id_solicitud}', 'SolicitudesController@AbrirContratacion');//validado
 
-Route::get('/solicitud/contratacion_sustitucion/{id_solicitud}', 'SolicitudesController@AbrirContratacionSustitucion');
+Route::get('/solicitud/contratacion_sustitucion/{id_solicitud}', 'SolicitudesController@AbrirContratacionSustitucion');//validado
 
-Route::get('/solicitud/promocion/{id_solicitud}', 'SolicitudesController@AbrirPromocion');
+Route::get('/solicitud/promocion/{id_solicitud}', 'SolicitudesController@AbrirPromocion');//validado
 
-Route::get('/solicitud/cambio_adscripcion/{id_solicitud}', 'SolicitudesController@AbrirCambioAdscripcion');
+Route::get('/solicitud/cambio_adscripcion/{id_solicitud}', 'SolicitudesController@AbrirCambioAdscripcion');//validado
 
 //solicitudes en revision de informaicon
 Route::post('/revision_informacion/actualiza_estado', 'SolicitudesController@MarcarInformacionCorrecta');
@@ -143,6 +142,8 @@ Route::post('/dependencias/obtener_nombre','DependenciasController@RegresarNombr
 
 Route::get('/usuarios','SolicitudesController@VistaUsuarios');
 Route::post('/usuarios/eliminar','LoginController@EliminarUsuario');
+Route::post('/usuarios/guardar_usuario','LoginController@CrearUsuarioGeneral');
+Route::post('/usuarios/recuperar_contrasena','LoginController@RecuperarContrasena');
 
 //refrescando tablas
 Route::post('/refrescar/listado_completo', 'SolicitudesController@RefrescarListadoCompleto');
@@ -150,6 +151,7 @@ Route::post('/refrescar/listado_general/{modulo}', 'SolicitudesController@Refres
 
 //mails
 Route::get('/enviamail','MailsController@pruebamail');
+Route::post('/mail/enviar_contrasena','MailsController@EnviarContrasena');
 
 //archivos
 

@@ -16,6 +16,56 @@
          * @return Response
          */
 
+        public function RecuperarContrasena(Request $request){
+            $usuario = $request['usuario'];
+            $exito = MailsController::FuncionEnviarContrasena($usuario);
+            $mensaje = '';
+            $titulo = '';
+            if($exito){
+                $titulo = '¡ÉXITO!';
+                $mensaje = 'Se ha enviado la contraseña satisfactoriamente';
+            }else{
+                $titulo = '¡ATENCIÓN!';
+                $exito = 'Existió un problema al enviar la contraseña, si el problema persiste, por favor verifique si la cuenta de correo es';
+            }
+            
+            $data = array(
+                "mensaje" => $mensaje,
+                "titulo" => $titulo
+              );
+
+            echo json_encode($data);//*/
+        }
+
+        public function CrearUsuarioGeneral(Request $request){
+            date_default_timezone_set('America/Mexico_City');
+            //dd($request);
+            $existe_usuario = DB::table('SOLICITUDES_LOGIN')
+                ->where('LOGIN_USUARIO',$request['usuario'])
+                ->get();
+            $mensaje = '';
+            if(count($existe_usuario)==0){
+                $contrasena = LoginController::randomPassword();
+                $insert = DB::table('SOLICITUDES_LOGIN')
+                    ->insert([
+                                'LOGIN_USUARIO' => $request['usuario'],
+                                'LOGIN_CONTRASENIA' => $contrasena,
+                                'LOGIN_CATEGORIA' => $request['tipo_usuario'],
+                                'LOGIN_RESPONSABLE' => $request['responsable'],
+                                'created_at' => date('Y-m-d H:i:s')
+                            ]);
+                $mensaje = 'El usuario ha sido registrado satirfacotiamente, se ha enviado la contraseña a '.$request['usuario'];
+                $exito_mail = MailsController::FuncionEnviarContrasena($request['usuario']);
+            }else{
+                $mensaje = 'El usuario ya se encuentra registrado, para cualquier cambio favor de eliminarlo e intentarlo nuevamente';
+            }
+            $data = array(
+                "mensaje" => $mensaje
+              );
+
+            echo json_encode($data);//*/
+        }
+
         public static function ObtenerListadoAnalistas(){
             //$usuarios = array();
             $usuarios = DB::table('SOLICITUDES_LOGIN')

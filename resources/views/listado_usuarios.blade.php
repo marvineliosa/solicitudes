@@ -30,7 +30,8 @@
               <td>{{$usuario->CATEGORIA_USUARIO}}</td>
               <td>
                 <div class="btn-group">
-                  <a class="btn btn-danger" href="#" onclick="ModalEliminarUsuario('{{$usuario->NOMBRE_USUARIO}}','{{$usuario->CATEGORIA_USUARIO}}')" data-toggle="tooltip" data-placement="auto" title="ELIMINAR USUARIO"><i class="icon_close"></i></a> 
+                  <a class="btn btn-danger" href="javascript:void(0)" onclick="ModalEliminarUsuario('{{$usuario->NOMBRE_USUARIO}}','{{$usuario->CATEGORIA_USUARIO}}')" data-toggle="tooltip" data-placement="auto" title="ELIMINAR USUARIO"><i class="icon_close"></i></a>
+                  <a class="btn btn-success" href="javascript:void(0)" onclick="ModalRecuperarContrasena('{{$usuario->NOMBRE_USUARIO}}')" data-toggle="tooltip" data-placement="auto" title="ENVIAR CONTRASEÑA"><i class="icon_key_alt"></i></a> 
                 </div>
               </td>
             </tr>
@@ -57,6 +58,27 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" onclick="EliminarUsuario()">Estoy seguro</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- MODAL DE RECUPERAR CONTRASENA -->
+<div class="modal fade" id="ModalRecuperarContrasena" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="exampleModalLabel" align="center">ATENCIÓN!</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <input type="" name="" style="display: none" id="hide_usuario_pass" value="">
+      </div>
+      <div class="modal-body">
+        <h3 align="center" id="mensaje_contrasena"></h3>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="RecuperarContrasena()">Enviar</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
       </div>
     </div>
@@ -141,7 +163,8 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Tipo de usuario</label>
             <div class="col-sm-10">
-              <select class="form-control m-bot15" id="select-dependencias" onchange="CambioDependencia()">
+              <input type="hidden" class="form-control" placeholder="NOMBRE DEL USUARIO" id="usuario-general" value="">
+              <select class="form-control m-bot15" id="select-usuarios">
                   <option value="SELECCIONAR">--SELECCIONAR USUARIO--</option>
                     <option value="ANALISTA_CGA">ANALISTA</option>
                     <option value="ADMINISTRADOR_CGA">ADMINISTRADOR DE CGA</option>
@@ -152,15 +175,21 @@
             </div>
           </div>
           <div class="form-group">
+            <label class="col-sm-2 control-label">Responsable</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" placeholder="NOMBRE DEL USUARIO" id="usuario_nombre" value="">
+            </div>
+          </div>
+          <div class="form-group">
             <label class="col-sm-2 control-label">Usuario</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" placeholder="NOMBRE DEL USUARIO" id="usuario-usuario" value="">
+              <input type="text" class="form-control" placeholder="CORREO ELECTRONICO DEL USUARIO" id="usuario_general" value="">
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label">Contraseña</label>
             <div class="col-sm-10">
-              <div hidden="true" id="div-BtnPassUsuario"><button type="button" class="btn btn-success" onclick="EnviarContrasena()">Enviar por correo</button></div>
+              <div hidden="true" id="div-BtnPassUsuario"><button type="button" class="btn btn-success" onclick="EnviarContrasenaUsuario()">Enviar por correo</button></div>
             </div>
           </div>
         </div>
@@ -202,13 +231,40 @@
         //aquí se escribe todas las operaciones que se harían en el succes
         //la variable success es el json que recibe del servidor el método AJAX
         //MensajeModal("TITULO DEL MODAL","MENSAJE DEL MODAL");
-        if(success['delete']&&success['delete2']){
-          MensajeModal("¡EXITO!","El usuario ha sido eliminado correctamente");
+        if(success['delete']){
+          if(success['delete2']){
+            MensajeModal("¡EXITO!","El titular se ha sido eliminado correctamente");
+          }else{
+            MensajeModal("¡EXITO!","El usuario ha sido eliminado correctamente");
+          }
           $("#ModalEliminarUsuario").modal('hide');
         }else{
           MensajeModal("¡ATENCIÓN!","Existió un problema, por favor intentelo más tarde");
           //$("#contrasena-titular").val('CONTRASEÑA SECRETA');
         }
+      });//*/
+    }
+
+    function ModalRecuperarContrasena(usuario){
+      $('#hide_usuario').val(usuario);
+      $("#mensaje_contrasena").html('¿Desea enviar la contraseña del usuario '+usuario+' por correo electrónico?');
+      $("#ModalRecuperarContrasena").modal();
+    }
+
+    function RecuperarContrasena(){
+      var usuario = $('#hide_usuario').val();
+      console.log(usuario);
+      var success;
+      var url = "/usuarios/recuperar_contrasena";
+      var dataForm = new FormData();
+      dataForm.append('usuario',usuario);
+      //lamando al metodo ajax
+      metodoAjax(url,dataForm,function(success){
+        //aquí se escribe todas las operaciones que se harían en el succes
+        //la variable success es el json que recibe del servidor el método AJAX
+        $("#ModalRecuperarContrasena").modal('hide');
+        MensajeModal(success['titulo'],success['mensaje']);
+        
       });//*/
     }
 
@@ -248,6 +304,61 @@
         $("#nombre-titular").val('');
         $("#div-BtnPass").hide();
       }
+    }
+
+    function EnviarContrasena(){
+      var usuario = $("#usuario-titular").val();
+      console.log(usuario);
+      var success;
+        var url = "/mail/enviar_contrasena";
+        var dataForm = new FormData();
+        dataForm.append('usuario',usuario);
+        //lamando al metodo ajax
+        metodoAjax(url,dataForm,function(success){
+          //aquí se escribe todas las operaciones que se harían en el succes
+          //la variable success es el json que recibe del servidor el método AJAX
+          
+          MensajeModal("¡EXITO!",'Se ha enviado la contraseña al correo '+usuario);
+
+        });
+    }
+
+    function GuardarDatosUsuario(){
+      var usuario = $("#usuario_general").val();
+      var responsable = $("#usuario_nombre").val();
+      var tipo_usuario = $("#select-usuarios").val();
+      var success;
+        var url = "/usuarios/guardar_usuario";
+        var dataForm = new FormData();
+        dataForm.append('usuario',usuario);
+        dataForm.append('responsable',responsable);
+        dataForm.append('tipo_usuario',tipo_usuario);
+        //lamando al metodo ajax
+        metodoAjax(url,dataForm,function(success){
+          //aquí se escribe todas las operaciones que se harían en el succes
+          //la variable success es el json que recibe del servidor el método AJAX
+          
+          MensajeModal("¡EXITO!", success['mensaje']);
+
+        });
+
+    }
+
+    function EnviarContrasenaUsuario(){
+      var usuario = $("#usuario_general").val();
+      console.log(usuario);
+      var success;
+        var url = "/mail/enviar_contrasena";
+        var dataForm = new FormData();
+        dataForm.append('usuario',usuario);
+        //lamando al metodo ajax
+        metodoAjax(url,dataForm,function(success){
+          //aquí se escribe todas las operaciones que se harían en el succes
+          //la variable success es el json que recibe del servidor el método AJAX
+          
+          MensajeModal("¡EXITO!",'Se ha enviado la contraseña al correo '+usuario);
+
+        });
     }
 
     function GuardarDatosDependencia(){

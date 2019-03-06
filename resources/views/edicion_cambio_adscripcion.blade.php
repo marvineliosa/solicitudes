@@ -11,13 +11,13 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Fecha de Recibido</label>
             <div class="col-sm-4">
-              <input type="date" class="form-control" placeholder="Fehca de Recibido" value="{{$solicitud->FECHA_CREACION}}" disabled>
+              <input type="text" class="form-control" placeholder="Fehca de Recibido" value="{{$solicitud->FECHA_CREACION}}" disabled>
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label">Información Completa</label>
             <div class="col-sm-4">
-              <input type="date" class="form-control" placeholder="Fehca de Información Completa" value="{{$solicitud->FECHAS_INFORMACION_COMPLETA}}" disabled>
+              <input type="text" class="form-control" placeholder="Fehca de Información Completa" value="{{$solicitud->FECHAS_INFORMACION_COMPLETA}}" disabled>
             </div>
           </div>
           <div class="form-group">

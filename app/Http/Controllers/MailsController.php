@@ -8,9 +8,76 @@
     use Illuminate\Support\Facades\Storage;
     use App\Mail\EnvioMail;
     use Illuminate\Support\Facades\Mail;
+    use Illuminate\Support\Facades\DB;//consulta a la base de datos
 
     class MailsController extends Controller
     {   
+
+        public static function MandarMensajeGenerico($asunto,$titulo,$mensaje, $usuario){
+            $pass = DB::table('SOLICITUDES_LOGIN')
+                ->where('LOGIN_USUARIO',$usuario)
+                ->select('LOGIN_CONTRASENIA','LOGIN_RESPONSABLE')
+                ->get();
+            //dd($pass[0]);
+
+            $data = array('titulo'=>$titulo,'mensaje'=>$mensaje);
+            // Path or name to the blade template to be rendered
+            $template_path = 'mails.mail_general';
+            $nombre_usuario = $pass[0]->LOGIN_RESPONSABLE;
+            $destinatario = $usuario;
+            $exito = false;
+            $exito = Mail::send($template_path,$data, function($message) use ($nombre_usuario,$destinatario,$asunto){
+                // Set the sender
+                $message->from('marvineliosa@gmail.com','Solicitudes CGA');
+                // Set the receiver and subject of the mail.
+                $message->to($destinatario, $nombre_usuario)->subject('[Sistema de Solicitudes]'.$asunto);
+            });
+            //return true;
+        }
+
+        public static function NotificarCambioEstatus(){
+
+        }
+
+        public function EnviarContrasena(Request $request){
+            $usuario = $request['usuario'];
+            $exito = MailsController::FuncionEnviarContrasena($usuario);
+            $data = array(
+                'exitoMail' => $exito
+            );
+            echo json_encode($data);
+
+            //return "Mail enviado correctamente.";
+        }
+
+        public static function FuncionEnviarContrasena($usuario){
+            $datos_sistema = SolicitudesController::DatosGenerales();
+            $tipo_sistema = '';
+            if($datos_sistema['institucional']){
+                $tipo_sistema = 'institucional';
+            }else{
+                $tipo_sistema = 'de prestación de servicios';
+            }
+            //dd($usuario);
+            $pass = DB::table('SOLICITUDES_LOGIN')
+                ->where('LOGIN_USUARIO',$usuario)
+                ->select('LOGIN_CONTRASENIA','LOGIN_RESPONSABLE')
+                ->get();
+            //dd($pass[0]);
+            $data = array('pass'=>$pass[0]->LOGIN_CONTRASENIA,'tipo_sistema'=>$tipo_sistema);
+            // Path or name to the blade template to be rendered
+            $template_path = 'mails.enviar_contrasena';
+            $nombre_usuario = $pass[0]->LOGIN_RESPONSABLE;
+            $destinatario = $usuario;
+            $exito = false;
+            $exito = Mail::send($template_path,$data, function($message) use ($nombre_usuario,$destinatario) {
+                // Set the sender
+                $message->from('marvineliosa@gmail.com','Solicitudes CGA');
+                // Set the receiver and subject of the mail.
+                $message->to($destinatario, $nombre_usuario)->subject('[Sistema de Solicitudes]Envío de contraseña');
+            });
+            return true;
+        }
 
     	//Ejemplo de enviar un EMAIL FUNCIONANDO
     	public function pruebamail(){
@@ -21,7 +88,7 @@
             $destinatario = 'marvineliosa@hotmail.com';
 	        Mail::send($template_path,$data, function($message) use ($nombre_usuario,$destinatario) {
 	            // Set the receiver and subject of the mail.
-	            $message->to('marvineliosa@hotmail.com', $nombre_usuario)->subject('[Sistema de Solicitudes]Envío de contraseña');
+	            $message->to($destinatario, $nombre_usuario)->subject('[Sistema de Solicitudes]Envío de contraseña');
 	            // Set the sender
 	            $message->from($destinatario,'Solicitudes CGA');
 	        });

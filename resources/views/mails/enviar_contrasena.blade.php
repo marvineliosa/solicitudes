@@ -6,7 +6,7 @@
     <title>Envío de contraseña</title>
 </head>
 <body>
-    <p>Su contraseña es: {!! $pass !!}</p>
-    <p>Si usted no solicitó un envío de contraseña, favor de comunicarse a la extensión: ----</p>
+    <p>Su contraseña del sistema {!! $tipo_sistema !!} es: {!! $pass !!}</p>
+    <p>Si usted no solicitó un envío de contraseña, favor de comunicarse a la extensión: 5897</p>
 </body>
 </html>
