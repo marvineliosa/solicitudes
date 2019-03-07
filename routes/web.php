@@ -148,9 +148,16 @@ Route::post('/usuarios/recuperar_contrasena','LoginController@RecuperarContrasen
 //refrescando tablas
 Route::post('/refrescar/listado_completo', 'SolicitudesController@RefrescarListadoCompleto');
 Route::post('/refrescar/listado_general/{modulo}', 'SolicitudesController@RefrescarListadoGeneralEstatus');
+Route::post('/refrescar/nuevas_spr', 'SolicitudesController@RefrescarNuevasSPR');
+Route::post('/refrescar/revision_informacion', 'SolicitudesController@RefrescarRevisionInformacion');
+Route::post('/refrescar/coordinacion', 'SolicitudesController@RefrescarCoordinacion');
+Route::post('/refrescar/dependencia', 'SolicitudesController@RefrescarDependencia');
+Route::post('/refrescar/spr', 'SolicitudesController@RefrescarSPR');
+Route::post('/refrescar/por_revisar', 'SolicitudesController@RefrescarPorRevisar');
+Route::post('/refrescar/revisadas', 'SolicitudesController@RefrescarRevisadas');
 
 //mails
-Route::get('/enviamail','MailsController@pruebamail');
+//Route::get('/enviamail','MailsController@pruebamail');
 Route::post('/mail/enviar_contrasena','MailsController@EnviarContrasena');
 
 //archivos

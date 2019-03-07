@@ -7,186 +7,12 @@
 	    Listado Completo
 	  </header>
 	  <div class="table-responsive">
-	    <table class="table" id="tabla_datos">
-	      <thead>
-	        <tr>
-	          <th>Folio</th>
-	          <th>Candidato</th>
-	          <th>Dependencia</th>
-	          <th>Fecha de turnado a CGA</th>
-	          <th>Solicitud</th>
-	          <th>Estatus</th>
-	          <th>Acciones</th>
-	        </tr>
-	      </thead>
-	      <tbody>
-	      	@foreach($solicitudes as $solicitud)
-		        <tr class="">
-		          <td>{{$solicitud->ID_SOLICITUD}}</td>
-		          <td>{{$solicitud->NOMBRE_SOLICITUD}}</td>
-		          <td>{{$solicitud->NOMBRE_DEPENDENCIA}}</td>
-		          <td>{{$solicitud->FECHA_TURNADO_CGA}}</td>
-		          <td>{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}</td>
-		          <td id="td_estatus_{{$solicitud->ID_ESCAPE}}">{{$solicitud->ESTATUS_SOLICITUD}}</td>
-		          <td>
-		              <div class="btn-group">
-              			<a class="btn btn-primary" href="javascript:void(0)" onclick="AbreModalInformacion('{{$solicitud->ID_SOLICITUD}}','{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}')"><i class="icon_info_alt"></i></a>
-		              	@if(strcmp($solicitud->ESTATUS_SOLICITUD,'VALIDACIÓN DE INFORMACIÓN')==0)
-							<a class="btn btn-warning" href="#" onclick="modalArchivosDependencia('{{$solicitud->ID_SOLICITUD}}')"><i class="icon_link_alt"></i></a>
-						@endif
-		                @if(strcmp($solicitud->ESTATUS_SOLICITUD,'FIRMAS')==0)
-		                	<a class="btn btn-danger" href="#" onclick="modalConfig('{{$solicitud->ID_SOLICITUD}}','{{$solicitud->ESTATUS_SOLICITUD}}')"><i class="icon_adjust-vert"></i></a>
-		                @endif
-		              </div>
-		          </td>
-		        </tr>
-		    @endforeach
-	        
-	        <!--<tr class="success">
-	          <td>SOL/5/2019</td>
-	          <td>Ramiro Sánchez Gómez</td>
-	          <td>FCC</td>
-	          <td>27/01/2019</td>
-	          <td>Cambio de Adscripción</td>
-	          <td>Recibido</td>
-	          <td>
-				<div class="btn-group">
-				<a class="btn btn-primary" href="#" data-toggle="modal" data-target="#ModalDetalleTerminado"><i class="icon_info_alt"></i></a>
-				<a class="btn btn-success" href="http://localhost:8000/solicitud/contratacion/1"><i class="icon_pencil"></i></a>
-				<a class="btn btn-danger" href="#" data-toggle="modal" data-target="#ModalConfiguraciones"><i class="icon_adjust-vert"></i></a>	
-				</div>
-	          </td>
-	        </tr>-->
-	      </tbody>
-	    </table>
+	  	<div id="div_tabla_datos">
+	  		@include('tablas.listado_dependencia')
+	  	</div>
 	  </div>
 	</section>
 </div>
-
-<!-- Modal -->
-<div class="modal fade" id="ModalDetalleTMP" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <table class="table">
-		  <thead>
-		    <tr>
-		      <th scope="col">Concepto</th>
-		      <th scope="col">Descripción</th>
-		    </tr>
-		  </thead>
-		  <tbody>
-		    <tr>
-		      <th scope="row">ID</th>
-		      <td>SOL/1/2018</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Candidato</th>
-		      <td>Marvin Gabriel Eliosa Abaroa</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Dependencia</th>
-		      <td>Coordinación General Administrativa</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Fecha de Solicitud</th>
-		      <td>13/12/2018</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Fecha de información completa</th>
-		      <td>22/01/2019</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Categoría</th>
-		      <td>Técnico Administrativo</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Puesto</th>
-		      <td>Encargado de Cómputo</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Salario</th>
-		      <td>$2,750.80</td>
-		    </tr>
-		  </tbody>
-		</table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <!--<button type="button" class="btn btn-primary">Save changes</button>-->
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="ModalDetalleTerminado" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <table class="table">
-		  <thead>
-		    <tr>
-		      <th scope="col">Concepto</th>
-		      <th scope="col">Descripción</th>
-		    </tr>
-		  </thead>
-		  <tbody>
-		    <tr>
-		      <th scope="row">ID</th>
-		      <td>SOL/4/2019</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Candidato</th>
-		      <td>Juan Pérez González</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Dependencia</th>
-		      <td>DCyTIC</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Fecha de Solicitud</th>
-		      <td>13/01/2019</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Fecha de información completa</th>
-		      <td>13/01/2019</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Categoría</th>
-		      <td>Responsable de Área</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Puesto</th>
-		      <td>Juan Pérez González</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Salario</th>
-		      <td>$6,577.63</td>
-		    </tr>
-		  </tbody>
-		</table>
-		<a href="{{asset('pdf/EjemploCuadroAprobado.pdf')}}" target="_blank">Ver cuadro</a>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <!--<button type="button" class="btn btn-primary">Save changes</button>-->
-      </div>
-    </div>
-  </div>
-</div>
-
 
 <!-- Modal -->
 <div class="modal fade" id="ModalConfiguraciones" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -267,6 +93,7 @@
 				gl_solicitudes[id_sol]['ESTATUS_SOLICITUD'] = estatus;
 				$("#td_estatus_"+gl_solicitudes[id_sol]['ID_ESCAPE']).html(estatus);
 				//console.log(gl_solicitudes);
+				recargarTablaAjax('/refrescar/dependencia');
 				MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente.");
 			});//*/
     	}

@@ -92,6 +92,10 @@
 
         public function ValidarUsuario(Request $request){
             //dd("epale");
+            \Session::forget('usuario');
+            \Session::forget('categoria');
+            \Session::forget('id_dependencia');
+            \Session::forget('responsable');
             $usr = $request['usuario'];
             $contrasena = $request['pass'];
             $fl = false;
@@ -112,25 +116,30 @@
                 }
                 //$usuario = $existe[0]->LOGIN_USUARIO;
                 if(\Session::get('usuario')!=null){
+                    //dd('Aqui olvidamos');
                     \Session::forget('usuario');
                     \Session::forget('categoria');
                     \Session::forget('id_dependencia');
                     \Session::forget('responsable');
                     //\Session::forget('nombre');
                 }
+                //dd($existe[0]->LOGIN_RESPONSABLE);
                 \Session::push('usuario',$existe[0]->LOGIN_USUARIO);
                 \Session::push('categoria',$existe[0]->LOGIN_CATEGORIA);
                 \Session::push('id_dependencia',$id_dependencia);
                 \Session::push('responsable',$existe[0]->LOGIN_RESPONSABLE);
+                //dd(\Session::get('responsable')[0]);
                 //\Session::push('nombre',$n_usuario[0]->USUARIOS_NOMBRE_RESPONSABLE);
             }
+            //dd($existe);
             $data = array(
                 "usuario"=>\Session::get('usuario')[0],
                 "categoria"=>\Session::get('categoria')[0],
                 "id_dependencia"=>\Session::get('id_dependencia')[0],
+                "responsable"=>\Session::get('responsable')[0],
                 "exito" => $fl
               );
-
+            //dd($data);
             echo json_encode($data);//*/
         }
 

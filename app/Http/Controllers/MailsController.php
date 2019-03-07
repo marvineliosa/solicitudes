@@ -18,20 +18,26 @@
                 ->where('LOGIN_USUARIO',$usuario)
                 ->select('LOGIN_CONTRASENIA','LOGIN_RESPONSABLE')
                 ->get();
-            //dd($pass[0]);
+            //dd($pass);
+            if(count($pass)>0){
+                $data = array('titulo'=>$titulo,'mensaje'=>$mensaje);
+                // Path or name to the blade template to be rendered
+                $template_path = 'mails.mail_general';
+                $nombre_usuario = $pass[0]->LOGIN_RESPONSABLE;
+                $destinatario = $usuario;
+                $exito = false;
+                $exito = Mail::send($template_path,$data, function($message) use ($nombre_usuario,$destinatario,$asunto){
+                    // Set the sender
+                    $message->from('marvineliosa@gmail.com','Solicitudes CGA');
+                    // Set the receiver and subject of the mail.
+                    $message->to($destinatario, $nombre_usuario)->subject('[Sistema de Solicitudes]'.$asunto);
+                });
+                return true;
+            }else{
+                return false;
+            }
 
-            $data = array('titulo'=>$titulo,'mensaje'=>$mensaje);
-            // Path or name to the blade template to be rendered
-            $template_path = 'mails.mail_general';
-            $nombre_usuario = $pass[0]->LOGIN_RESPONSABLE;
-            $destinatario = $usuario;
-            $exito = false;
-            $exito = Mail::send($template_path,$data, function($message) use ($nombre_usuario,$destinatario,$asunto){
-                // Set the sender
-                $message->from('marvineliosa@gmail.com','Solicitudes CGA');
-                // Set the receiver and subject of the mail.
-                $message->to($destinatario, $nombre_usuario)->subject('[Sistema de Solicitudes]'.$asunto);
-            });
+            
             //return true;
         }
 

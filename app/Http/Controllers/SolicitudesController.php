@@ -451,7 +451,7 @@
             $categoria = \Session::get('categoria')[0];
             $id_solicitud = str_replace('_','/',$id_solicitud);
 
-            if(in_array($categoria, ['ANALISTA_CGA','ADMINISTRADOR_CGA'])){
+            if(in_array($categoria, ['ANALISTA_CGA','ADMINISTRADOR_CGA','COORDINADOR_CGA'])){
                 $val = DB::table('SOLICITUDES_SOLICITUD')
                     ->where('SOLICITUD_ID',$id_solicitud)
                     ->where('SOLICITUD_TIPO_SOLICITUD','CONTRATACIÓN')
@@ -465,7 +465,7 @@
                 }else{
                     return view('errors.404');
                 }
-            }else if(in_array($categoria, ['TITULAR'])){
+            }else if(in_array($categoria, ['TITULAR','SECRETARIO_PARTICULAR','TRABAJADOR_SPR'])){
                 $val = DB::table('SOLICITUDES_SOLICITUD')
                     ->where('SOLICITUD_ID',$id_solicitud)
                     ->where('SOLICITUD_TIPO_SOLICITUD','CONTRATACIÓN')
@@ -473,7 +473,7 @@
                 if(count($val)>0){
                     $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
                     if(in_array($solicitud->ESTATUS_SOLICITUD, ['FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR'])){
-                        $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+                        //$solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
                         //dd($solicitud);
                         $pdf = \PDF::loadView('pdf.cuadro_contratacion',['solicitud'=>$solicitud])->setPaper('letter', 'landscape');
                         //return $pdf->download($descripcion['DATOS']->NOM_DESC.'.pdf');
@@ -492,7 +492,7 @@
             $categoria = \Session::get('categoria')[0];
             $id_solicitud = str_replace('_','/',$id_solicitud);
 
-            if(in_array($categoria, ['ANALISTA_CGA','ADMINISTRADOR_CGA'])){
+            if(in_array($categoria, ['ANALISTA_CGA','ADMINISTRADOR_CGA','COORDINADOR_CGA'])){
                 $val = DB::table('SOLICITUDES_SOLICITUD')
                     ->where('SOLICITUD_ID',$id_solicitud)
                     ->where('SOLICITUD_TIPO_SOLICITUD','CONTRATACIÓN POR SUSTITUCIÓN')
@@ -508,7 +508,7 @@
                 }else{
                     return view('errors.404');
                 }
-            }else if(in_array($categoria, ['TITULAR'])){
+            }else if(in_array($categoria, ['TITULAR','SECRETARIO_PARTICULAR','TRABAJADOR_SPR'])){
                 $val = DB::table('SOLICITUDES_SOLICITUD')
                     ->where('SOLICITUD_ID',$id_solicitud)
                     ->where('SOLICITUD_TIPO_SOLICITUD','CONTRATACIÓN POR SUSTITUCIÓN')
@@ -517,7 +517,7 @@
                     $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
                     if(in_array($solicitud->ESTATUS_SOLICITUD, ['FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR'])){
                         
-                        $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+                        //$solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
                         $sustitucion = SolicitudesController::ObtenerDatosSustitucion($id_solicitud);
                         //dd($sustitucion);
 
@@ -535,6 +535,48 @@
         }
 
         public function PDFPromocion($id_solicitud){
+            $categoria = \Session::get('categoria')[0];
+            $id_solicitud = str_replace('_','/',$id_solicitud);
+
+            if(in_array($categoria, ['ANALISTA_CGA','ADMINISTRADOR_CGA','COORDINADOR_CGA'])){
+                $val = DB::table('SOLICITUDES_SOLICITUD')
+                    ->where('SOLICITUD_ID',$id_solicitud)
+                    ->where('SOLICITUD_TIPO_SOLICITUD','PROMOCION')
+                    ->get();
+                if(count($val)>0){
+                    $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+                    $promocion = SolicitudesController::ObtenerDatosPromocion($id_solicitud);
+                    //dd($sustitucion);
+
+                    $pdf = \PDF::loadView('pdf.cuadro_promocion',['solicitud'=>$solicitud,'promocion'=>$promocion])->setPaper('letter', 'landscape');
+                    //return $pdf->download($descripcion['DATOS']->NOM_DESC.'.pdf');
+                    return $pdf->stream($id_solicitud.'.pdf', array("Attachment" => 0));
+                }else{
+                    return view('errors.404');
+                }
+            }else if(in_array($categoria, ['TITULAR','SECRETARIO_PARTICULAR','TRABAJADOR_SPR'])){
+                $val = DB::table('SOLICITUDES_SOLICITUD')
+                    ->where('SOLICITUD_ID',$id_solicitud)
+                    ->where('SOLICITUD_TIPO_SOLICITUD','PROMOCION')
+                    ->get();
+                if(count($val)>0){
+                    $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+                    if(in_array($solicitud->ESTATUS_SOLICITUD, ['FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR'])){
+                        
+                        $promocion = SolicitudesController::ObtenerDatosPromocion($id_solicitud);
+                        //dd($sustitucion);
+                        $pdf = \PDF::loadView('pdf.cuadro_promocion',['solicitud'=>$solicitud,'promocion'=>$promocion])->setPaper('letter', 'landscape');
+                        //return $pdf->download($descripcion['DATOS']->NOM_DESC.'.pdf');
+                        return $pdf->stream($id_solicitud.'.pdf', array("Attachment" => 0));
+                        
+                    }else{
+                        return view('errors.404');
+                    }
+                }
+            }else{
+                return view('errors.505');
+            }
+            /*
             $id_solicitud = str_replace('_','/',$id_solicitud);
             //hay que validar que exista la solicitud
             $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
@@ -546,10 +588,65 @@
                 return $pdf->stream($id_solicitud.'.pdf', array("Attachment" => 0));
             }else{
                 return view('errors.404');
-            }
+            }//*/
         }
 
         public function PDFCambioAdscripcion($id_solicitud){
+            $categoria = \Session::get('categoria')[0];
+            $id_solicitud = str_replace('_','/',$id_solicitud);
+
+            if(in_array($categoria, ['ANALISTA_CGA','ADMINISTRADOR_CGA','COORDINADOR_CGA'])){
+                $val = DB::table('SOLICITUDES_SOLICITUD')
+                    ->where('SOLICITUD_ID',$id_solicitud)
+                    ->where('SOLICITUD_TIPO_SOLICITUD','CAMBIO DE ADSCRIPCIÓN')
+                    ->get();
+                if(count($val)>0){
+                    $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+                    $adscripcion = SolicitudesController::ObtenerDatosCambioAdscripcion($id_solicitud);
+                    //dd($sustitucion);
+                    
+                    $datos = SolicitudesController::DatosGenerales();   
+                    if($datos['institucional']){
+                        $pdf = \PDF::loadView('pdf.cuadro_cambio_adscripcion_institucional',['solicitud'=>$solicitud,'adscripcion'=>$adscripcion]);
+                    }else{
+                        $pdf = \PDF::loadView('pdf.cuadro_cambio_adscripcion_nps',['solicitud'=>$solicitud,'adscripcion'=>$adscripcion]);
+                    }
+                    //return $pdf->download($descripcion['DATOS']->NOM_DESC.'.pdf');
+                    return $pdf->stream($id_solicitud.'.pdf', array("Attachment" => 0));
+                }else{
+                    return view('errors.404');
+                }
+            }else if(in_array($categoria, ['TITULAR','SECRETARIO_PARTICULAR','TRABAJADOR_SPR'])){
+                $val = DB::table('SOLICITUDES_SOLICITUD')
+                    ->where('SOLICITUD_ID',$id_solicitud)
+                    ->where('SOLICITUD_TIPO_SOLICITUD','CAMBIO DE ADSCRIPCIÓN')
+                    ->get();
+                if(count($val)>0){
+                    $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+                    if(in_array($solicitud->ESTATUS_SOLICITUD, ['FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR'])){
+                        
+                        $adscripcion = SolicitudesController::ObtenerDatosCambioAdscripcion($id_solicitud);
+                        //dd($sustitucion);
+                        $datos = SolicitudesController::DatosGenerales();   
+                        if($datos['institucional']){
+                            $pdf = \PDF::loadView('pdf.cuadro_cambio_adscripcion_institucional',['solicitud'=>$solicitud,'adscripcion'=>$adscripcion]);
+                        }else{
+                            $pdf = \PDF::loadView('pdf.cuadro_cambio_adscripcion_nps',['solicitud'=>$solicitud,'adscripcion'=>$adscripcion]);
+                        }
+                        //return $pdf->download($descripcion['DATOS']->NOM_DESC.'.pdf');
+                        return $pdf->stream($id_solicitud.'.pdf', array("Attachment" => 0));
+                        
+                    }else{
+                        return view('errors.404');
+                    }
+                }
+            }else{
+                return view('errors.505');
+            }
+
+
+
+            /*
             $id_solicitud = str_replace('_','/',$id_solicitud);
             //hay que validar que exista la solicitud
             $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
@@ -568,7 +665,7 @@
                 return $pdf->stream($id_solicitud.'.pdf', array("Attachment" => 0));
             }else{
                 return view('errors.404');
-            }
+            }//*/
         }
 
         public function GuardaDatosCambioAdscripcion(Request $request){
@@ -1058,6 +1155,8 @@
             $update = DB::table('SOLICITUDES_DATOS_CGA')
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])
                 ->update(['DATOS_CGA_ESTATUS' => $request['estatus']]);
+
+            $mail = null;
             if(in_array($request['estatus'], ['VALIDACIÓN DE INFORMACIÓN','INFORMACIÓN CORRECTA','RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN','FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR','CANCELADO','OTRO'])){
                 $asunto = 'Cambio de estatus';
                 $titulo = 'Cambio de estatus';
@@ -1065,7 +1164,7 @@
                 $usuario = 'marvineliosa@hotmail.com';
                 $mail = MailsController::MandarMensajeGenerico($asunto,$titulo,$mensaje,$usuario);
                 //dd($mail);
-            }
+            }//*/
 
             if(strcmp($request['estatus'],'TURNADO A SPR')==0){
                 $update = DB::table('SOLICITUDES_FECHAS')
@@ -1099,8 +1198,25 @@
                 //enviar coorreo electrónico
             }//*/
 
+            //ahora eliminamos las posibles firmas que existen
+            $verificaCompletado = DB::table('SOLICITUDES_FIRMAS')->where('FK_SOLICITUD_ID', $request['id_sol'])->get();
+            //dd($verificaCompletado);
+            if($verificaCompletado[0]->FIRMAS_CGA||$verificaCompletado[0]->FIRMAS_TITULAR||$verificaCompletado[0]->FIRMAS_SPR){
+                //dd('SE HA COMPLETADO LAS FIRMAS');
+                $update = DB::table('SOLICITUDES_DATOS_CGA')
+                    ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                    ->update(['DATOS_CGA_ESTATUS' => 'TURNADO A SPR']);
+                $update = DB::table('SOLICITUDES_FECHAS')
+                    ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                    ->update(['FECHAS_TURNADO_SPR' => date('Y-m-d H:i:s')]);
+            }
+
+
+
             $data = array(
-                "update"=>$update
+                "update"=>$update,
+                "mail"=>$mail
+
             );
 
             echo json_encode($data);//*/
@@ -1868,6 +1984,43 @@
             //dd($solicitudes);
             return View('tablas.listado_general_estatus') ->with ("solicitudes",$solicitudes);
             //return View::make("tablas.listado_completo", ["solicitudes" => $solicitudes]);
+        }
+
+        public function RefrescarNuevasSPR(){
+            $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('RECIBIDO SPR');
+            return View('tablas.listado_nuevas') ->with ("solicitudes",$solicitudes);
+        }
+
+        public function RefrescarRevisionInformacion(){
+            $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('VALIDACION DE INFORMACION');
+            return View('tablas.listado_revision_informacion') ->with ("solicitudes",$solicitudes);
+        }
+
+        public function RefrescarCoordinacion(){
+            $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('FIRMAS');
+            return View('tablas.listado_cga') ->with ("solicitudes",$solicitudes);
+        }
+
+        public function RefrescarDependencia(){
+            $id_dependencia = \Session::get('id_dependencia')[0];
+            $solicitudes = SolicitudesController::ObtenerSolicitudesDependencia($id_dependencia);
+            //return view('listado_dependencia')->with("solicitudes",$solicitudes);
+            return View('tablas.listado_dependencia') ->with ("solicitudes",$solicitudes);
+        }
+
+        public function RefrescarSPR(){
+            $solicitudes = SolicitudesController::ObtenerSolicitudes();
+            return View('tablas.listado_secretario_particular') ->with ("solicitudes",$solicitudes);
+        }
+
+        public function RefrescarPorRevisar(){
+            $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('TURNADO A SPR');
+            return View('tablas.listado_por_revisar') ->with ("solicitudes",$solicitudes);
+        }
+
+        public function RefrescarRevisadas(){
+            $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('COMPLETADO POR SPR');
+            return View('tablas.listado_revisadas') ->with ("solicitudes",$solicitudes);
         }
 
         public static function DatosGenerales(){

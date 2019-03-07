@@ -74,16 +74,6 @@
 		      </td>
 		    </tr>
 		    @endif
-		    <tr>
-		      <th scope="row" width="50%">Observaciones</th>
-		      <td>
-		      	<div class="form-check form-check-inline">
-		      		<textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeñará" id="Contratacion-Actividades"></textarea>
-			      <br>
-			      <button type="button" class="btn btn-primary" onclick="CambiarEstado()">Guardar</button>
-				</div>
-		      </td>
-		    </tr>
 		  </tbody>
 		</table>
       </div>

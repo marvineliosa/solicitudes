@@ -7,40 +7,9 @@
 	    Listado de Cambios de Adscripción
 	  </header>
 	  <div class="table-responsive">
-	    <table class="table" id="tabla_datos">
-	      <thead>
-	        <tr>
-	          <th>Folio</th>
-	          <th>Candidato</th>
-	          <th>Dependencia</th>
-	          <th>Fecha de creación</th>
-	          <th>Solicitud</th>
-	          <th>Estatus</th>
-	          <th>Acciones</th>
-	        </tr>
-	      </thead>
-	      <tbody>
-	      	@foreach($solicitudes as $solicitud)
-		        <tr class="">
-		          <td>{{$solicitud->ID_SOLICITUD}}</td>
-		          <td>{{$solicitud->NOMBRE_SOLICITUD}}</td>
-		          <td>{{$solicitud->NOMBRE_DEPENDENCIA}}</td>
-		          <td>{{$solicitud->FECHA_CREACION}}</td>
-		          <td>{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}</td>
-		          <td>{{$solicitud->ESTATUS_SOLICITUD}}</td>
-		          <td>
-					<div class="btn-group">
-	              	@if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN')==0)
-	                	<a class="btn btn-primary" href="#" onclick="AbreModalContratacion('{{$solicitud->ID_SOLICITUD}}')"><i class="icon_info_alt"></i></a>
-	              	@endif
-					<a class="btn btn-warning" href="#" onclick="modalArchivos('{{$solicitud->ID_SOLICITUD}}')"><i class="icon_link_alt"></i></a>
-					<a class="btn btn-danger" href="#" onclick="modalConfig('{{$solicitud->ID_SOLICITUD}}')"><i class="icon_adjust-vert"></i></a>	
-					</div>
-		          </td>
-		        </tr>
-		    @endforeach
-	      </tbody>
-	    </table>
+	  	<div id="div_tabla_datos">
+	  		@include('tablas.listado_revision_informacion')
+	  	</div>
 	  </div>
 	</section>
 </div>
@@ -120,6 +89,7 @@
 				metodoAjax(url,dataForm,function(success){
 					//aquí se escribe todas las operaciones que se harían en el succes
 					//la variable success es el json que recibe del servidor el método AJAX
+					recargarTablaAjax('/refrescar/revision_informacion');
 					MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente, la solicitud se ha marcado como RECIBIDA.");
 				});//*/
     		}else{

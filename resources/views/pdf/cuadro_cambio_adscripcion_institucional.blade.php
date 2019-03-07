@@ -55,7 +55,8 @@
 			    <td style="font-size: 10px;border:1px solid black;" align="center">{{$solicitud->JUSTIFICACION_SOLICITUD}}</td>
 			</table>
 		</div>
-		@if(false)
+		<div style="page-break-after:always;"></div>
+		@if(true)
 		<div id="div-tabla_datos2" align="right" class="">
 			<table style="width:100%;" class="table table-bordered">
 			  <tr>
