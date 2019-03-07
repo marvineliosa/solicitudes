@@ -1,12 +1,12 @@
 @extends('plantillas.menu')
 @section('titulo','Solicitudes')
 @section('content')
-	<div class="col-lg-12">
-		<section class="panel">
-		  <header class="panel-heading">
-		    Formulario de Promoción
-		  </header>
-		  <div class="panel-body">
+  <div class="col-lg-12">
+    <section class="panel">
+      <header class="panel-heading">
+        Formulario de Promoción
+      </header>
+      <div class="panel-body">
         <form class="form-horizontal " method="get">
           <div class="form-group">
             <label class="col-sm-2 control-label">Dependencia</label>
@@ -15,70 +15,61 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Candidato</label>
+            <label class="col-sm-2 control-label">Candidato*</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Nombre del candidato" id="Promocion-Candidato">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Categoría Actual</label>
+            <label class="col-sm-2 control-label">Categoría Actual*</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Categoría actual" id="Promocion-CategoriaActual">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Puesto Actual</label>
+            <label class="col-sm-2 control-label">Puesto Actual*</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Puesto del candidato" id="Promocion-PuestoActual">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Actividades actuales</label>
+            <label class="col-sm-2 control-label">Actividades actuales*</label>
             <div class="col-sm-6">
               <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Actividades que desempeña actualmente" id="Promocion-ActividadesActuales"></textarea>
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Salario neto actual</label>
+            <label class="col-sm-2 control-label">Salario neto actual*</label>
             <div class="col-sm-6">
-              <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" value="0.00" id="Promocion-SalarioActual" step=".01">
+              <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" id="Promocion-SalarioActual" step=".01">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Categoría Solicitada</label>
+            <label class="col-sm-2 control-label">Categoría Solicitada*</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Nueva categoría solicitada" id="Promocion-CategoriaSolicitada">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Nuevo Puesto</label>
+            <label class="col-sm-2 control-label">Nuevo Puesto*</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Nuevo puesto que desempeñará" id="Promocion-PuestoNuevo">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Nuevas Actividades</label>
+            <label class="col-sm-2 control-label">Nuevas Actividades*</label>
             <div class="col-sm-6">
               <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Nuevas actividades que desempeñará" id="Promocion-ActividadesNuevas"></textarea>
             </div>
           </div>
-          <!--<div class="form-group">
-            <label class="col-sm-2 control-label">Nómina</label>
-            <div class="col-sm-6">
-              <select class="form-control m-bot15">
-                  <option>Prestación de Servicios</option>
-                  <option>Institucional</option>
-              </select>
-            </div>
-          </div>-->
           <div class="form-group">
-            <label class="col-sm-2 control-label">Salario neto solicitado</label>
+            <label class="col-sm-2 control-label">Salario neto solicitado*</label>
             <div class="col-sm-6">
-              <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" value="0.00" id="Promocion-SalarioSolicitado" step=".01">
+              <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" id="Promocion-SalarioSolicitado" step=".01">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Justificación</label>
+            <label class="col-sm-2 control-label">Justificación*</label>
             <div class="col-sm-6">
               <textarea class="form-control ckeditor" name="editor1" rows="6" placeholder="Justificación de la solicitud de promoción" id="Promocion-Justificacion"></textarea>
             </div>
@@ -119,23 +110,28 @@
               <input type="file" class="form-control-file" accept="application/pdf" id="archivo-mapa_ubicacion">
             </div>
           </div>
+
+          <hr>
           <div class="form-group">
             <label class="col-sm-2 control-label"></label>
-            <div class="col-sm-2">
+            <div class="col-sm-2" id="btn_registrar">
               <button type="button" class="btn btn-primary" onclick="AlmacenarSolicitud()">Registrar</button>
+            </div>
+            <div class="col-sm-2" hidden="true" id="btn_regresar">
+              <button type="button" class="btn btn-primary" onclick="Regresar()">Salir</button>
             </div>
           </div>
         </form>
       </div>
-		</section>
-	</div>
-	  
+    </section>
+  </div>
+    
 @endsection
 
 @section('script')
   <script type="text/javascript">
     id_dependencia = <?php echo json_encode(\Session::get('id_dependencia')[0]) ?>;
-    autollenado();
+    //autollenado();
     function autollenado(){
       $("#Promocion-Candidato").val('Marvin Eliosa Abaroa');
       $("#Promocion-CategoriaActual").val('Auxiliar Administrativo');
@@ -166,47 +162,76 @@
       //
       var nomina = 'NA'
       var justificacion = $("#Promocion-Justificacion").val();
-
-      var success;
-      var url = "/promocion/insertar";
-      var dataForm = new FormData();
-      dataForm.append('Candidato',Candidato);
-      dataForm.append('CategoriaActual',CategoriaActual);
-      dataForm.append('PuestoActual',PuestoActual);
-      dataForm.append('ActividadesActuales',ActividadesActuales);
-      dataForm.append('SalarioActual',SalarioActual);
-
-      dataForm.append('CategoriaSolicitada',CategoriaSolicitada);
-      dataForm.append('PuestoNuevo',PuestoNuevo);
-      dataForm.append('ActividadesNuevas',ActividadesNuevas);
-      dataForm.append('SalarioSolicitado',SalarioSolicitado);
-
-      dataForm.append('nomina',nomina);
-      dataForm.append('justificacion',justificacion);
-
       //archivos
       var archivo_organigrama = document.getElementById('archivo-organigrama');
       var archivo_plantilla = document.getElementById('archivo-plantilla');
       var archivo_descripcion = document.getElementById('archivo-descripcion');
       var archivo_curriculum = document.getElementById('archivo-curriculum');
       var archivo_mapa_ubicacion = document.getElementById('archivo-mapa_ubicacion');
-
-        dataForm.append('archivo_organigrama',archivo_organigrama.files[0]);
-        dataForm.append('archivo_plantilla',archivo_plantilla.files[0]);
-        dataForm.append('archivo_descripcion',archivo_descripcion.files[0]);
-        dataForm.append('archivo_curriculum',archivo_curriculum.files[0]);
-      if(archivo_mapa_ubicacion.value !=''){
-        dataForm.append('archivo_mapa_ubicacion',archivo_mapa_ubicacion.files[0]);
+      if(Candidato==''){
+        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+      }else if(CategoriaActual==''){
+        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+      }else if(PuestoActual==''){
+        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+      }else if(ActividadesActuales==''){
+        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+      }else if(PuestoNuevo==''){
+        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+      }else if(ActividadesNuevas==''){
+        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+      }else if(SalarioSolicitado==''){
+        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+      }else if(justificacion==''){
+        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+      }else if(archivo_organigrama.value==""){
+        console.log('falta organigrama');
+        MensajeModal("¡ATENCIÓN!",'Debe adjuntar el organigrama de la dependencia');
+      }else if(archivo_plantilla.value==''){
+        MensajeModal("¡ATENCIÓN!",'Debe adjuntar la plantilla de personal de la dependencia');
+      }else if(archivo_descripcion.value==''){
+        MensajeModal("¡ATENCIÓN!",'Debe adjuntar la descripción del puesto a desempeñar');
+      }else if(archivo_curriculum.value==''){
+        MensajeModal("¡ATENCIÓN!",'Debe adjuntar el curriculum del candidato');
       }else{
-        dataForm.append('archivo_mapa_ubicacion',null);
+
+        var success;
+        var url = "/promocion/insertar";
+        var dataForm = new FormData();
+        dataForm.append('Candidato',Candidato);
+        dataForm.append('CategoriaActual',CategoriaActual);
+        dataForm.append('PuestoActual',PuestoActual);
+        dataForm.append('ActividadesActuales',ActividadesActuales);
+        dataForm.append('SalarioActual',SalarioActual);
+
+        dataForm.append('CategoriaSolicitada',CategoriaSolicitada);
+        dataForm.append('PuestoNuevo',PuestoNuevo);
+        dataForm.append('ActividadesNuevas',ActividadesNuevas);
+        dataForm.append('SalarioSolicitado',SalarioSolicitado);
+
+        dataForm.append('nomina',nomina);
+        dataForm.append('justificacion',justificacion);
+
+
+          dataForm.append('archivo_organigrama',archivo_organigrama.files[0]);
+          dataForm.append('archivo_plantilla',archivo_plantilla.files[0]);
+          dataForm.append('archivo_descripcion',archivo_descripcion.files[0]);
+          dataForm.append('archivo_curriculum',archivo_curriculum.files[0]);
+        if(archivo_mapa_ubicacion.value !=''){
+          dataForm.append('archivo_mapa_ubicacion',archivo_mapa_ubicacion.files[0]);
+        }else{
+          dataForm.append('archivo_mapa_ubicacion',null);
+        }
+        //lamando al metodo ajax
+        metodoAjax(url,dataForm,function(success){
+          //aquí se escribe todas las operaciones que se harían en el succes
+          //la variable success es el json que recibe del servidor el método AJAX
+          var mensaje = "El número de solicitud asignado es: "+success['solicitud'];
+          $("#btn_registrar").remove();
+          $("#btn_regresar").show();
+          MensajeModal("¡Solicitud almacenada!",mensaje);
+        });
       }
-      //lamando al metodo ajax
-      metodoAjax(url,dataForm,function(success){
-        //aquí se escribe todas las operaciones que se harían en el succes
-        //la variable success es el json que recibe del servidor el método AJAX
-        var mensaje = "El número de solicitud asignado es: "+success['solicitud'];
-        MensajeModal("¡Solicitud almacenada!",mensaje);
-      });
     }
 
     ObtenerNombreDependencia();
@@ -223,6 +248,10 @@
         //console.log(success['dependencia']);
         $("#nombre_dependencia").val(success['dependencia']['NOMBRE_DEPENDENCIA']);
       });
+    }
+
+    function Regresar(){
+      location.href='/listado/dependencia';
     }
 
     function ejemploAjax(){

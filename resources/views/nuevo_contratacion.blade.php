@@ -1,12 +1,12 @@
 @extends('plantillas.menu')
 @section('titulo','Nueva Contratación')
 @section('content')
-	<div class="col-lg-12">
-		<section class="panel">
-		  <header class="panel-heading">
-		    Formulario de Contratación
-		  </header>
-		  <div class="panel-body">
+  <div class="col-lg-12">
+    <section class="panel">
+      <header class="panel-heading">
+        Formulario de Contratación
+      </header>
+      <div class="panel-body">
         <div class="form-horizontal">
           <div class="form-group">
             <label class="col-sm-2 control-label">Dependencia</label>
@@ -41,7 +41,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Salario neto solicitado</label>
             <div class="col-sm-6">
-              <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" value="0.00" id="Contratacion-SalarioSolicitado" step=".01">
+              <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" id="Contratacion-SalarioSolicitado" step=".01">
             </div>
           </div>
           <div class="form-group">
@@ -61,7 +61,7 @@
             <label class="col-sm-2 control-label">Fuente de Recursos*</label>
             <div class="col-sm-6">
               <select class="form-control m-bot15" id="SelectFuenteRecursos">
-                  <option>SELECCIONAR</option>
+                  <option value="NADA">SELECCIONAR</option>
                   <option value="ADMINISTRACIÓN CENTRAL">ADMINISTRACIÓN CENTRAL</option>
                   <option value="RECURSOS PROPIOS">RECURSOS PROPIOS</option>
               </select>
@@ -123,9 +123,9 @@
           </div>
         </div>
       </div>
-		</section>
-	</div>
-	  
+    </section>
+  </div>
+    
 @endsection
 
 @section('script')
@@ -172,6 +172,8 @@
         MensajeModal("¡ATENCIÓN!",'Debe proponer un salario para el candidato');
       }else if(justificacion==''){
         MensajeModal("¡ATENCIÓN!",'La justificación es un campo obligatorio');
+      }else if(fuente_recursos=='NADA'){
+        MensajeModal("¡ATENCIÓN!",'La fuente de recursos es un campo obligatorio');
       }else if(archivo_organigrama.value==""){
         console.log('falta organigrama');
         MensajeModal("¡ATENCIÓN!",'Debe adjuntar el organigrama de la dependencia');
