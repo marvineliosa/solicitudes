@@ -1,12 +1,12 @@
 @extends('plantillas.menu')
 @section('titulo','Solicitudes')
 @section('content')
-  <div class="col-lg-12">
-    <section class="panel">
-      <header class="panel-heading">
-        Formulario de Promoción
-      </header>
-      <div class="panel-body">
+	<div class="col-lg-12">
+		<section class="panel">
+		  <header class="panel-heading">
+		    Formulario de Promoción
+		  </header>
+		  <div class="panel-body">
         <form class="form-horizontal " method="get">
           <div class="form-group">
             <label class="col-sm-2 control-label">Dependencia</label>
@@ -123,9 +123,9 @@
           </div>
         </form>
       </div>
-    </section>
-  </div>
-    
+		</section>
+	</div>
+	  
 @endsection
 
 @section('script')

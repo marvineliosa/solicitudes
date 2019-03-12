@@ -1201,15 +1201,17 @@
             //ahora eliminamos las posibles firmas que existen
             $verificaCompletado = DB::table('SOLICITUDES_FIRMAS')->where('FK_SOLICITUD_ID', $request['id_sol'])->get();
             //dd($verificaCompletado);
-            if($verificaCompletado[0]->FIRMAS_CGA||$verificaCompletado[0]->FIRMAS_TITULAR||$verificaCompletado[0]->FIRMAS_SPR){
-                //dd('SE HA COMPLETADO LAS FIRMAS');
-                $update = DB::table('SOLICITUDES_DATOS_CGA')
-                    ->where('FK_SOLICITUD_ID', $request['id_sol'])
-                    ->update(['DATOS_CGA_ESTATUS' => 'TURNADO A SPR']);
-                $update = DB::table('SOLICITUDES_FECHAS')
-                    ->where('FK_SOLICITUD_ID', $request['id_sol'])
-                    ->update(['FECHAS_TURNADO_SPR' => date('Y-m-d H:i:s')]);
-            }
+			if(count($verificaCompletado)>0){
+                if($verificaCompletado[0]->FIRMAS_CGA||$verificaCompletado[0]->FIRMAS_TITULAR||$verificaCompletado[0]->FIRMAS_SPR){
+                    //dd('SE HA COMPLETADO LAS FIRMAS');
+                    $update = DB::table('SOLICITUDES_DATOS_CGA')
+                        ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                        ->update(['DATOS_CGA_ESTATUS' => 'TURNADO A SPR']);
+                    $update = DB::table('SOLICITUDES_FECHAS')
+                        ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                        ->update(['FECHAS_TURNADO_SPR' => date('Y-m-d H:i:s')]);
+                }
+			}
 
 
 

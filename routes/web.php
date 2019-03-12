@@ -16,6 +16,10 @@ Route::get('/', function () {
     return view('login');
 });
 
+Route::get('/gd', function () {
+	dd(gd_info());
+});
+
 //SOLICITUDES DE CONTRATACION - ACCESO VALIDADO
 Route::get('/solicitudes/contratacion', 'SolicitudesController@VistaCrearContratacion');
 Route::get('/solicitudes/sustitucion', 'SolicitudesController@VistaCrearSustitucion');
