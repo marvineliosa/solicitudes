@@ -181,6 +181,37 @@
       </div>
     </div>
 
+    <!-- Modal Archivos -->
+    <div class="modal fade" id="ModalFechas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title" id="TituloModalArchivos" align="center">Fechas</h2>
+            <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>-->
+          </div>
+          <div class="modal-body">
+            <h3  id="CuerpoModalFechas" align="center"> </h3>
+            <table class="table table-bordered">
+              <thead id="HeadTablaArchivos">
+                <tr>
+                  <th scope="col">Concepto</th>
+                  <th scope="col">Fechas</th>
+                </tr>
+              </thead>
+              <tbody id="CuerpoTablaFechas">
+                
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Modal mensajes -->
     <div class="modal fade" id="ModalComentarios" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -580,6 +611,37 @@
       $("#TituloModalInformacion").text(titulo);
       $("#ModalDetalleContratacion").modal();
     });//*/
+  }
+
+  function AbreModalFechas(id_sol){
+    //$("#div_cuadro").hide();
+    var success;
+    var url = "/solicitud/obtener_fechas";
+    var dataForm = new FormData();
+    dataForm.append('id_sol',id_sol);
+    //lamando al metodo ajax
+
+    metodoAjax(url,dataForm,function(success){
+      //aquí se escribe todas las operaciones que se harían en el succes
+      //la variable success es el json que recibe del servidor el método AJAX
+      console.log(success);
+      $("#CuerpoTablaFechas").html('');
+      for(var i = 0; i < success['cabeceras'].length; i++){
+        //console.log(success['cabeceras'][i]);
+        if(success['cabeceras'][i]!='Escape'){
+          $("#CuerpoTablaFechas").append(
+            '<tr>'+
+              '<th scope="row">' + success['cabeceras'][i] + '</th>'+
+              '<td style="word-wrap: break-word;">'+ ((success['datos'][success['cabeceras'][i]])?success['datos'][success['cabeceras'][i]]:'') +'</td>'+
+            '<  /tr>'
+          );
+        }
+      }
+      //$("#verCuadro").attr('href','/algo/algo')
+      //$("#TituloModalInformacion").text(titulo);
+      $("#ModalFechas").modal();
+    });//*/
+    $("#ModalFechas").modal();
   }
 
   function modalComentarios(id_solicitud){

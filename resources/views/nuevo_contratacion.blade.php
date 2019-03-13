@@ -45,19 +45,6 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Nómina</label>
-            
-            <div class="col-sm-6">
-              <input type="text" class="form-control" name="" value="INSTITUCIONAL" id="Contratacion-Nomina" disabled="disabled">
-            </div>
-            <!--<div class="col-sm-6">
-              <select class="form-control m-bot15">
-                  <option>Prestación de Servicios</option>
-                  <option>Institucional</option>
-              </select>
-            </div>-->
-          </div>
-          <div class="form-group">
             <label class="col-sm-2 control-label">Fuente de Recursos*</label>
             <div class="col-sm-6">
               <select class="form-control m-bot15" id="SelectFuenteRecursos">
@@ -78,7 +65,7 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">Organigrama*</label>
             <div class="col-sm-9">
-              <input type="file" class="form-control-file" accept="application/pdf" id="archivo-organigrama">
+              <input type="file" class="form-control-file" accept="application/pdf" id="archivo-organigrama" onchange="VerificarTamanio(this)">
             </div>
           </div>
           <div class="form-group">
@@ -87,7 +74,7 @@
               <a href="#">Descargar Formato</a>-->
             </label>
             <div class="col-sm-9">
-              <input type="file" class="form-control-file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" id="archivo-plantilla">
+              <input type="file" class="form-control-file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" id="archivo-plantilla" onchange="VerificarTamanio(this)">
               <br>
               <a href="/descargas/anexo_plantilla" target="_blank">DESCARGAR ANEXO DE PLANTILLA</a>
             </div>
@@ -95,19 +82,19 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">Descripción del Puesto a Cubrir*</label>
             <div class="col-sm-9">
-              <input type="file" class="form-control-file" accept="application/pdf" id="archivo-descripcion">
+              <input type="file" class="form-control-file" accept="application/pdf" id="archivo-descripcion" onchange="VerificarTamanio(this)">
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-3 control-label">Curriculum Actualizado*</label>
             <div class="col-sm-9">
-              <input type="file" class="form-control-file" accept="application/pdf" id="archivo-curriculum">
+              <input type="file" class="form-control-file" accept="application/pdf" id="archivo-curriculum" onchange="VerificarTamanio(this)">
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-3 control-label">Mapa de Ubicación Física</label>
             <div class="col-sm-9">
-              <input type="file" class="form-control-file" accept="application/pdf" id="archivo-mapa_ubicacion">
+              <input type="file" class="form-control-file" accept="application/pdf" id="archivo-mapa_ubicacion" onchange="VerificarTamanio(this)">
             </div>
           </div>
 
@@ -136,6 +123,18 @@
       location.href='/listado/dependencia';
     }
 
+    function VerificarTamanio(archivo){
+      arch = archivo.value;
+      if(archivo.value!=''){
+        var size = archivo.files[0].size
+        //console.log(archivo.files[0].size);
+        if(size>2097152){
+          MensajeModal('¡ATENCIÓN!','El tamaño del archivo no debe exceder los 2MB');
+          archivo.value = '';
+        }
+      }
+    }
+
     id_dependencia = <?php echo json_encode(\Session::get('id_dependencia')[0]) ?>;
     //console.log(id_dependencia);
     function autollenado(){
@@ -152,7 +151,8 @@
       var categoria = $("#Contratacion-CategoriaSolicitada").val();
       var puesto = $("#Contratacion-PuestoSolicitado").val();
       var actividades = $("#Contratacion-Actividades").val();
-      var nomina = $("#Contratacion-Nomina").val();
+      //var nomina = $("#Contratacion-Nomina").val();
+      var nomina = 'NA';
       var salario = $("#Contratacion-SalarioSolicitado").val();
       var justificacion = $("#Contratacion-Justificacion").val();
       var fuente_recursos = $("#SelectFuenteRecursos").val();
@@ -175,7 +175,7 @@
       }else if(fuente_recursos=='NADA'){
         MensajeModal("¡ATENCIÓN!",'La fuente de recursos es un campo obligatorio');
       }else if(archivo_organigrama.value==""){
-        console.log('falta organigrama');
+        //console.log('falta organigrama');
         MensajeModal("¡ATENCIÓN!",'Debe adjuntar el organigrama de la dependencia');
       }else if(archivo_plantilla.value==''){
         MensajeModal("¡ATENCIÓN!",'Debe adjuntar la plantilla de personal de la dependencia');

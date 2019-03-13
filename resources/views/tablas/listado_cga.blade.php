@@ -12,7 +12,7 @@
   </thead>
   <tbody>
   	@foreach($solicitudes as $solicitud)
-        <tr class="">
+        <tr class="{{ $solicitud->CLASE_TR}}">
           <td>{{$solicitud->ID_SOLICITUD}}</td>
           <td>{{$solicitud->NOMBRE_SOLICITUD}}</td>
           <td>{{$solicitud->NOMBRE_DEPENDENCIA}}</td>
@@ -21,7 +21,8 @@
           <td id="td_estatus_{{$solicitud->ID_ESCAPE}}">{{$solicitud->ESTATUS_SOLICITUD}}</td>
           <td>
               <div class="btn-group">
-      			<a class="btn btn-primary" href="javascript:void(0)" onclick="AbreModalInformacion('{{$solicitud->ID_SOLICITUD}}','{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}')"><i class="icon_info_alt"></i></a>
+      			<a class="btn btn-primary" href="javascript:void(0)" onclick="AbreModalInformacion('{{$solicitud->ID_SOLICITUD}}','{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}')"><i class="icon_info_alt"></i></a></div>
+                <a class="btn btn-info" href="javascript:void(0);" onclick="AbreModalFechas('{{$solicitud->ID_SOLICITUD}}')" style="background-color: DeepSkyBlue;"><i class="icon_calendar"></i></a>
                 @if(strcmp($solicitud->ESTATUS_SOLICITUD,'FIRMAS')==0)
                 	<a class="btn btn-danger" href="#" onclick="modalConfig('{{$solicitud->ID_SOLICITUD}}','{{$solicitud->ESTATUS_SOLICITUD}}')"><i class="icon_adjust-vert"></i></a>
                	

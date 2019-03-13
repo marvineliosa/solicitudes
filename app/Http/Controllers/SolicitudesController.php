@@ -183,6 +183,57 @@
             return $comentarios;
         }
 
+        public function ObtenerFechasSolicitud(Request $request){
+
+            $fechas = DB::table('SOLICITUDES_FECHAS')
+                ->where('FK_SOLICITUD_ID',$request['id_sol'])
+                ->get();
+            $cabeceras = array(
+                    'CREACIÓN',
+                    'EXPIRACIÓN',
+                    'INFORMACION COMPLETA',
+                    'TURNADO A CGA',
+                    'LIMITE AGENDAR CITA',
+                    'LIMITE LEVANTAMIENTO',
+                    'LIMITE ANALISIS',
+                    'LIMITE REVISION',
+                    'LIMITE FIRMAS',
+                    'LIMITE FINALIZAR',
+                    'PUESTO REVISION',
+                    'PUESTO FIRMAS',
+                    'FIRMA COORDINADOR GENERAL ADMINISTRATIVO',
+                    'FIRMA TITULAR',
+                    'FIRMA SECRETARIO PARTICULAR',
+                    'TURNADO SPR PARA APROVACIÓN'
+                );
+            $datos_tabla = array(
+                    'CREACIÓN' => (($fechas[0]->FECHAS_CREACION_SOLICITUD)?date("d/m/Y", strtotime($fechas[0]->FECHAS_CREACION_SOLICITUD)):null),
+                    'EXPIRACIÓN' => (($fechas[0]->FECHAS_EXPIRACION)?date("d/m/Y", strtotime($fechas[0]->FECHAS_EXPIRACION)):null),
+                    'INFORMACION COMPLETA' => (($fechas[0]->FECHAS_INFORMACION_COMPLETA)?date("d/m/Y", strtotime($fechas[0]->FECHAS_INFORMACION_COMPLETA)):null),
+                    'TURNADO A CGA' => (($fechas[0]->FECHAS_TURNADO_CGA)?date("d/m/Y", strtotime($fechas[0]->FECHAS_TURNADO_CGA)):null),
+                    'LIMITE AGENDAR CITA' => (($fechas[0]->FECHAS_LIMITE_AGENDAR_CITA)?date("d/m/Y", strtotime($fechas[0]->FECHAS_LIMITE_AGENDAR_CITA)):null),
+                    'LIMITE LEVANTAMIENTO' => (($fechas[0]->FECHAS_LIMITE_LEVANTAMIENTO)?date("d/m/Y", strtotime($fechas[0]->FECHAS_LIMITE_LEVANTAMIENTO)):null),
+                    'LIMITE ANALISIS' => (($fechas[0]->FECHAS_LIMITE_ANALISIS)?date("d/m/Y", strtotime($fechas[0]->FECHAS_LIMITE_ANALISIS)):null),
+                    'LIMITE REVISION' => (($fechas[0]->FECHAS_LIMITE_REVISION)?date("d/m/Y", strtotime($fechas[0]->FECHAS_LIMITE_REVISION)):null),
+                    'LIMITE FIRMAS' => (($fechas[0]->FECHAS_LIMITE_FIRMAS)?date("d/m/Y", strtotime($fechas[0]->FECHAS_LIMITE_FIRMAS)):null),
+                    'LIMITE FINALIZAR' => (($fechas[0]->FECHAS_LIMITE_FINALIZAR)?date("d/m/Y", strtotime($fechas[0]->FECHAS_LIMITE_FINALIZAR)):null),
+                    'PUESTO REVISION' => (($fechas[0]->FECHAS_PUESTO_REVISION)?date("d/m/Y", strtotime($fechas[0]->FECHAS_PUESTO_REVISION)):null),
+                    'PUESTO FIRMAS' => (($fechas[0]->FECHAS_PUESTO_FIRMAS)?date("d/m/Y", strtotime($fechas[0]->FECHAS_PUESTO_FIRMAS)):null),
+                    'FIRMA COORDINADOR GENERAL' => (($fechas[0]->FECHAS_FIRMA_CGA)?date("d/m/Y", strtotime($fechas[0]->FECHAS_FIRMA_CGA)):null),
+                    'FIRMA TITULAR' => (($fechas[0]->FECHAS_FIRMA_TITULAR)?date("d/m/Y", strtotime($fechas[0]->FECHAS_FIRMA_TITULAR)):null),
+                    'FIRMA SECRETARIO PARTICULAR' => (($fechas[0]->FECHAS_FIRMA_SPR)?date("d/m/Y", strtotime($fechas[0]->FECHAS_FIRMA_SPR)):null),
+                    'TURNADO SPR PARA APROVACIÓN' => (($fechas[0]->FECHAS_TURNADO_SPR)?date("d/m/Y", strtotime($fechas[0]->FECHAS_TURNADO_SP)):null)
+                );
+
+            //dd($datos_tabla);
+            $data = array(
+                "cabeceras"=>$cabeceras,
+                "datos"=>$datos_tabla
+            );
+
+            echo json_encode($data);//*/
+        }
+
         public function ObtenerCambioAdscripcion(Request $request){
             $solicitud = SolicitudesController::ObtenerSolicitudId($request['id_sol']);
             $cambio_adscripcion = SolicitudesController::ObtenerDatosCambioAdscripcion($request['id_sol']);
@@ -927,6 +978,12 @@
                 //dd('Modo NPS');
                 $solicitud[0]->NOMBRE_DEPENDENCIA = $dependencia->CODIGO_DEPENDENCIA;
             }
+
+            if(strcmp($solicitud[0]->TIPO_SOLICITUD_SOLICITUD, 'CONTRATACIÓN POR SUSTITUCIÓN')==0){
+                $sustitucion = SolicitudesController::ObtenerDatosSustitucion($id_solicitud);
+                //dd($sustitucion);
+                $solicitud[0]->NOMBRE_SOLICITUD = $sustitucion->NUEVO_CANDIDATO;
+            }
             //dd($dependencia);
             $solicitud[0]->ID_ESCAPE = str_replace('/','_',$solicitud[0]->ID_SOLICITUD);
             $solicitud[0]->SALARIO_FORMATO = number_format($solicitud[0]->SALARIO_SOLICITUD,2);
@@ -935,9 +992,12 @@
             $fechas = DB::table('SOLICITUDES_FECHAS')
                 ->where('FK_SOLICITUD_ID',$id_solicitud)
                 ->get();
+            //dd($fechas[0]);
             $solicitud[0]->FECHA_CREACION = date("d/m/Y", strtotime($fechas[0]->FECHAS_CREACION_SOLICITUD));
-            $solicitud[0]->FECHAS_INFORMACION_COMPLETA = date("d/m/Y", strtotime($fechas[0]->FECHAS_INFORMACION_COMPLETA));
-            $solicitud[0]->FECHA_TURNADO_CGA = date("d/m/Y", strtotime($fechas[0]->FECHAS_TURNADO_CGA));
+            $solicitud[0]->FECHAS_INFORMACION_COMPLETA = (($fechas[0]->FECHAS_INFORMACION_COMPLETA)?date("d/m/Y", strtotime($fechas[0]->FECHAS_INFORMACION_COMPLETA)):'');
+
+            $solicitud[0]->FECHA_TURNADO_CGA = (($fechas[0]->FECHAS_TURNADO_CGA)?date("d/m/Y", strtotime($fechas[0]->FECHAS_TURNADO_CGA)):'');
+
             $solicitud[0]->FECHA_ENVIO = date("d/m/Y", strtotime($fechas[0]->FECHAS_TURNADO_SPR));
 
             $datos_cga = DB::table('SOLICITUDES_DATOS_CGA')
@@ -954,10 +1014,12 @@
             $solicitud[0]->SALARIO_SUPERIOR = $datos_cga[0]->DATOS_CGA_SALARIO_SUPERIOR;
             $solicitud[0]->CATEGORIA_INFERIOR = $datos_cga[0]->DATOS_CGA_CATEGORIA_INFERIOR;
             $solicitud[0]->SALARIO_INFERIOR = $datos_cga[0]->DATOS_CGA_SALARIO_INFERIOR;
-            $solicitud[0]->ESTATUS_SOLICITUD = $datos_cga[0]->DATOS_CGA_ESTATUS;
+            $solicitud[0]->ESTATUS_SOLICITUD = $datos_cga[0]->DATOS_CGA_ESTATUS;//estatus
             $solicitud[0]->AHORRO_SOLICITUD = $datos_cga[0]->DATOS_CGA_AHORRO;
             $solicitud[0]->COMPENSACION_SOLICITUD = $datos_cga[0]->DATOS_CGA_COMPENSACION;
             $solicitud[0]->HOY = date('d/m/Y');
+
+            $solicitud[0]->CLASE_TR = SolicitudesController::VerificaTiempo($datos_cga[0]->DATOS_CGA_ESTATUS,$id_solicitud,$solicitud[0]->PRIORIDAD_SOLICITUD);
 
             $rel_analista = DB::table('REL_SOLICITUDES_ANALISTA')
                 ->where('FK_SOLICITUD_ID',$id_solicitud)
@@ -983,6 +1045,142 @@
             }
 
             return $solicitud[0];
+        }
+
+        public function VerificaTiempo($estatus,$solicitud,$prioridad){
+            //$solicitud = 'SOL/2/2019';
+            //dd($prioridad);
+            date_default_timezone_set('America/Mexico_City');
+            //dd($estatus);
+            $estatus_fechas='NO IDENTIFICADO';//estatus que arroja la tabla fechas
+            $color = '--';
+            $retraso = 'danger';
+            $adelanto = 'success';
+            if(in_array($estatus, ['RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN','FIRMAS','TURNADO A SPR'])){
+                $fechas = DB::table('SOLICITUDES_FECHAS')
+                    ->where('FK_SOLICITUD_ID',$solicitud)
+                    ->get();
+                //dd($fechas[0]);
+                $hoy = date('Y-m-d');
+                //dd($hoy);
+                //$hoy = '2019-03-17';
+                //$hoy = '2019-04-04';
+                $fechas = $fechas[0];
+                //$estatus = 'FIRMAS';
+                //if(strcmp($prioridad, 'PRIORIDAD 2')==0){
+                if(true){
+                    //dd($estatus);
+                    //dd($fechas->FECHAS_LIMITE_AGENDAR_CITA);
+                    if(SolicitudesController::check_in_range($fechas->FECHAS_INFORMACION_COMPLETA, $fechas->FECHAS_LIMITE_AGENDAR_CITA, $hoy,'RECIBIDO')){
+                        //dd('Estamos en tiempo, el limite es: '.$fechas->FECHAS_LIMITE_AGENDAR_CITA);
+                        $estatus_fechas = "RECIBIDO";
+                        if(in_array($estatus, ['LEVANTAMIENTO','ANÁLISIS','REVISIÓN','FIRMAS','TURNADO A SPR'])){
+                            $color = $adelanto;
+                            //dd('Solicitud ADELANTADA: '.$estatus_fechas);
+                        }else{
+                            //dd('Solicitud EN TIEMPO: '.$estatus_fechas);
+                        }
+                        //dd($estatus_fechas);
+                    }else if(SolicitudesController::check_in_range($fechas->FECHAS_LIMITE_AGENDAR_CITA, $fechas->FECHAS_LIMITE_LEVANTAMIENTO, $hoy,'LEVANTAMIENTO')){
+                        $estatus_fechas = "LEVANTAMIENTO";
+                        if(in_array($estatus, ['RECIBIDO'])){
+                            //dd('Solicitud RETRASADA '.$estatus_fechas);
+                            $color = $retraso;
+                        }else if(in_array($estatus, ['ANÁLISIS','REVISIÓN','FIRMAS','TURNADO A SPR'])){
+                            //dd('Solicitud ADELANTADA: '.$estatus_fechas);
+                            $color = $adelanto;
+                        }else{
+                            //dd('Solicitud EN TIEMPO: '.$estatus_fechas);
+                        }
+                        //dd($estatus_fechas);
+                        //dd('Estamos en tiempo, el limite es: '.$fechas->FECHAS_LIMITE_AGENDAR_CITA);
+                    }else if(SolicitudesController::check_in_range($fechas->FECHAS_LIMITE_LEVANTAMIENTO, $fechas->FECHAS_LIMITE_ANALISIS, $hoy,'ANÁLISIS')){
+                        $estatus_fechas = "ANÁLISIS";
+                        if(in_array($estatus, ['RECIBIDO','LEVANTAMIENTO'])){
+                            //dd('Solicitud RETRASADA '.$estatus_fechas);
+                            $color = $retraso;
+                        }else if(in_array($estatus, ['REVISIÓN','FIRMAS','TURNADO A SPR'])){
+                            //dd('Solicitud ADELANTADA: '.$estatus_fechas);
+                            $color = $adelanto;
+                        }else{
+                            //dd('Solicitud EN TIEMPO: '.$estatus_fechas);
+                        }
+                        //dd($estatus_fechas);
+                        //dd('Estamos en tiempo, el limite es: '.$fechas->FECHAS_LIMITE_AGENDAR_CITA);
+                    }else if(SolicitudesController::check_in_range($fechas->FECHAS_LIMITE_ANALISIS, $fechas->FECHAS_LIMITE_REVISION, $hoy,'REVISIÓN')){
+                        $estatus_fechas = "REVISIÓN";
+                        if(in_array($estatus, ['RECIBIDO','LEVANTAMIENTO','ANÁLISIS'])){
+                            //dd('Solicitud RETRASADA '.$estatus_fechas);
+                            $color = $retraso;
+                        }else if(in_array($estatus, ['FIRMAS','TURNADO A SPR'])){
+                            //dd('Solicitud ADELANTADA: '.$estatus_fechas);
+                            $color = $adelanto;
+                        }else{
+                            //dd('Solicitud EN TIEMPO: '.$estatus_fechas);
+                        }
+                        //dd($estatus_fechas);
+                        //dd('Estamos en tiempo, el limite es: '.$fechas->FECHAS_LIMITE_AGENDAR_CITA);
+                    }else if(SolicitudesController::check_in_range($fechas->FECHAS_LIMITE_REVISION, $fechas->FECHAS_LIMITE_FIRMAS, $hoy,'FIRMAS')){
+                        $estatus_fechas = "FIRMAS";
+                        if(in_array($estatus, ['RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN'])){
+                            //dd('Solicitud RETRASADA '.$estatus_fechas);
+                            $color = $retraso;
+                        }else if(in_array($estatus, ['TURNADO A SPR'])){
+                            //dd('Solicitud ADELANTADA: '.$estatus_fechas);
+                            $color = $adelanto;
+                        }else{
+                            //dd('Solicitud EN TIEMPO: '.$estatus_fechas);
+                        }
+                        //dd($estatus_fechas);
+                        //dd('Estamos en tiempo, el limite es: '.$fechas->FECHAS_LIMITE_AGENDAR_CITA);
+                    }else if(SolicitudesController::check_in_range($fechas->FECHAS_LIMITE_FIRMAS, $fechas->FECHAS_LIMITE_FINALIZAR, $hoy,'FINALIZAR SPR')){
+                        $estatus_fechas = "FINALIZAR SPR";
+                        if(in_array($estatus, ['RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN','FIRMAS','TURNADO A SPR'])){
+                            //dd('Solicitud RETRASADA: '.$estatus_fechas);
+                            $color = $retraso;
+                        }else{
+                            //dd('Solicitud EN TIEMPO: '.$estatus_fechas);
+                        }
+                        //dd($estatus_fechas);
+                        //dd('Estamos en tiempo, el limite es: '.$fechas->FECHAS_LIMITE_AGENDAR_CITA);
+                    }else{
+                        //este estatus es cuando la solicitud ya debió haber sido atendida
+                        $estatus_fechas = "COMPLETADO POR SPR";
+                        if(in_array($estatus, ['RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN','FIRMAS','TURNADO A SPR'])){
+                            //dd('Solicitud RETRASADA: '.$estatus_fechas);
+                            $color = $retraso;
+                        }
+                        //dd('epale');
+                    }
+                }else{
+                    //dd($fechas);
+                }
+                //dd($estatus_fechas);
+
+            }
+            return $color;
+            //dd('No es apto para estatus');
+        }
+        function check_in_range($fecha_inicio, $fecha_fin, $fecha,$estatus){
+            if(strcmp($estatus, 'RECIBIDO')!=0){
+                //dd($estatus);
+                $fecha_inicio = strtotime($fecha_inicio."+ 1 days");
+            }else{
+                //dd($estatus);
+                $fecha_inicio = strtotime($fecha_inicio);
+            }
+            $fecha_fin = strtotime($fecha_fin);
+            $fecha = strtotime($fecha);
+
+            if(($fecha >= $fecha_inicio) && ($fecha <= $fecha_fin)) {
+
+                return true;
+
+            }else{
+
+                return false;
+
+            }
         }
 
         public function ValidacionRectoria(Request $request){
@@ -1157,7 +1355,7 @@
                 ->update(['DATOS_CGA_ESTATUS' => $request['estatus']]);
 
             $mail = null;
-            if(in_array($request['estatus'], ['VALIDACIÓN DE INFORMACIÓN','INFORMACIÓN CORRECTA','RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN','FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR','CANCELADO','OTRO'])){
+            /*if(in_array($request['estatus'], ['VALIDACIÓN DE INFORMACIÓN','INFORMACIÓN CORRECTA','RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN','FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR','CANCELADO','OTRO'])){
                 $asunto = 'Cambio de estatus';
                 $titulo = 'Cambio de estatus';
                 $mensaje = 'El estatus de la solicitud '.$request['id_sol'].' ha cambiado a '.$request['estatus'];
@@ -1517,11 +1715,22 @@
         }
 
         public function ObtenerSolicitudes(){
-            $res_solicitudes = DB::table('SOLICITUDES_DATOS_CGA')
-                                ->whereNotIn('DATOS_CGA_ESTATUS',['RECIBIDO SPR','VALIDACIÓN DE INFORMACIÓN'])
-                                ->select('FK_SOLICITUD_ID')
-                                ->get();
-            $solicitudes = array();
+
+            $categoria = \Session::get('categoria')[0];
+            if(in_array($categoria, ['TRABAJADOR_SPR'])){
+                $res_solicitudes = DB::table('SOLICITUDES_DATOS_CGA')
+                                    ->whereNotIn('DATOS_CGA_ESTATUS',['RECIBIDO SPR'])
+                                    ->select('FK_SOLICITUD_ID')
+                                    ->get();
+                $solicitudes = array();
+
+            }else{
+                $res_solicitudes = DB::table('SOLICITUDES_DATOS_CGA')
+                                    ->whereNotIn('DATOS_CGA_ESTATUS',['RECIBIDO SPR','VALIDACIÓN DE INFORMACIÓN'])
+                                    ->select('FK_SOLICITUD_ID')
+                                    ->get();
+                $solicitudes = array();
+            }
             foreach ($res_solicitudes as $solicitud){
                 $solicitudes[$solicitud->FK_SOLICITUD_ID]=SolicitudesController::ObtenerSolicitudId($solicitud->FK_SOLICITUD_ID);
                 //$solicitudes[$solicitud->SOLICITUD_ID] = (object)$tmpSol;
@@ -1533,13 +1742,50 @@
         public function MarcarInformacionCorrecta(Request $request){
             date_default_timezone_set('America/Mexico_City');
             //dd($request['id_sol']);
-            $update = DB::table('SOLICITUDES_DATOS_CGA')
-                ->where('FK_SOLICITUD_ID', $request['id_sol'])
-                ->update(['DATOS_CGA_ESTATUS' => 'RECIBIDO']);
+            
+            $res_solicitudes = DB::table('SOLICITUDES_SOLICITUD')
+                                ->where('SOLICITUD_ID', $request['id_sol'])
+                                ->select('SOLICITUD_URGENCIA')
+                                ->get();
+            //dd($res_solicitudes[0]->SOLICITUD_URGENCIA);
+            if(strcmp($res_solicitudes[0]->SOLICITUD_URGENCIA,'PRIORIDAD 2')==0){
+                $fechas = array(
+                        //'tiempo_revision_informacion' => SolicitudesController::CalculaFecha(1),
+                        'tiempo_GenerarCita' => SolicitudesController::CalculaFecha(3),
+                        'tiempo_levantamiento' => SolicitudesController::CalculaFecha(5),
+                        'tiempo_analisis' => SolicitudesController::CalculaFecha(7),
+                        'tiempo_revision_cuadro' => SolicitudesController::CalculaFecha(9),
+                        'tiempo_firmas' => SolicitudesController::CalculaFecha(11),
+                        'tiempo_AprovacionSpr' => SolicitudesController::CalculaFecha(14)
+                    );
+            }else{
+                $fechas = array(
+                        //'tiempo_revision_informacion' => SolicitudesController::CalculaFecha(1),
+                        'tiempo_GenerarCita' => SolicitudesController::CalculaFecha(1),
+                        'tiempo_levantamiento' => SolicitudesController::CalculaFecha(2),
+                        'tiempo_analisis' => SolicitudesController::CalculaFecha(3),
+                        'tiempo_revision_cuadro' => SolicitudesController::CalculaFecha(4),
+                        'tiempo_firmas' => SolicitudesController::CalculaFecha(5),
+                        'tiempo_AprovacionSpr' => SolicitudesController::CalculaFecha(6)
+                    );
+            }
+            //dd($fechas);
 
             $updateFecha = DB::table('SOLICITUDES_FECHAS')
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])
-                ->update(['FECHAS_INFORMACION_COMPLETA' =>  date('Y-m-d H:i:s')]);
+                ->update([
+                    'FECHAS_INFORMACION_COMPLETA' =>  date('Y-m-d H:i:s'),
+                    'FECHAS_LIMITE_AGENDAR_CITA' =>  $fechas['tiempo_GenerarCita'],
+                    'FECHAS_LIMITE_LEVANTAMIENTO' =>  $fechas['tiempo_levantamiento'],
+                    'FECHAS_LIMITE_ANALISIS' =>  $fechas['tiempo_analisis'],
+                    'FECHAS_LIMITE_REVISION' =>  $fechas['tiempo_revision_cuadro'],
+                    'FECHAS_LIMITE_FIRMAS' =>  $fechas['tiempo_firmas'],
+                    'FECHAS_LIMITE_FINALIZAR' =>  $fechas['tiempo_AprovacionSpr']
+                ]);
+
+            $update = DB::table('SOLICITUDES_DATOS_CGA')
+                ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                ->update(['DATOS_CGA_ESTATUS' => 'RECIBIDO']);
 
             $data = array(
                 "update"=>$update
@@ -1596,9 +1842,72 @@
              return $sol;   
         }
 
+        public function esFestivo($time) {
+            date_default_timezone_set('America/Mexico_City');
+            /*global $dias_saltados;
+            global $dias_festivos;//*/
+            // Guardamos en una variable los dias festivos en varios arrays con formato
+            // $dias_festivos[año][mes] = [dias festivos];
+            $dias_festivos = array(
+                "2019"=>array(
+                  3 => [8,18],
+                  4 => [15,16,17,28,19,20],
+                  5 => [1,5,10,15],
+                  6 => [8],
+                  7 => [8,9,10,11,12,15,16,17,18,19,22,23,24,25,26],
+                  9 => [15],
+                  11 => [1,2,18],
+                  12 => [14,18,19,20,23,24,25,26,27,30,31],
+                ),
+                "2020"=>array(1 => [1])
+            );
+            $dias_saltados = array(0,6); // 0: domingo, 1: lunes... 6:sabado
+
+            $w = date("w",$time); // dia de la semana en formato 0-6
+            if(in_array($w, $dias_saltados)) return true;
+            $j = date("j",$time); // dia en formato 1 - 31
+            $n = date("n",$time); // mes en formato 1 - 12
+            $y = date("Y",$time); // año en formato XXXX
+            if(isset($dias_festivos[$y]) && isset($dias_festivos[$y][$n]) && in_array($j,$dias_festivos[$y][$n])) return true;
+
+            return false;
+        }
+
+        public function CalculaFecha($dias){
+            date_default_timezone_set('America/Mexico_City');
+            $dias_saltados = array(0,6); // 0: domingo, 1: lunes... 6:sabado
+            // dias a sumar
+            $dias = $dias_origin = $dias;
+            // dias que el programa ha contado
+            $dias_contados = 0;
+            // timestamp actual
+            $time = time();
+            // duracion (en segundos) que tiene un día
+            $dia_time = 3600*24; //3600 segundos en una hora * 24 horas que tiene un dia.
+
+            while($dias != 0) {
+              $dias_contados++;
+              $tiempoContado = $time+($dia_time*$dias_contados); // Sacamos el timestamp en la que estamos ahora mismo comprobando
+              if(SolicitudesController::esFestivo($tiempoContado) == false)
+                  $dias--;
+            }
+            //return date("d/m/Y",$tiempoContado);
+            return date("Y-m-d",$tiempoContado);
+        }
+
         public function AlmacenarSolicitud($datos_solicitud){
             date_default_timezone_set('America/Mexico_City');
             $sol = '';
+            $nomina = '';
+            //print_r($datos_solicitud);
+            $datos = SolicitudesController::DatosGenerales();
+            if($datos['institucional']){
+                $nomina = 'INSTITUCIONAL';
+            }else{
+                $nomina = 'PRESTACION DE SERVICIOS';
+            }
+            //dd($datos_solicitud['candidato']);
+            //dd($nomina);
             //Se bloquea la base de datos para que otro usuario no genere un folio repetido
             DB::raw('lock tables SOLICITUDES_SOLICITUD write');
                 $sol = SolicitudesController::ObtenerConsecutivo();
@@ -1612,11 +1921,12 @@
                         'SOLICITUD_CATEGORIA' => $datos_solicitud['categoria'],
                         'SOLICITUD_PUESTO' => $datos_solicitud['puesto'],
                         'SOLICITUD_ACTIVIDADES' => $datos_solicitud['actividades'],
-                        'SOLICITUD_NOMINA' => $datos_solicitud['nomina'],
+                        //'SOLICITUD_NOMINA' => $datos_solicitud['nomina'],
+                        'SOLICITUD_NOMINA' => $nomina,
                         'SOLICITUD_SALARIO' => $datos_solicitud['salario'],
                         'SOLICITUD_JUSTIFICACION' => $datos_solicitud['justificacion'],
                         'SOLICITUD_TIPO_SOLICITUD' => $datos_solicitud['tipo_solicitud'],
-                        'SOLICITUD_URGENCIA' => 'PRIORIDAD 1',
+                        'SOLICITUD_URGENCIA' => 'PRIORIDAD 2',
                         'SOLICITUD_FUENTE_RECURSOS' => $datos_solicitud['fuente_recursos'],
                         'created_at' => date('Y-m-d H:i:s')
                     ]
@@ -1628,7 +1938,7 @@
                     [
                         'FK_SOLICITUD_ID' => $sol,
                         'DATOS_CGA_ESTATUS' => 'RECIBIDO SPR',
-                        'DATOS_CGA_PRIORIDAD' => 'PRIORIDAD 1',
+                        'DATOS_CGA_PRIORIDAD' => 'PRIORIDAD 2',
                          'created_at' => date('Y-m-d H:i:s')
                     ]
                 );
@@ -1755,7 +2065,7 @@
                 'tipo_solicitud' => 'CONTRATACIÓN POR SUSTITUCIÓN',
                 'fuente_recursos' => $fuente_recursos
             );
-            //dd($datos_solicitud);
+            //print_r($datos_solicitud);
             $sol = SolicitudesController::AlmacenarSolicitud($datos_solicitud);
             SolicitudesController::InsertarRelacionDependenciaSolicitud($id_dependencia,$sol);
 

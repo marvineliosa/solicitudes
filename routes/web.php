@@ -124,6 +124,7 @@ Route::post('/solicitud/obtener_datos_contratacion', 'SolicitudesController@Obte
 Route::post('/solicitud/obtener_datos_sustitucion', 'SolicitudesController@ObtenerSustitucion');
 Route::post('/solicitud/obtener_datos_promocion', 'SolicitudesController@ObtenerPromocion');
 Route::post('/solicitud/obtener_datos_cambio_adscripcion', 'SolicitudesController@ObtenerCambioAdscripcion');
+Route::post('/solicitud/obtener_fechas', 'SolicitudesController@ObtenerFechasSolicitud');
 
 
 //CUADROS
