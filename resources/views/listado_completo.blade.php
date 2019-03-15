@@ -48,6 +48,7 @@
 			        <option value="ANÁLISIS">ANÁLISIS</option>
 			        <option value="REVISIÓN">REVISIÓN</option>
 			        <option value="FIRMAS">FIRMAS</option>
+			        <option value="CANCELADO POR TITULAR">CANCELADO POR TITULAR</option>
 			        <!--<option value="TURNADO A SPR">TURNAR A SPR</option>-->
 			        <option value="CANCELADO">CANCELADO</option>
 			        <option value="OTRO">OTRO</option>
@@ -140,16 +141,21 @@
 			dataForm.append('id_sol',id_sol);
 			dataForm.append('estatus',estatus);
 			//lamando al metodo ajax
-
-			metodoAjax(url,dataForm,function(success){
-				//aquí se escribe todas las operaciones que se harían en el succes
-				//la variable success es el json que recibe del servidor el método AJAX
-				gl_solicitudes[id_sol]['ESTATUS_SOLICITUD'] = estatus;
-				//$("#td_estatus_"+gl_solicitudes[id_sol]['ID_ESCAPE']).html(estatus);
-				//console.log(gl_solicitudes);
-				recargarTablaAjax('/refrescar/listado_completo');
-				MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente.");
-			});//*/
+			if(estatus!='SELECCIONAR'&&estatus!='CANCELADO POR TITULAR'){
+				metodoAjax(url,dataForm,function(success){
+					//aquí se escribe todas las operaciones que se harían en el succes
+					//la variable success es el json que recibe del servidor el método AJAX
+					gl_solicitudes[id_sol]['ESTATUS_SOLICITUD'] = estatus;
+					//$("#td_estatus_"+gl_solicitudes[id_sol]['ID_ESCAPE']).html(estatus);
+					//console.log(gl_solicitudes);
+					recargarTablaAjax('/refrescar/listado_completo');
+					MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente.");
+				});//*/
+			}else if(estatus=='CANCELADO POR TITULAR'){
+				MensajeModal("¡ATENCIÓN!","El estatus 'CANCELADO POR TITULAR' solo puede ser seleccionado por un titular.");
+			}else{
+				MensajeModal("¡ATENCIÓN!","No ha seleccionado un estatus.");
+			}
     	}
 
 		function refreshTable() {

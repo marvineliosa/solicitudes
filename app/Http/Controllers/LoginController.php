@@ -96,11 +96,13 @@
             \Session::forget('categoria');
             \Session::forget('id_dependencia');
             \Session::forget('responsable');
+            \Session::forget('horario');
             $usr = $request['usuario'];
             $contrasena = $request['pass'];
             $fl = false;
             $usuario = "";
             $id_dependencia = null;
+            $fl_horario = false;
             $existe = DB::table('SOLICITUDES_LOGIN')->where(['LOGIN_USUARIO'=> $usr, 'LOGIN_CONTRASENIA' => $contrasena])->get();
             //dd($existe);
             if(count($existe)>0){
@@ -113,6 +115,22 @@
                     /*$nom_dependencia = DB::table('SOLICITUDES_DEPENDENCIA')->where(['DEPENDENCIA_ID'=> $id_dependencia[0]->FK_DEPENDENCIA)->get();
                     $id_dependencia = $nom_dependencia[0]->DEPENDENCIA_ID;//*/
                     $id_dependencia = $rel_dependencia[0]->FK_DEPENDENCIA;
+
+                    date_default_timezone_set('America/Mexico_City');
+                    $ahora = strtotime(date('H:i'));
+                    //dd($ahora);
+                    $inicio = strtotime( "09:00" );
+                    $fin = strtotime( "17:00" );
+                    //dd($inicio.' --- '.$fin);
+                    if($ahora > $inicio && $ahora < $fin) {
+                        //dd($ahora.' es mayor que '.$fin);
+                        //dd('Esta en tiempo');
+                        $fl_horario = true;
+                    } else {
+                        //dd($ahora.' es menor que '.$fin);
+                        $fl_horario = false;
+                        //dd('No sta en tiempo');
+                    }
                 }
                 //$usuario = $existe[0]->LOGIN_USUARIO;
                 if(\Session::get('usuario')!=null){
@@ -121,6 +139,7 @@
                     \Session::forget('categoria');
                     \Session::forget('id_dependencia');
                     \Session::forget('responsable');
+                    \Session::forget('horario');
                     //\Session::forget('nombre');
                 }
                 //dd($existe[0]->LOGIN_RESPONSABLE);
@@ -128,6 +147,7 @@
                 \Session::push('categoria',$existe[0]->LOGIN_CATEGORIA);
                 \Session::push('id_dependencia',$id_dependencia);
                 \Session::push('responsable',$existe[0]->LOGIN_RESPONSABLE);
+                \Session::push('horario',$fl_horario);
                 //dd(\Session::get('responsable')[0]);
                 //\Session::push('nombre',$n_usuario[0]->USUARIOS_NOMBRE_RESPONSABLE);
             }

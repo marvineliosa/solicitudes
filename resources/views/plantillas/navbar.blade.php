@@ -38,7 +38,8 @@
                   <li><a class="" href="/listado/revisadas">Por Autorizar (SPR)</a></li>
                 @endif
                 @if(strcmp(\Session::get('categoria')[0],'SECRETARIO_PARTICULAR')==0)
-                  <li><a class="" href="/listado/spr">Solicitudes (SPR)</a></li>
+                  <li><a class="" href="/listado/spr">Por Firmar (SPR)</a></li>
+                  <li><a class="" href="/listado/spr_firmadas">Firmadas (SPR)</a></li>
                 @endif
                 @if(strcmp(\Session::get('categoria')[0],'COORDINADOR_CGA')==0)
                   <li><a class="" href="/listado/completo">Listado Completo</a></li>
@@ -58,10 +59,12 @@
             </a>
             <ul class="sub">
               <li><a class="" href="/listado/dependencia">Listado</a></li>
+              @if(\Session::get('horario')[0])
               <li><a class="" href="/solicitudes/contratacion">Contratación</a></li>
               <li><a class="" href="/solicitudes/sustitucion">Sustitución</a></li>
               <li><a class="" href="/solicitudes/promocion">Promoción</a></li>
               <li><a class="" href="/solicitudes/cambio_adscripcion">Cambio de Adscripción</a></li>
+              @endif
             </ul>
           </li>
           @endif

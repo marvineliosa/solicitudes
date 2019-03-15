@@ -53,14 +53,15 @@
 		    <td style="font-size: 8px;border:1px solid black;" align="justify">{{$sustitucion->NUEVAS_ACTIVIDADES}}</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$sustitucion->NUEVA_CATEGORIA}}</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{'$ '.number_format($sustitucion->NUEVO_SALARIO,2)}}</td>
-		    <td style="font-size: 10px;border:1px solid black;" align="center">{{number_format(($sustitucion->NUEVO_SALARIO - $solicitud->SALARIO_SOLICITUD),2)}}</td>
-		    <td style="font-size: 10px;border:1px solid black;" align="center">{{round((($sustitucion->NUEVO_SALARIO - $solicitud->SALARIO_SOLICITUD)/$sustitucion->NUEVO_SALARIO)*100,2).'%'}}</td>
+		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$diferencias->dif_quincenal_1}}</td>
+		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$diferencias->porc_diferencia_1}}</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{'$ '.$solicitud->SALARIO_FORMATO}}</td>
-		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$solicitud->NOMBRE_SOLICITUD}}</td>
+		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$solicitud->EN_SUSTITUCION_DE}}</td>
 		  </tr>
 		</table>
 	</div>
 
+	@if(strcmp($solicitud->ESTATUS_PROCEDE,'SI')==0)
 	<div id="div-tabla_cantidades" align="right" class="">
 		<table style="width:100%" class="table" align="center">
 		  <tr>
@@ -78,11 +79,11 @@
 		    <td style="font-size: 8px;border:1px solid black;" align="center">PROPUESTA DE LA COORDINACIÓN GENERAL ADMINISTRATIVA</td>
 		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{$solicitud->CATEGORIA_PROPUESTA}}</td>
 		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{'$ '.$solicitud->SALARIO_PROPUESTO}}</td>
-		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center"><!--{{$dif_quincenal = (double)((($solicitud->SALARIO_PROPUESTO_SF)?$solicitud->SALARIO_PROPUESTO_SF:0) - (($solicitud->SALARIO_SOLICITUD)?$solicitud->SALARIO_SOLICITUD:0))}} -->{{number_format($dif_quincenal,2)}}</td>
-		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{(($solicitud->SALARIO_SOLICITUD!=0)?(round((($dif_quincenal/$solicitud->SALARIO_SOLICITUD)*100),1)).'%':'')}}</td>
+		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{$diferencias->dif_quincenal_2}}</td>
+		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{$diferencias->porc_diferencia_2}}</td>
 		    @if($solicitud->COMPENSACION_SOLICITUD)
 		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{'$ '.number_format($solicitud->COMPENSACION_SOLICITUD,2)}}</td>
-		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{'$ '.number_format(($solicitud->COMPENSACION_SOLICITUD + $solicitud->SALARIO_PROPUESTO_SF),2)}}</td>
+		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{$diferencias->compensacion_salario}}</td>
 		    @endif
 		  </tr>
 		  <tr><!-- fuente de recursos -->
@@ -96,6 +97,8 @@
 		  </tr>
 		</table>
 	</div>
+	@endif
+
 	<div id="div-tabla_respuesta" align="right" class="">
 		<table style="width:100%" class="" border="0">
 		  <tr>

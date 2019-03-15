@@ -545,7 +545,7 @@
     metodoAjax(url,dataForm,function(success){
       //aquí se escribe todas las operaciones que se harían en el succes
       //la variable success es el json que recibe del servidor el método AJAX
-      console.log(success);
+      //console.log(success);
       $("#CuerpoTablaInformacion").html('');
       for(var i = 0; i < success['cabeceras'].length; i++){
         //console.log(success['cabeceras'][i]);
@@ -590,7 +590,7 @@
           $("#div_cuadro").show();
         }
       }
-      var array_titular = ['TITULAR'];
+      /*var array_titular = ['TITULAR'];
       var permitidos_titular = ['FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR'];
       if(array_titular.includes(gl_categoria)){
         if(tipo_solicitud == 'CONTRATACIÓN' && permitidos_titular.includes(success['datos']['Estatus'])){
@@ -606,7 +606,7 @@
           $("#verCuadro").attr('href','/cuadro/cambio_adscripcion/'+success['datos']['Escape']);
           $("#div_cuadro").show();
         }
-      }
+      }//*/
       //$("#verCuadro").attr('href','/algo/algo')
       $("#TituloModalInformacion").text(titulo);
       $("#ModalDetalleContratacion").modal();

@@ -131,7 +131,7 @@
 @section('script')
   <script type="text/javascript">
     id_dependencia = <?php echo json_encode(\Session::get('id_dependencia')[0]) ?>;
-    //autollenado();
+    autollenado();
     function autollenado(){
       $("#Promocion-Candidato").val('Marvin Eliosa Abaroa');
       $("#Promocion-CategoriaActual").val('Auxiliar Administrativo');

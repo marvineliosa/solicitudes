@@ -57,41 +57,43 @@
 		</table>
 	</div>
 
-	<div id="div-tabla_cantidades" align="right" class="">
-		<table style="width:100%" class="table" align="center">
-		  <tr>
-		    <th style="font-size: 8px;border:1px solid black; visibility: hidden" class="bloque"></th>
-		    <th style="font-size: 8px;border:1px solid black;" class="bloque">CATEGORÍAS INMEDIATAS</th> 
-		    <th style="font-size: 8px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL</th>
-		    <th style="font-size: 8px;border:1px solid black;" class="bloque">DIFERENCIA QUINCENAL</th>
-		    <th style="font-size: 8px;border:1px solid black;" class="bloque">% DE DIFERENCIA</th>
-		    @if($solicitud->COMPENSACION_SOLICITUD)
-		    <th style="font-size: 8px;border:1px solid black;" class="bloque">COMPENSACIÓN SALARIAL QUINCENAL</th>
-		    <th style="font-size: 8px;border:1px solid black;" class="bloque">COMPENSACIÓN MÁS SALARIO QUINCENAL</th>
-		    @endif
-		  </tr>
-		  <tr>
-		    <td style="font-size: 8px;border:1px solid black;" align="center">PROPUESTA DE LA COORDINACIÓN GENERAL ADMINISTRATIVA</td>
-		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{$solicitud->CATEGORIA_PROPUESTA}}</td>
-		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{'$ '.$solicitud->SALARIO_PROPUESTO}}</td>
-		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center"><!--{{$dif_quincenal = (double)((($solicitud->SALARIO_PROPUESTO_SF)?$solicitud->SALARIO_PROPUESTO_SF:0) - (($solicitud->SALARIO_SOLICITUD)?$solicitud->SALARIO_SOLICITUD:0))}} -->{{number_format($dif_quincenal,2)}}</td>
-		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{(($solicitud->SALARIO_SOLICITUD!=0)?(round((($dif_quincenal/$solicitud->SALARIO_SOLICITUD)*100),1)).'%':'')}}</td>
-		    @if($solicitud->COMPENSACION_SOLICITUD)
-		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">'$ '.{{number_format($solicitud->COMPENSACION_SOLICITUD,2)}}</td>
-		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">'$ '.{{number_format(($solicitud->COMPENSACION_SOLICITUD + $solicitud->SALARIO_PROPUESTO_SF),2)}}</td>
-		    @endif
-		  </tr>
-		  <tr><!-- fuente de recursos -->
-		  	@if($solicitud->COMPENSACION_SOLICITUD)
-		    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="right" colspan="4">Fuente de Recursos:</td>
-		    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="left" colspan="3">{{$solicitud->FUENTE_RECURSOS_SOLICITUD}}</td>
-		    @else
-		    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="right" colspan="3">Fuente de Recursos:</td>
-		    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="left" colspan="2">{{$solicitud->FUENTE_RECURSOS_SOLICITUD}}</td>
-		    @endif
-		  </tr>
-		</table>
-	</div>
+	@if(strcmp($solicitud->ESTATUS_PROCEDE,"SI")==0)
+		<div id="div-tabla_cantidades" align="right" class="">
+			<table style="width:100%" class="table" align="center">
+			  <tr>
+			    <th style="font-size: 8px;border:1px solid black; visibility: hidden" class="bloque"></th>
+			    <th style="font-size: 8px;border:1px solid black;" class="bloque">CATEGORÍAS INMEDIATAS</th> 
+			    <th style="font-size: 8px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL</th>
+			    <th style="font-size: 8px;border:1px solid black;" class="bloque">DIFERENCIA QUINCENAL</th>
+			    <th style="font-size: 8px;border:1px solid black;" class="bloque">% DE DIFERENCIA</th>
+			    @if($solicitud->COMPENSACION_SOLICITUD)
+			    <th style="font-size: 8px;border:1px solid black;" class="bloque">COMPENSACIÓN SALARIAL QUINCENAL</th>
+			    <th style="font-size: 8px;border:1px solid black;" class="bloque">COMPENSACIÓN MÁS SALARIO QUINCENAL</th>
+			    @endif
+			  </tr>
+			  <tr>
+			    <td style="font-size: 8px;border:1px solid black;" align="center">PROPUESTA DE LA COORDINACIÓN GENERAL ADMINISTRATIVA</td>
+			    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{$solicitud->CATEGORIA_PROPUESTA}}</td>
+			    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{'$ '.$solicitud->SALARIO_PROPUESTO}}</td>
+			    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{$diferencias->dif_quincenal_2}}</td>
+			    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{$diferencias->porc_diferencia_2}}</td>
+			    @if($solicitud->COMPENSACION_SOLICITUD)
+			    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">$ {{number_format($solicitud->COMPENSACION_SOLICITUD,2)}}</td>
+			    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">$ {{$diferencias->compensacion_salario}}</td>
+			    @endif
+			  </tr>
+			  <tr><!-- fuente de recursos -->
+			  	@if($solicitud->COMPENSACION_SOLICITUD)
+			    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="right" colspan="4">Fuente de Recursos:</td>
+			    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="left" colspan="3">{{$solicitud->FUENTE_RECURSOS_SOLICITUD}}</td>
+			    @else
+			    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="right" colspan="3">Fuente de Recursos:</td>
+			    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="left" colspan="2">{{$solicitud->FUENTE_RECURSOS_SOLICITUD}}</td>
+			    @endif
+			  </tr>
+			</table>
+		</div>
+	@endif
 	<div id="div-tabla_respuesta" align="right" class="">
 		<table style="width:100%" class="" border="0">
 		  <tr>

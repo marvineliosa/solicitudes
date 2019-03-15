@@ -43,6 +43,7 @@ Route::get('/listado/dependencia', 'SolicitudesController@VistaListadoDependenci
 
 //listado nuevas en dependencia
 Route::get('/listado/spr', 'SolicitudesController@VistaListadoSecretarioParticular');//validado
+Route::get('/listado/spr_firmadas', 'SolicitudesController@VistaListadoSprFirmadas');//validado
 
 //listado analista
 Route::get('/listado/analista', 'SolicitudesController@VistaListadoAnalista');//validado
@@ -113,11 +114,15 @@ Route::post('/cambio_adscripcion/guardar_datos_cambio_adscripcion', 'Solicitudes
 //solicitudes
 Route::post('/solicitud/cambiar_estado', 'SolicitudesController@CambiarEstadoCGA');
 Route::post('/solicitud/validar_solicitud', 'SolicitudesController@ValidarSolicitudSPR');
-Route::post('/solicitud/validacion_titular', 'SolicitudesController@ValidarSolicitudDependencia');
 Route::post('/solicitud/validacion_cga', 'SolicitudesController@ValidarSolicitudCGA');
 Route::post('/solicitud/validacion_rectoria', 'SolicitudesController@ValidacionRectoria');
 Route::post('/solicitudes/cambiar_prioridad', 'SolicitudesController@CambiarPrioridad');
 Route::post('/solicitud/asignar_analista', 'SolicitudesController@AsignarAnalista');
+
+//PROPUESTA A LA DEPENDENCIA /solicitud/obtener_propuesta
+Route::post('/solicitud/validacion_titular', 'SolicitudesController@ValidarSolicitudDependencia');
+Route::post('/solicitud/cancelacion_titular', 'SolicitudesController@CambiarEstadoCGA');
+Route::post('/solicitud/obtener_propuesta', 'SolicitudesController@ObtenerPropuesta');
 
 //obtencion de datos para los modales de informacion
 Route::post('/solicitud/obtener_datos_contratacion', 'SolicitudesController@ObtenerContratacion');
@@ -125,6 +130,7 @@ Route::post('/solicitud/obtener_datos_sustitucion', 'SolicitudesController@Obten
 Route::post('/solicitud/obtener_datos_promocion', 'SolicitudesController@ObtenerPromocion');
 Route::post('/solicitud/obtener_datos_cambio_adscripcion', 'SolicitudesController@ObtenerCambioAdscripcion');
 Route::post('/solicitud/obtener_fechas', 'SolicitudesController@ObtenerFechasSolicitud');
+
 
 
 //CUADROS

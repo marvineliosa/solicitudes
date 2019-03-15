@@ -19,7 +19,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Configuraciones</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -38,15 +38,23 @@
 		  </thead>-->
 		  <tbody>
 		    <tr>
-		      <th scope="row" width="50%">Validar Solicitud</th>
+		      <th scope="row" width="75%"><b style="font-size: 15px">Acepto la propuesta.</b><br><em>Esta opción agregará un sello digital al cuadro.</em></th>
 		      <td>
 		      	<div class="form-check form-check-inline">
-			      <select id="SelectValidar" class="form-control" id="select_status">
+			      <!--<select id="SelectValidar" class="form-control" id="select_status">
 			        <option value="SELECCIONAR">--SELECCIONAR--</option>
 			        <option value="VALIDAR">VALIDAR</option>
 			      </select>
 			      <br>
-			      <button type="button" class="btn btn-primary" onclick="CambiarEstado()">Guardar</button>
+			      <button type="button" class="btn btn-primary" onclick="CambiarEstado()">Aceptar</button>-->
+			      <button type="button" class="btn btn-primary" onclick="ModalAceptarSolicitud()">Aceptar Solicitud</button>
+				</div>
+		      </td>
+		    </tr>
+		    <tr>
+		      <th scope="row" width="75%"><b style="font-size: 15px">No acepto la propuesta y solicito cita con la Coordinación General Administrativa.</b><br><em>Esta opción cancelará la solicitud y posteriormente podrá obtener una cita por parte de la Coordinación General Adminsitrativa para obtener más detalles.</th>
+		      <td>
+			      <button type="button" class="btn btn-danger" onclick="ModalCancelarSolicitud()">Cancelar Solicitud</button>
 				</div>
 		      </td>
 		    </tr>
@@ -59,13 +67,132 @@
     </div>
   </div>
 </div>
+
+<!-- MODAL DE ACEPTAR SOLICITUD -->
+<div class="modal fade" id="ModalAceptarSolicitud" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="exampleModalLabel" align="center">ATENCIÓN!</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <input type="" name="" style="display: none" id="hide_solicitud" value="">
+      </div>
+      <div class="modal-body">
+        <h3 align="center" id="mensaje_aceptar_solicitud"></h3>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="AceptarSolicitud()">Aceptar Propuesta</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE ACEPTAR SOLICITUD -->
+<div class="modal fade" id="ModalCancelarSolicitud" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="exampleModalLabel" align="center">ATENCIÓN!</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <input type="" name="" style="display: none" id="hide_solicitud" value="">
+      </div>
+      <div class="modal-body">
+        <h3 align="center" id="mensaje_cancelar_solicitud"></h3>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" onclick="CancelarSolicitud()">Canelar Solicitud</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Detalle de Propuesta-->
+    <div class="modal fade" id="ModalDetallePropuesta" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="TituloModalPropuesta" align="center"></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          	<div class="modal-body table-responsive">
+            	<table class="table" width="100%" style="table-layout: fixed;">
+					<thead>
+						<tr>
+							<th scope="col">Concepto</th>
+							<th scope="col">Descripción</th>
+						</tr>
+					</thead>
+					<tbody id="CuerpoTablaPropuesta" style="padding: 5px !important;">
+
+					</tbody>
+            	</table>              
+            </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+          </div>
+        </div>
+      </div>
+    </div>
 	  
 @endsection
 
 @section('script')
 	<script type="text/javascript">
 		var gl_solicitudes = <?php echo json_encode($solicitudes) ?>;
-    	console.log(gl_solicitudes);
+    	//console.log(gl_solicitudes);
+
+		function VerDatosCuadro(id_solicitud,tipo_solicitud){
+			//$("#div_cuadro").hide();
+    		url = '/solicitud/obtener_propuesta';
+			var success;
+			var dataForm = new FormData();
+			dataForm.append('id_solicitud',id_solicitud);
+			dataForm.append('tipo_solicitud',tipo_solicitud);
+			//lamando al metodo ajax
+
+			metodoAjax(url,dataForm,function(success){
+				//aquí se escribe todas las operaciones que se harían en el succes
+				//la variable success es el json que recibe del servidor el método AJAX
+				console.log(success);
+				$("#CuerpoTablaPropuesta").html('');
+				for(var i = 0; i < success['cabeceras'].length; i++){
+					//console.log(success['cabeceras'][i]);
+					if(success['cabeceras'][i]!='Escape'){
+						$("#CuerpoTablaPropuesta").append(
+						'<tr>'+
+						'<th scope="row">' + success['cabeceras'][i] + '</th>'+
+						'<td id=""  style="word-wrap: break-word;">'+ ((success['datos'][success['cabeceras'][i]])?success['datos'][success['cabeceras'][i]]:'') +'</td>'+
+						'</tr>'
+						);
+					}
+				}
+				$("#TituloModalPropuesta").text('Propuesta de la Coordinación General Administrativa');
+				$("#ModalDetallePropuesta").modal();
+			});//
+		}//*/
+
+    	function ModalAceptarSolicitud(id_solicitud){
+    		$("#hide_solicitud").val(id_solicitud);
+    		$("#mensaje_aceptar_solicitud").text('¿Esta seguro de aceptar la propuesta de la Coordinación General Administrativa correspondiente a la solicitud '+id_solicitud+'?');
+    		$("#ModalAceptarSolicitud").modal();
+    	}
+    	function ModalCancelarSolicitud(id_solicitud){
+    		$("#hide_solicitud").val(id_solicitud);
+    		$("#mensaje_cancelar_solicitud").text('¿Esta seguro de cancelar la solicitud '+id_solicitud+' y pedir cita con la Coordinación General Administrativa?');
+    		$("#ModalCancelarSolicitud").modal();
+    	}
+
     	function modalConfig(id_sol){
     		var estatus_sol = gl_solicitudes[id_sol]['ESTATUS_SOLICITUD'];
     		//if(estatus)
@@ -76,10 +203,10 @@
     		$("#ModalConfiguraciones").modal();
     	}
 
-    	function CambiarEstado(){
-    		var id_sol = $("#num_oficio").val();
-    		var estatus = $("#SelectValidar").val();
-    		//console.log(estatus);
+    	function AceptarSolicitud(){
+    		var id_sol = $("#hide_solicitud").val();
+    		var estatus = 'VALIDAR';
+    		console.log(id_sol);
     		var success;
 			var url = "/solicitud/validacion_titular";
 			var dataForm = new FormData();
@@ -94,7 +221,29 @@
 				$("#td_estatus_"+gl_solicitudes[id_sol]['ID_ESCAPE']).html(estatus);
 				//console.log(gl_solicitudes);
 				recargarTablaAjax('/refrescar/dependencia');
+				$("#ModalAceptarSolicitud").modal('hide');
 				MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente.");
+			});//*/
+    	}
+
+    	function CancelarSolicitud(){
+    		var id_sol = $("#hide_solicitud").val();
+    		var estatus = 'CANCELADO POR TITULAR';
+    		//console.log(id_sol);
+    		var success;
+			var url = "/solicitud/cancelacion_titular";
+			var dataForm = new FormData();
+			dataForm.append('id_sol',id_sol);
+			dataForm.append('estatus',estatus);
+			//lamando al metodo ajax
+
+			metodoAjax(url,dataForm,function(success){
+				//aquí se escribe todas las operaciones que se harían en el succes
+				//la variable success es el json que recibe del servidor el método AJAX
+				//console.log(gl_solicitudes);
+				recargarTablaAjax('/refrescar/dependencia');
+				$("#ModalCancelarSolicitud").modal('hide');
+				MensajeModal("¡EXITO!","La solicitud ha sido cancelada satisfactoriamente.");
 			});//*/
     	}
     	//$("#ModalArchivos").modal();

@@ -151,7 +151,7 @@
 @section('script')
   <script type="text/javascript">
     id_dependencia = <?php echo json_encode(\Session::get('id_dependencia')[0]) ?>;
-    //autollenado();
+    autollenado();
 
     function listado(){
       location.href="/listado/completo";

@@ -222,7 +222,7 @@
                     'FIRMA COORDINADOR GENERAL' => (($fechas[0]->FECHAS_FIRMA_CGA)?date("d/m/Y", strtotime($fechas[0]->FECHAS_FIRMA_CGA)):null),
                     'FIRMA TITULAR' => (($fechas[0]->FECHAS_FIRMA_TITULAR)?date("d/m/Y", strtotime($fechas[0]->FECHAS_FIRMA_TITULAR)):null),
                     'FIRMA SECRETARIO PARTICULAR' => (($fechas[0]->FECHAS_FIRMA_SPR)?date("d/m/Y", strtotime($fechas[0]->FECHAS_FIRMA_SPR)):null),
-                    'TURNADO SPR PARA APROVACIÓN' => (($fechas[0]->FECHAS_TURNADO_SPR)?date("d/m/Y", strtotime($fechas[0]->FECHAS_TURNADO_SP)):null)
+                    'TURNADO SPR PARA APROVACIÓN' => (($fechas[0]->FECHAS_TURNADO_SPR)?date("d/m/Y", strtotime($fechas[0]->FECHAS_TURNADO_SPR)):null)
                 );
 
             //dd($datos_tabla);
@@ -232,6 +232,316 @@
             );
 
             echo json_encode($data);//*/
+        }
+
+        public function ObtenerPropuesta(Request $request){
+            $tipo_solicitud = $request['tipo_solicitud'];
+            $sol = $request['id_solicitud'];
+            $propuesta = null;
+            switch ($tipo_solicitud) {
+                case 'CONTRATACIÓN':
+                    $propuesta = SolicitudesController::ObtenerPropuestaContratacion($sol);
+                    break;
+                case 'CONTRATACIÓN POR SUSTITUCIÓN':
+                    $propuesta = SolicitudesController::ObtenerPropuestaSustitucion($sol);
+                    break;
+                case 'PROMOCION':
+                    $propuesta = SolicitudesController::ObtenerPropuestaPromocion($sol);
+                    break;
+                case 'CAMBIO DE ADSCRIPCIÓN':
+                    $propuesta = SolicitudesController::ObtenerPropuestaCambioAdscripcion($sol);
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+            return $propuesta;
+        }
+
+        public function ObtenerPropuestaContratacion($id_solicitud){
+            //dd($id_solicitud);
+            $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+            $extra = array();
+            $diferencias = SolicitudesController::ObtenerDiferencias($solicitud,$extra);
+            //dd($diferencias);
+            $cabeceras = array(
+                'Número de solicitud',
+                //'Estatus',
+                'Candidato',
+                'Dependencia',
+                //'Fecha de solicitud',
+                'Actividades',
+                'Categoría solicitada',
+                'Puesto solicitado',
+                'Salario solicitado',
+                'Categoría propuesta',
+                'Salario neto quincenal propuesto',
+                'Diferencia quincenal (Propuesta)',
+                '% de diferencia (Propuesta)',
+                'Compensación neto quincenal',
+                'Compensación más salario quincenal',
+                'Fuente de recursos',
+                'Respuesta de la CGA'
+            );
+            $datos_tabla = array(
+                'Número de solicitud' => $solicitud->ID_SOLICITUD,
+                'Candidato' => $solicitud->NOMBRE_SOLICITUD, 
+                'Dependencia' => $solicitud->NOMBRE_DEPENDENCIA,
+                'Actividades' => $solicitud->ACTIVIDADES_SOLICITUD,
+                'Categoría solicitada' => $solicitud->CATEGORIA_SOLICITUD,
+                'Puesto solicitado' => $solicitud->PUESTO_SOLICITUD,
+                'Salario solicitado' => '$ '. $solicitud->SALARIO_FORMATO,
+
+                'Categoría propuesta' => $solicitud->CATEGORIA_PROPUESTA,
+                'Salario neto quincenal propuesto' => '$ '. $solicitud->SALARIO_PROPUESTO,
+
+                'Diferencia quincenal (Propuesta)' => $diferencias->dif_quincenal_2,
+                '% de diferencia (Propuesta)' => $diferencias->porc_diferencia_2,
+                'Compensación neto quincenal' => '$ '. number_format($solicitud->COMPENSACION_SOLICITUD,2),
+                'Compensación más salario quincenal' => '$ '. $diferencias->compensacion_salario,
+
+                'Fuente de recursos' => $solicitud->FUENTE_RECURSOS_SOLICITUD,
+                'Respuesta de la CGA' => $solicitud->RESPUESTA_CGA
+
+            );//*/
+            $data = array(
+                "cabeceras"=>$cabeceras,
+                "datos"=>$datos_tabla
+            );
+            //dd($data);
+
+            echo json_encode($data);//*/
+        }
+
+        public function ObtenerPropuestaSustitucion($id_solicitud){
+            //dd($id_solicitud);
+            $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+            $extra = SolicitudesController::ObtenerDatosSustitucion($id_solicitud);
+            //dd($extra);
+            $diferencias = SolicitudesController::ObtenerDiferencias($solicitud,$extra);
+            //dd($extra);
+            $cabeceras = array(
+                'Número de solicitud',
+                'Candidato',
+                'Actividades',
+                'Categoría solicitada',
+                'Puesto solicitado',
+                'Salario solicitado',
+
+                'Diferencia quincenal solicitada',
+                '% de diferencia solicitada',
+
+                'Nombre de quien se sustituye',
+                'Salario quincenal de quien se sustituye',
+
+                'Categoría propuesta',
+                'Salario neto quincenal propuesto',
+                'Diferencia quincenal (propuesta)',
+                '% de diferencia (propuesta)',
+                'Compensación neto quincenal',
+                'Compensación más salario quincenal',
+                'Fuente de recursos',
+                'Respuesta de la CGA'
+            );
+            $datos_tabla = array(
+                'Número de solicitud' => $solicitud->ID_SOLICITUD,
+                'Candidato' => $solicitud->NOMBRE_SOLICITUD,
+                'Actividades' => $extra->NUEVAS_ACTIVIDADES,
+                'Categoría solicitada' => $extra->NUEVA_CATEGORIA,
+                'Puesto solicitado' => $extra->PUESTO_NUEVO,
+                'Salario solicitado' => '$ '. $extra->NUEVO_SALARIO,
+
+                'Diferencia quincenal solicitada' => $diferencias->dif_quincenal_1,
+                '% de diferencia solicitada' => $diferencias->porc_diferencia_1,
+
+                'Nombre de quien se sustituye' => $solicitud->EN_SUSTITUCION_DE,
+                'Salario quincenal de quien se sustituye' => '$ '. $solicitud->SALARIO_FORMATO,
+
+                'Categoría propuesta' => $solicitud->CATEGORIA_PROPUESTA,
+                'Salario neto quincenal propuesto' => '$ '. $solicitud->SALARIO_PROPUESTO,
+                'Diferencia quincenal (propuesta)' => $diferencias->dif_quincenal_2,
+                '% de diferencia (propuesta)' => $diferencias->porc_diferencia_2,
+                'Compensación neto quincenal' => '$ '. number_format($solicitud->COMPENSACION_SOLICITUD,2),
+                'Compensación más salario quincenal' => '$ '. $diferencias->compensacion_salario,
+
+                'Fuente de recursos' => $solicitud->FUENTE_RECURSOS_SOLICITUD,
+                'Respuesta de la CGA' => $solicitud->RESPUESTA_CGA
+
+            );//*/
+            $data = array(
+                "cabeceras"=>$cabeceras,
+                "datos"=>$datos_tabla
+            );
+            //dd($data);
+
+            echo json_encode($data);//*/
+        }
+
+        public function ObtenerPropuestaPromocion($id_solicitud){
+            //dd($id_solicitud);
+            $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+            $extra = SolicitudesController::ObtenerDatosPromocion($id_solicitud);
+            //dd($solicitud);
+            $diferencias = SolicitudesController::ObtenerDiferencias($solicitud,$extra);
+            //dd($extra);
+            $cabeceras = array(
+                'Número de solicitud',
+                'Candidato',
+                'Categoría actual',
+                'Salario neto actual',
+                'Actividades',
+                'Categoría solicitada',
+                'Puesto solicitado',
+                'Salario solicitado',
+
+                'Diferencia quincenal solicitada',
+                '% de diferencia solicitada',
+
+                'Categoría propuesta',
+                'Salario neto quincenal propuesto',
+                'Diferencia quincenal (propuesta)',
+                '% de diferencia (propuesta)',
+                'Compensación neto quincenal',
+                'Compensación más salario quincenal',
+                'Respuesta de la CGA'
+            );
+            $datos_tabla = array(
+                'Número de solicitud' => $solicitud->ID_SOLICITUD,
+                'Candidato' => $solicitud->NOMBRE_SOLICITUD,
+                'Categoría actual' => $solicitud->CATEGORIA_SOLICITUD,
+                'Salario neto actual' => $solicitud->SALARIO_SOLICITUD,
+                'Actividades' => $extra->NUEVAS_ACTIVIDADES,
+                'Categoría solicitada' => $extra->NUEVA_CATEGORIA,
+                'Puesto solicitado' => $extra->PUESTO_NUEVO,
+                'Salario solicitado' => '$ '. $extra->NUEVO_SALARIO,
+
+                'Diferencia quincenal solicitada' => $diferencias->dif_quincenal_1,
+                '% de diferencia solicitada' => $diferencias->porc_diferencia_1,
+
+                'Categoría propuesta' => $solicitud->CATEGORIA_PROPUESTA,
+                'Salario neto quincenal propuesto' => '$ '. $solicitud->SALARIO_PROPUESTO,
+                'Diferencia quincenal (propuesta)' => $diferencias->dif_quincenal_2,
+                '% de diferencia (propuesta)' => $diferencias->porc_diferencia_2,
+                'Compensación neto quincenal' => '$ '. number_format($solicitud->COMPENSACION_SOLICITUD,2),
+                'Compensación más salario quincenal' => '$ '. $diferencias->compensacion_salario,
+
+                'Respuesta de la CGA' => $solicitud->RESPUESTA_CGA
+
+            );//*/
+            $data = array(
+                "cabeceras"=>$cabeceras,
+                "datos"=>$datos_tabla
+            );
+            //dd($data);
+
+            echo json_encode($data);//*/
+
+        }
+
+        public function ObtenerPropuestaCambioAdscripcion($id_solicitud){
+            $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+            $cambio_adscripcion = SolicitudesController::ObtenerDatosCambioAdscripcion($id_solicitud);
+            //dd($cambio_adscripcion);
+            $cabeceras = array(
+                'Número de solicitud',
+                'Candidato', 
+
+                'Dependencia actual',
+                'Categoría actual',  
+                'Puesto actual',  
+                'Salario actual',  
+                'Actividades actuales',
+
+                'Categoría propuesta',
+                'Salario neto quincenal propuesto',
+                'Puesto en '.ucwords(strtolower($cambio_adscripcion->NUEVA_DEPENDENCIA)),
+                'Funciones desempeñadas en '.ucwords(strtolower($cambio_adscripcion->NUEVA_DEPENDENCIA)),
+
+            );
+            //dd($cabeceras);
+            $datos_tabla = array(
+                'Número de solicitud' => $solicitud->ID_SOLICITUD,
+                'Candidato' => $solicitud->NOMBRE_SOLICITUD,
+
+                'Dependencia actual' => $solicitud->NOMBRE_DEPENDENCIA,
+                'Categoría actual' => $solicitud->CATEGORIA_SOLICITUD,  
+                'Puesto actual' => $solicitud->PUESTO_SOLICITUD,  
+                'Salario actual' => $solicitud->SALARIO_FORMATO,  
+                'Actividades actuales' => $solicitud->ACTIVIDADES_SOLICITUD,
+
+                'Categoría propuesta' => $solicitud->CATEGORIA_PROPUESTA,
+                'Salario neto quincenal propuesto' => '$ '. $solicitud->SALARIO_PROPUESTO,
+                'Puesto en '.ucwords(strtolower($cambio_adscripcion->NUEVA_DEPENDENCIA)) => $solicitud->PUESTO_PROPUESTO,
+                'Funciones desempeñadas en '.ucwords(strtolower($cambio_adscripcion->NUEVA_DEPENDENCIA)) => $cambio_adscripcion->NUEVAS_ACTIVIDADES,
+
+            );//*/
+            $data = array(
+                "cabeceras"=>$cabeceras,
+                "datos"=>$datos_tabla
+            );
+
+            echo json_encode($data);//*/
+
+        }
+
+        public static function ObtenerDiferencias($solicitud,$extra){
+
+            //Salario propuesto - Salario solicitados
+            $dif_quincenal_1=null;
+            $porc_diferencia_1=null;
+            $dif_quincenal_2=null;
+            $porc_diferencia_2=null;
+            $compensacion_salario=null;
+            if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD, 'CONTRATACIÓN')==0){
+                //dd('Entra');
+                $dif_quincenal_2 = (double)((($solicitud->SALARIO_PROPUESTO_SF)?$solicitud->SALARIO_PROPUESTO_SF:0) - (($solicitud->SALARIO_SOLICITUD)?$solicitud->SALARIO_SOLICITUD:0));
+                $porc_diferencia_2 = (($solicitud->SALARIO_SOLICITUD!=0)?(round((($dif_quincenal_2/$solicitud->SALARIO_SOLICITUD)*100),1)).'%':'');
+
+            }else if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD, 'CONTRATACIÓN POR SUSTITUCIÓN')==0){
+                $dif_quincenal_1 = (double)($extra->NUEVO_SALARIO - $solicitud->SALARIO_SOLICITUD);
+                $porc_diferencia_1=round(($dif_quincenal_1/$solicitud->SALARIO_SOLICITUD)*100,1).'%';
+
+                $dif_quincenal_2 = (double)((($solicitud->SALARIO_PROPUESTO_SF)?$solicitud->SALARIO_PROPUESTO_SF:0) - (($solicitud->SALARIO_SOLICITUD)?$solicitud->SALARIO_SOLICITUD:0));
+                $porc_diferencia_2 = (($solicitud->SALARIO_SOLICITUD!=0)?(round((($dif_quincenal_2/$solicitud->SALARIO_SOLICITUD)*100),1)).'%':'');
+
+            }else if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD, 'PROMOCION')==0){
+                //dd()
+                $dif_quincenal_1 = (double)(($extra->NUEVO_SALARIO-$solicitud->SALARIO_SOLICITUD));
+                $porc_diferencia_1=round(($dif_quincenal_1/$solicitud->SALARIO_SOLICITUD)*100,1).'%';
+
+                $dif_quincenal_2 = (double)((($solicitud->SALARIO_PROPUESTO_SF)?$solicitud->SALARIO_PROPUESTO_SF:0) - (($solicitud->SALARIO_SOLICITUD)?$solicitud->SALARIO_SOLICITUD:0));
+                //dd(round((($dif_quincenal_2 / $solicitud->SALARIO_SOLICITUD)*100),1));
+                $porc_diferencia_2 = (($solicitud->SALARIO_SOLICITUD!=0)?(round((($dif_quincenal_2 / $solicitud->SALARIO_SOLICITUD)*100),1)).'%':'');
+                //dd($porc_diferencia_2);
+            }else{
+
+            }
+
+            if($dif_quincenal_1<0){
+                $dif_quincenal_1 ='-$ '.number_format(($dif_quincenal_1*(-1)),2);
+            }else{
+                $dif_quincenal_1 = '$ '.number_format($dif_quincenal_1,2);
+            }
+
+            if($dif_quincenal_2<0){
+                $dif_quincenal_2 ='-$ '.number_format(($dif_quincenal_2*(-1)),2);
+            }else{
+                $dif_quincenal_2 = '$ '.number_format($dif_quincenal_2,2);
+            }
+
+            if($solicitud->COMPENSACION_SOLICITUD){
+                $compensacion_salario = number_format(($solicitud->COMPENSACION_SOLICITUD + $solicitud->SALARIO_PROPUESTO_SF),2);
+            }
+            
+            $diferencias = array(
+                'dif_quincenal_1' => $dif_quincenal_1,
+                'porc_diferencia_1' => $porc_diferencia_1,
+                'dif_quincenal_2' => $dif_quincenal_2,
+                'porc_diferencia_2' => $porc_diferencia_2,
+                'compensacion_salario' => $compensacion_salario
+            );
+            return (object)$diferencias;
         }
 
         public function ObtenerCambioAdscripcion(Request $request){
@@ -510,7 +820,10 @@
                 if(count($val)>0){
                     $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
                     //dd($solicitud);
-                    $pdf = \PDF::loadView('pdf.cuadro_contratacion',['solicitud'=>$solicitud])->setPaper('letter', 'landscape');
+                    $extra = array();
+                    $diferencias = SolicitudesController::ObtenerDiferencias($solicitud,$extra);
+                    //dd($diferencias);
+                    $pdf = \PDF::loadView('pdf.cuadro_contratacion',['solicitud'=>$solicitud,'diferencias'=>$diferencias])->setPaper('letter', 'landscape');
                     //return $pdf->download($descripcion['DATOS']->NOM_DESC.'.pdf');
                     return $pdf->stream($id_solicitud.'.pdf', array("Attachment" => 0));
                 }else{
@@ -526,7 +839,10 @@
                     if(in_array($solicitud->ESTATUS_SOLICITUD, ['FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR'])){
                         //$solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
                         //dd($solicitud);
-                        $pdf = \PDF::loadView('pdf.cuadro_contratacion',['solicitud'=>$solicitud])->setPaper('letter', 'landscape');
+                        $extra = array();
+                        $diferencias = SolicitudesController::ObtenerDiferencias($solicitud,$extra);
+                        //dd($diferencias);
+                        $pdf = \PDF::loadView('pdf.cuadro_contratacion',['solicitud'=>$solicitud,'diferencias'=>$diferencias])->setPaper('letter', 'landscape');
                         //return $pdf->download($descripcion['DATOS']->NOM_DESC.'.pdf');
                         return $pdf->stream($id_solicitud.'.pdf', array("Attachment" => 0));
                         
@@ -552,8 +868,10 @@
                     $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
                     $sustitucion = SolicitudesController::ObtenerDatosSustitucion($id_solicitud);
                     //dd($sustitucion);
+                    $extra = $sustitucion;
+                    $diferencias = SolicitudesController::ObtenerDiferencias($solicitud,$extra);
 
-                    $pdf = \PDF::loadView('pdf.cuadro_sustitucion',['solicitud'=>$solicitud,'sustitucion'=>$sustitucion])->setPaper('letter', 'landscape');
+                    $pdf = \PDF::loadView('pdf.cuadro_sustitucion',['solicitud'=>$solicitud,'sustitucion'=>$sustitucion,'diferencias'=>$diferencias])->setPaper('letter', 'landscape');
                     //return $pdf->download($descripcion['DATOS']->NOM_DESC.'.pdf');
                     return $pdf->stream($id_solicitud.'.pdf', array("Attachment" => 0));
                 }else{
@@ -598,8 +916,10 @@
                     $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
                     $promocion = SolicitudesController::ObtenerDatosPromocion($id_solicitud);
                     //dd($sustitucion);
+                    $extra = $promocion;
+                    $diferencias = SolicitudesController::ObtenerDiferencias($solicitud,$extra);
 
-                    $pdf = \PDF::loadView('pdf.cuadro_promocion',['solicitud'=>$solicitud,'promocion'=>$promocion])->setPaper('letter', 'landscape');
+                    $pdf = \PDF::loadView('pdf.cuadro_promocion',['solicitud'=>$solicitud,'promocion'=>$promocion,'diferencias'=>$diferencias])->setPaper('letter', 'landscape');
                     //return $pdf->download($descripcion['DATOS']->NOM_DESC.'.pdf');
                     return $pdf->stream($id_solicitud.'.pdf', array("Attachment" => 0));
                 }else{
@@ -616,7 +936,9 @@
                         
                         $promocion = SolicitudesController::ObtenerDatosPromocion($id_solicitud);
                         //dd($sustitucion);
-                        $pdf = \PDF::loadView('pdf.cuadro_promocion',['solicitud'=>$solicitud,'promocion'=>$promocion])->setPaper('letter', 'landscape');
+                        $extra = $promocion;
+                        $diferencias = SolicitudesController::ObtenerDiferencias($solicitud,$extra);
+                        $pdf = \PDF::loadView('pdf.cuadro_promocion',['solicitud'=>$solicitud,'promocion'=>$promocion,'diferencias'=>$diferencias])->setPaper('letter', 'landscape');
                         //return $pdf->download($descripcion['DATOS']->NOM_DESC.'.pdf');
                         return $pdf->stream($id_solicitud.'.pdf', array("Attachment" => 0));
                         
@@ -982,6 +1304,7 @@
             if(strcmp($solicitud[0]->TIPO_SOLICITUD_SOLICITUD, 'CONTRATACIÓN POR SUSTITUCIÓN')==0){
                 $sustitucion = SolicitudesController::ObtenerDatosSustitucion($id_solicitud);
                 //dd($sustitucion);
+                $solicitud[0]->EN_SUSTITUCION_DE = $solicitud[0]->NOMBRE_SOLICITUD;
                 $solicitud[0]->NOMBRE_SOLICITUD = $sustitucion->NUEVO_CANDIDATO;
             }
             //dd($dependencia);
@@ -1009,6 +1332,7 @@
             $solicitud[0]->SALARIO_PROPUESTO = number_format($datos_cga[0]->DATOS_CGA_SALARIO_PROPUESTO,2);
             $solicitud[0]->SALARIO_PROPUESTO_SF = $datos_cga[0]->DATOS_CGA_SALARIO_PROPUESTO;
             $solicitud[0]->ESTATUS_PROCEDE = $datos_cga[0]->DATOS_CGA_PROCEDENTE;
+            //dd($solicitud[0]->ESTATUS_PROCEDE);
             $solicitud[0]->RESPUESTA_CGA = $datos_cga[0]->DATOS_CGA_RESPUESTA;
             $solicitud[0]->CATEGORIA_SUPERIOR = $datos_cga[0]->DATOS_CGA_CATEGORIA_SUPERIOR;
             $solicitud[0]->SALARIO_SUPERIOR = $datos_cga[0]->DATOS_CGA_SALARIO_SUPERIOR;
@@ -1042,7 +1366,11 @@
                 $solicitud[0]->FIRMA_CGA = $firmas[0]->FIRMAS_CGA;
                 $solicitud[0]->FIRMA_TITULAR = $firmas[0]->FIRMAS_TITULAR;
                 $solicitud[0]->FIRMA_SPR = $firmas[0]->FIRMAS_SPR;
-            }
+            }/*else{
+                $solicitud[0]->FIRMA_CGA = null;
+                $solicitud[0]->FIRMA_TITULAR = null;
+                $solicitud[0]->FIRMA_SPR = null;
+            }//*/
 
             return $solicitud[0];
         }
@@ -1157,6 +1485,8 @@
                 }
                 //dd($estatus_fechas);
 
+            }else if(in_array($estatus, ['CANCELADO POR TITULAR'])){
+                $color = 'warning';
             }
             return $color;
             //dd('No es apto para estatus');
@@ -1378,26 +1708,44 @@
                 $existeFirma = DB::table('SOLICITUDES_FIRMAS')->where('FK_SOLICITUD_ID', $request['id_sol'])->get();
                 if(count($existeFirma)!=0){
                     //dd('Limpiando Firmas');
-                    $update = DB::table('SOLICITUDES_FIRMAS')
+                    /*$update = DB::table('SOLICITUDES_FIRMAS')
                         ->where('FK_SOLICITUD_ID', $request['id_sol'])
                         ->update([
                                     'FIRMAS_CGA' => null,
                                     'FIRMAS_TITULAR' => null,
                                     'FIRMAS_SPR' => null
-                                ]);
+                                ]);//*/
+                    DB::table('SOLICITUDES_FIRMAS')
+                        ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                        ->delete();
                 }
             }//*/
+
+            if(strcmp($request['estatus'], 'CANCELADO POR TITULAR')==0){
+                DB::table('SOLICITUDES_FIRMAS')
+                    ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                    ->delete();
+
+
+            }
 
             if(strcmp($request['estatus'],'FIRMAS')==0){
                 $update = DB::table('SOLICITUDES_FECHAS')
                     ->where('FK_SOLICITUD_ID', $request['id_sol'])
                     ->update(['FECHAS_PUESTO_FIRMAS' => date('Y-m-d H:i:s')]);//*/
 
+                $existeFirma = DB::table('SOLICITUDES_FIRMAS')->where('FK_SOLICITUD_ID', $request['id_sol'])->get();
+                if(count($existeFirma)!=0){
+                    //dd('Limpiando Firmas');
+                    DB::table('SOLICITUDES_FIRMAS')
+                        ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                        ->delete();
+                }
                 //enviar coorreo electrónico
             }//*/
 
-            //ahora eliminamos las posibles firmas que existen
-            $verificaCompletado = DB::table('SOLICITUDES_FIRMAS')->where('FK_SOLICITUD_ID', $request['id_sol'])->get();
+            //ahora verificamos si ya se juntan las firmas para el cambio de estatus
+            /*$verificaCompletado = DB::table('SOLICITUDES_FIRMAS')->where('FK_SOLICITUD_ID', $request['id_sol'])->get();
             //dd($verificaCompletado);
 			if(count($verificaCompletado)>0){
                 if($verificaCompletado[0]->FIRMAS_CGA||$verificaCompletado[0]->FIRMAS_TITULAR||$verificaCompletado[0]->FIRMAS_SPR){
@@ -1409,7 +1757,7 @@
                         ->where('FK_SOLICITUD_ID', $request['id_sol'])
                         ->update(['FECHAS_TURNADO_SPR' => date('Y-m-d H:i:s')]);
                 }
-			}
+			}//*/
 
 
 
@@ -1461,43 +1809,49 @@
         }
 
         public function VistaUsuarios(){
-            $dependencias = DependenciasController::ObtenerSoloDependencias();
-            $usuarios = DB::table('SOLICITUDES_LOGIN')
-                ->select(
-                            'LOGIN_USUARIO as NOMBRE_USUARIO',
-                            'LOGIN_RESPONSABLE as RESPONSABLE_USUARIO',
-                            'LOGIN_CATEGORIA as CATEGORIA_USUARIO'
-                        )
-                ->get();
-            foreach ($usuarios as $usuario) {
-                switch ($usuario->CATEGORIA_USUARIO) {
-                    case 'ADMINISTRADOR_CGA':
-                            $usuario->CATEGORIA_USUARIO = 'ADMINISTRADOR CGA';
-                        break;
-                    case 'COORDINADOR_CGA':
-                            $usuario->CATEGORIA_USUARIO = 'COORDINADOR CGA';
-                        break;
-                    case 'ANALISTA_CGA':
-                            $usuario->CATEGORIA_USUARIO = 'ANALISTA CGA';
-                        break;
-                    case 'SECRETARIO_PARTICULAR':
-                            $usuario->CATEGORIA_USUARIO = 'SECRETARIO PARTICULAR';
-                        break;
-                    case 'TRABAJADOR_SPR':
-                            $usuario->CATEGORIA_USUARIO = 'ENCARGADO DE SPR';
-                        break;
-                    case 'TITULAR':
-                            $usuario->CATEGORIA_USUARIO = 'TITULAR DE DEPENDENCIA';
-                        break;
-                    
-                    default:
+            $categoria = \Session::get('categoria')[0];
+            if(strcmp($categoria, 'ADMINISTRADOR_CGA')==0){
+
+                $dependencias = DependenciasController::ObtenerSoloDependencias();
+                $usuarios = DB::table('SOLICITUDES_LOGIN')
+                    ->select(
+                                'LOGIN_USUARIO as NOMBRE_USUARIO',
+                                'LOGIN_RESPONSABLE as RESPONSABLE_USUARIO',
+                                'LOGIN_CATEGORIA as CATEGORIA_USUARIO'
+                            )
+                    ->get();
+                foreach ($usuarios as $usuario) {
+                    switch ($usuario->CATEGORIA_USUARIO) {
+                        case 'ADMINISTRADOR_CGA':
+                                $usuario->CATEGORIA_USUARIO = 'ADMINISTRADOR CGA';
+                            break;
+                        case 'COORDINADOR_CGA':
+                                $usuario->CATEGORIA_USUARIO = 'COORDINADOR CGA';
+                            break;
+                        case 'ANALISTA_CGA':
+                                $usuario->CATEGORIA_USUARIO = 'ANALISTA CGA';
+                            break;
+                        case 'SECRETARIO_PARTICULAR':
+                                $usuario->CATEGORIA_USUARIO = 'SECRETARIO PARTICULAR';
+                            break;
+                        case 'TRABAJADOR_SPR':
+                                $usuario->CATEGORIA_USUARIO = 'ENCARGADO DE SPR';
+                            break;
+                        case 'TITULAR':
+                                $usuario->CATEGORIA_USUARIO = 'TITULAR DE DEPENDENCIA';
+                            break;
                         
-                        break;
+                        default:
+                            
+                            break;
+                    }
                 }
+                //dd($usuarios);
+                return view('listado_usuarios') ->with (["usuarios"=>$usuarios,"dependencias"=>$dependencias]);
+                //return view('listado_nuevas') ->with ("solicitudes",$solicitudes);
+            }else{
+                return view('errors.505');
             }
-            //dd($usuarios);
-            return view('listado_usuarios') ->with (["usuarios"=>$usuarios,"dependencias"=>$dependencias]);
-            //return view('listado_nuevas') ->with ("solicitudes",$solicitudes);
         }
 
         public function VistaNuevasSPR(){
@@ -1556,8 +1910,22 @@
         public function VistaListadoSecretarioParticular(){
             $categoria = \Session::get('categoria')[0];
             if(in_array($categoria, ['SECRETARIO_PARTICULAR'])){
-                $solicitudes = SolicitudesController::ObtenerSolicitudes();
+                //$solicitudes = SolicitudesController::ObtenerSolicitudes();
+                $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('FIRMAS');
                 return view('listado_secretario_particular')->with("solicitudes",$solicitudes);
+            }else{
+                return view('errors.505');
+            }
+        }
+        
+        public function VistaListadoSprFirmadas(){
+            $categoria = \Session::get('categoria')[0];
+            if(in_array($categoria, ['SECRETARIO_PARTICULAR'])){
+                //$solicitudes = SolicitudesController::ObtenerSolicitudes();
+                //$solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('FIRMAS');
+                $solicitudes = SolicitudesController::ObtenerSolicitudesFirmadas('SPR');
+                //dd($solicitudes);
+                return view('listado_solicitudes_firmadas')->with("solicitudes",$solicitudes);
             }else{
                 return view('errors.505');
             }
@@ -1714,10 +2082,36 @@
             return $solicitudes;
         }
 
+        public function ObtenerSolicitudesFirmadas($entidad){
+            if(strcmp($entidad, 'SPR')==0){
+                //dd('ES SPR');
+                $res_solicitudes = DB::table('SOLICITUDES_FIRMAS')
+                                ->whereNotNull('FIRMAS_SPR')
+                                ->select('FK_SOLICITUD_ID')
+                                ->get();
+            }else if(strcmp($entidad, 'CGA')==0){
+                $res_solicitudes = DB::table('SOLICITUDES_FIRMAS')
+                                ->whereNotNull('FIRMAS_CGA')
+                                ->select('FK_SOLICITUD_ID')
+                                ->get();
+            }else{
+                $res_solicitudes = DB::table('SOLICITUDES_FIRMAS')
+                                ->whereNotNull('FIRMAS_TITULAR')
+                                ->select('FK_SOLICITUD_ID')
+                                ->get();
+            }
+            $solicitudes = array();
+            foreach ($res_solicitudes as $solicitud){
+                $solicitudes[$solicitud->FK_SOLICITUD_ID]=SolicitudesController::ObtenerSolicitudId($solicitud->FK_SOLICITUD_ID);
+                //$solicitudes[$solicitud->SOLICITUD_ID] = (object)$tmpSol;
+            }
+            return $solicitudes;//*/
+        }
+
         public function ObtenerSolicitudes(){
 
             $categoria = \Session::get('categoria')[0];
-            if(in_array($categoria, ['TRABAJADOR_SPR'])){
+            if(in_array($categoria, ['TRABAJADOR_SPR','SECRETARIO_PARTICULAR'])){
                 $res_solicitudes = DB::table('SOLICITUDES_DATOS_CGA')
                                     ->whereNotIn('DATOS_CGA_ESTATUS',['RECIBIDO SPR'])
                                     ->select('FK_SOLICITUD_ID')
@@ -2065,7 +2459,7 @@
                 'tipo_solicitud' => 'CONTRATACIÓN POR SUSTITUCIÓN',
                 'fuente_recursos' => $fuente_recursos
             );
-            //print_r($datos_solicitud);
+            //dd($datos_solicitud);
             $sol = SolicitudesController::AlmacenarSolicitud($datos_solicitud);
             SolicitudesController::InsertarRelacionDependenciaSolicitud($id_dependencia,$sol);
 
@@ -2321,7 +2715,9 @@
         }
 
         public function RefrescarSPR(){
-            $solicitudes = SolicitudesController::ObtenerSolicitudes();
+            //$solicitudes = SolicitudesController::ObtenerSolicitudes();
+            //$solicitudes = SolicitudesController::ObtenerSolicitudesFirmadas('SPR');
+            $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('FIRMAS');
             return View('tablas.listado_secretario_particular') ->with ("solicitudes",$solicitudes);
         }
 

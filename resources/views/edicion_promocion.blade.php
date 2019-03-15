@@ -103,7 +103,7 @@
             <div class="col-sm-6">
               <input type="number" class="form-control" placeholder="Puesto del Candidato" value="{{$solicitud->SALARIO_PROPUESTO_SF}}" id="propuesta-salario" step=".01">
             </div>
-          </div>{{$solicitud->SALARIO_PROPUESTO_SF}}
+          </div>
           <div class="form-group">
             <label class="col-sm-2 control-label">Categoría Superior Propuesta</label>
             <div class="col-sm-6">
