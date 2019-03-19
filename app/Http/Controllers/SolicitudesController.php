@@ -17,6 +17,49 @@
          * @return Response
          */
 
+        public function ObtenerMovimientos(Request $request){
+            //dd($request['id_solicitud']);
+            $movimientos = SolicitudesController::ObtenerMovimientosId($request['id_solicitud']);
+
+            $data = array(
+                "movimientos"=>$movimientos
+            );
+
+            echo json_encode($data);//*/
+
+        }
+
+        public function ObtenerMovimientosId($id_solicitud){
+            //dd($id_solicitud);
+            $categoria = \Session::get('categoria')[0];
+            $rel_movimientos;
+            $movimientos = array();
+            if(in_array($categoria, ['ANALISTA_CGA','ADMINISTRADOR_CGA','COORDINADOR_CGA'])){
+                $rel_movimientos = DB::table('REL_MOVIMIENTOS_CGA')
+                    ->where('FK_SOLICITUD_ID', $id_solicitud)
+                    ->get();
+            }else if(in_array($categoria, ['TRABAJADOR_SPR','SECRETARIO_PARTICULAR'])){
+                $rel_movimientos = $users = DB::table('REL_OBSERVACIONES_SPR')
+                    ->where('FK_SOLICITUD_ID', $id_solicitud)
+                    ->get();
+            }
+            //dd($rel_movimientos);
+            foreach ($rel_movimientos as $movimiento) {
+                $tmp_movimiento = DB::table('SOLICITUDES_MOVIMIENTOS')
+                    ->where('MOVIMIENTOS_ID', $movimiento->FK_MOVIMIENTO)
+                    ->select(
+                                'MOVIMIENTOS_ID as ID_MOVIMIENTO',
+                                'MOVIMIENTOS_MOVIMIENTO as MOVIMIENTO',
+                                'created_at as FECHA_MOVIMIENTO'
+                            )
+                    ->get();
+                $movimientos[]=$tmp_movimiento[0];
+            }
+            //dd($movimientos);
+            return $movimientos;
+
+        }
+
         public function GuardarComentarioGeneral(Request $request){
             $id_comentario = SolicitudesController::GuardaComentario($request['comentario']);
             DB::table('REL_OBSERVACIONES_GENERALES')->insert(
@@ -467,7 +510,7 @@
                 'Dependencia actual' => $solicitud->NOMBRE_DEPENDENCIA,
                 'Categoría actual' => $solicitud->CATEGORIA_SOLICITUD,  
                 'Puesto actual' => $solicitud->PUESTO_SOLICITUD,  
-                'Salario actual' => $solicitud->SALARIO_FORMATO,  
+                'Salario actual' => '$ '.$solicitud->SALARIO_FORMATO,  
                 'Actividades actuales' => $solicitud->ACTIVIDADES_SOLICITUD,
 
                 'Categoría propuesta' => $solicitud->CATEGORIA_PROPUESTA,
@@ -748,7 +791,7 @@
                 ->where('FK_SOLICITUD_ID', $IdSolicitud)
                 ->get();
 
-            //si existe una relación con anterioridad, la solicitud se borra la relación existente
+            //si existe una relación con anterioridad, se borra la relación existente
             if(count($existeRelacion)>0){
                 DB::table('REL_SOLICITUDES_ANALISTA')
                     ->where('FK_SOLICITUD_ID', $IdSolicitud)
@@ -763,6 +806,10 @@
                     ]
                 );
 
+            $responsable = \Session::get('responsable')[0];
+            $movimiento = $responsable.' ha asignado la solicitud a '.$IdAnalista;
+            SolicitudesController::InsertaMovimientoCGA($responsable,$movimiento,$IdSolicitud);
+
             $data = array(
                 "insert"=>$insert
             );
@@ -775,11 +822,15 @@
             date_default_timezone_set('America/Mexico_City');
 
             $update = DB::table('SOLICITUDES_SOLICITUD')
-                ->where('SOLICITUD_ID', $request['id_sol'])
+                ->where('SOLICITUD_ID', $requests['id_sol'])
                 ->update([
                             'SOLICITUD_URGENCIA' => $request['prioridad'],
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
+                //dd('Cambio');
+            $responsable = \Session::get('responsable')[0];
+            $movimiento = $responsable.' ha marcado la solicitud  como '.$request['prioridad'];
+            SolicitudesController::InsertaMovimientoSPR($responsable,$movimiento,$request['id_sol']);
 
             $data = array(
                 "update"=>$update
@@ -1051,6 +1102,11 @@
                             'CAMBIO_ADSCRIPCION_ACTIVIDADES_NUEVAS' => $request['actividades'],
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
+
+            $responsable = \Session::get('responsable')[0];
+            $movimiento = $responsable.' ha modificado los datos de la solicitud '.$request['id_sol'];
+            SolicitudesController::InsertaMovimientoCGA($responsable,$movimiento,$request['id_sol']);
+
             $data = array(
                 "update"=>$update
             );
@@ -1068,6 +1124,11 @@
                             'PROMOCION_ACTIVIDADES_NUEVAS' => $request['actividades'],
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
+
+            $responsable = \Session::get('responsable')[0];
+            $movimiento = $responsable.' ha modificado los datos de la solicitud '.$request['id_sol'];
+            SolicitudesController::InsertaMovimientoCGA($responsable,$movimiento,$request['id_sol']);
+
             $data = array(
                 "update"=>$update
             );
@@ -1085,6 +1146,11 @@
                             'SUSTITUCION_ACTIVIDADES_NUEVAS' => $request['actividades'],
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
+
+            $responsable = \Session::get('responsable')[0];
+            $movimiento = $responsable.' ha modificado los datos de la solicitud '.$request['id_sol'];
+            SolicitudesController::InsertaMovimientoCGA($responsable,$movimiento,$request['id_sol']);
+
             $data = array(
                 "update"=>$update
             );
@@ -1102,6 +1168,10 @@
                             'SOLICITUD_ACTIVIDADES' => $request['actividades'],
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
+
+            $responsable = \Session::get('responsable')[0];
+            $movimiento = $responsable.' ha modificado los datos de la solicitud '.$request['id_sol'];
+            SolicitudesController::InsertaMovimientoCGA($responsable,$movimiento,$request['id_sol']);
 
             $data = array(
                 "update"=>$update
@@ -1567,6 +1637,10 @@
                 }
             }
 
+            $responsable = \Session::get('responsable')[0];
+            $movimiento = 'Titular '.$responsable.' ha validado la solicitud';
+            SolicitudesController::InsertaMovimientoGeneral($responsable,$movimiento,$request['id_sol']);
+
 
             $data = array(
                 "update"=>$update
@@ -1614,6 +1688,10 @@
                     //dd('FALTAN FIRMAS');
                 }
             }
+
+            $responsable = \Session::get('responsable')[0];
+            $movimiento = 'Coordinador General Administrativo '.$responsable.' ha validado la solicitud';
+            SolicitudesController::InsertaMovimientoGeneral($responsable,$movimiento,$request['id_sol']);
 
 
             $data = array(
@@ -1669,6 +1747,10 @@
                 }
             }
 
+            $responsable = \Session::get('responsable')[0];
+            $movimiento = 'Secretario Particular '.$responsable.' ha validado la solicitud';
+            SolicitudesController::InsertaMovimientoGeneral($responsable,$movimiento,$request['id_sol']);
+
 
             $data = array(
                 "update"=>$update
@@ -1677,13 +1759,32 @@
             echo json_encode($data);//*/
         }
 
+        public function EliminarFirmas($id_solicitud){
+
+            $existeFirma = DB::table('SOLICITUDES_FIRMAS')->where('FK_SOLICITUD_ID', $id_solicitud)->get();
+            if(count($existeFirma)!=0){
+                DB::table('SOLICITUDES_FIRMAS')
+                    ->where('FK_SOLICITUD_ID', $id_solicitud)
+                    ->delete();//*/
+                //dd('Epale');
+                $update = DB::table('SOLICITUDES_FECHAS')
+                    ->where('FK_SOLICITUD_ID', $id_solicitud)
+                    ->update([
+                                'FECHAS_PUESTO_FIRMAS' => null,
+                                'FECHAS_FIRMA_CGA' => null,
+                                'FECHAS_FIRMA_TITULAR' => null,
+                                'FECHAS_FIRMA_SPR' => null
+                            ]);
+            }
+        }
+
         public function CambiarEstadoCGA(Request $request){
             date_default_timezone_set('America/Mexico_City');
             //dd($request['estatus']);
             $update = DB::table('SOLICITUDES_DATOS_CGA')
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])
                 ->update(['DATOS_CGA_ESTATUS' => $request['estatus']]);
-
+            //dd($update);
             $mail = null;
             /*if(in_array($request['estatus'], ['VALIDACIÓN DE INFORMACIÓN','INFORMACIÓN CORRECTA','RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN','FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR','CANCELADO','OTRO'])){
                 $asunto = 'Cambio de estatus';
@@ -1695,85 +1796,151 @@
             }//*/
 
             if(strcmp($request['estatus'],'TURNADO A SPR')==0){
-                $update = DB::table('SOLICITUDES_FECHAS')
+                $update_turnadospr = DB::table('SOLICITUDES_FECHAS')
                     ->where('FK_SOLICITUD_ID', $request['id_sol'])
                     ->update(['FECHAS_TURNADO_SPR' => date('Y-m-d H:i:s')]);
-                }//*/
+            }//*/
 
             if(strcmp($request['estatus'],'REVISIÓN')==0){
-                $update = DB::table('SOLICITUDES_FECHAS')
+                $update_revision = DB::table('SOLICITUDES_FECHAS')
                     ->where('FK_SOLICITUD_ID', $request['id_sol'])
                     ->update(['FECHAS_PUESTO_REVISION' => date('Y-m-d H:i:s')]);//*/
                     //reseteando las firmas
-                $existeFirma = DB::table('SOLICITUDES_FIRMAS')->where('FK_SOLICITUD_ID', $request['id_sol'])->get();
-                if(count($existeFirma)!=0){
-                    //dd('Limpiando Firmas');
-                    /*$update = DB::table('SOLICITUDES_FIRMAS')
-                        ->where('FK_SOLICITUD_ID', $request['id_sol'])
-                        ->update([
-                                    'FIRMAS_CGA' => null,
-                                    'FIRMAS_TITULAR' => null,
-                                    'FIRMAS_SPR' => null
-                                ]);//*/
-                    DB::table('SOLICITUDES_FIRMAS')
-                        ->where('FK_SOLICITUD_ID', $request['id_sol'])
-                        ->delete();
-                }
+
+                //SolicitudesController::EliminarFirmas($request['id_sol']);
             }//*/
 
-            if(strcmp($request['estatus'], 'CANCELADO POR TITULAR')==0){
-                DB::table('SOLICITUDES_FIRMAS')
-                    ->where('FK_SOLICITUD_ID', $request['id_sol'])
-                    ->delete();
-
-
-            }
-
             if(strcmp($request['estatus'],'FIRMAS')==0){
-                $update = DB::table('SOLICITUDES_FECHAS')
+                $update_firmas = DB::table('SOLICITUDES_FECHAS')
                     ->where('FK_SOLICITUD_ID', $request['id_sol'])
                     ->update(['FECHAS_PUESTO_FIRMAS' => date('Y-m-d H:i:s')]);//*/
-
-                $existeFirma = DB::table('SOLICITUDES_FIRMAS')->where('FK_SOLICITUD_ID', $request['id_sol'])->get();
-                if(count($existeFirma)!=0){
-                    //dd('Limpiando Firmas');
-                    DB::table('SOLICITUDES_FIRMAS')
-                        ->where('FK_SOLICITUD_ID', $request['id_sol'])
-                        ->delete();
-                }
+                //SolicitudesController::EliminarFirmas($request['id_sol']);
                 //enviar coorreo electrónico
             }//*/
 
-            //ahora verificamos si ya se juntan las firmas para el cambio de estatus
-            /*$verificaCompletado = DB::table('SOLICITUDES_FIRMAS')->where('FK_SOLICITUD_ID', $request['id_sol'])->get();
-            //dd($verificaCompletado);
-			if(count($verificaCompletado)>0){
-                if($verificaCompletado[0]->FIRMAS_CGA||$verificaCompletado[0]->FIRMAS_TITULAR||$verificaCompletado[0]->FIRMAS_SPR){
-                    //dd('SE HA COMPLETADO LAS FIRMAS');
-                    $update = DB::table('SOLICITUDES_DATOS_CGA')
-                        ->where('FK_SOLICITUD_ID', $request['id_sol'])
-                        ->update(['DATOS_CGA_ESTATUS' => 'TURNADO A SPR']);
-                    $update = DB::table('SOLICITUDES_FECHAS')
-                        ->where('FK_SOLICITUD_ID', $request['id_sol'])
-                        ->update(['FECHAS_TURNADO_SPR' => date('Y-m-d H:i:s')]);
+            if(in_array($request['estatus'], ['RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN','CANCELADO POR TITULAR','CANCELADO','OTRO'])){
+                SolicitudesController::EliminarFirmas($request['id_sol']);
+            }
+
+            if($update==1){
+                //dd('Hubo Cambio');
+                if(strcmp($request['estatus'], 'VALIDACIÓN DE INFORMACIÓN')==0){
+                    $responsable = \Session::get('responsable')[0];
+                    $movimiento = $responsable.' ha turnado la solicitud a CGA';
+                    $id_mov = SolicitudesController::InsertaMovimientoSPR($responsable,$movimiento,$request['id_sol']);
                 }
-			}//*/
 
+                //verificar si informacion correcta se marca o es en recibido directamente
+                if(in_array($request['estatus'], ['INFORMACIÓN CORRECTA','RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN','FIRMAS','CANCELADO','OTRO'])){
+                    $responsable = \Session::get('responsable')[0];
+                    $categoria = \Session::get('categoria')[0];
+                    $movimiento = $responsable.' ha cambiado el estatus a '.$request['estatus'];
+                    if(in_array($categoria, ['TRABAJADOR_SPR']) && strcmp($request['estatus'], 'REVISIÓN')){
+                        $movimiento = $responsable.' ha regresado la solicitud a CGA para su revisión';
+                        SolicitudesController::InsertaMovimientoGeneral($responsable,$movimiento,$request['id_sol']);
 
+                    }else{
+                        SolicitudesController::InsertaMovimientoCGA($responsable,$movimiento,$request['id_sol']);
+                    }
+                }
+
+                if(strcmp($request['estatus'], 'CANCELADO POR TITULAR')==0){
+                    $responsable = \Session::get('responsable')[0];
+                    $movimiento = 'Titular '.$responsable.' ha cambiado el estatus a '.$request['estatus'];
+                    SolicitudesController::InsertaMovimientoCGA($responsable,$movimiento,$request['id_sol']);
+                }
+
+                if(strcmp($request['estatus'], 'COMPLETADO POR SPR')==0){
+                    $responsable = \Session::get('responsable')[0];
+                    $movimiento = $responsable.' ha marcado la solicitud como válida';
+                    SolicitudesController::InsertaMovimientoSPR($responsable,$movimiento,$request['id_sol']);
+                }
+
+                if(strcmp($request['estatus'], 'COMPLETADO POR RECTOR')==0){
+                    $responsable = \Session::get('responsable')[0];
+                    $movimiento = $responsable.' ha marcado la solicitud como entregada al rector';
+                    SolicitudesController::InsertaMovimientoSPR($responsable,$movimiento,$request['id_sol']);
+                }
+            }
 
             $data = array(
                 "update"=>$update,
                 "mail"=>$mail
-
             );
 
             echo json_encode($data);//*/
         }
 
+
+        public function InsertaMovimientoGeneral($responsable,$movimiento,$id_solicitud){
+            date_default_timezone_set('America/Mexico_City');
+            $id_mov = DB::table('SOLICITUDES_MOVIMIENTOS')->insertGetId(
+                [
+                    'MOVIMIENTOS_RESPONSABLE' => $responsable,
+                    'MOVIMIENTOS_MOVIMIENTO' => $movimiento,
+                    'created_at' => date('Y-m-d H:i:s')
+                ]
+            );
+            DB::table('REL_MOVIMIENTOS_CGA')->insert(
+                [
+                    'FK_MOVIMIENTO' => $id_mov,
+                    'FK_SOLICITUD_ID' => $id_solicitud
+                ]
+            );
+            DB::table('REL_MOVIMIENTOS_SPR')->insert(
+                [
+                    'FK_MOVIMIENTO' => $id_mov,
+                    'FK_SOLICITUD_ID' => $id_solicitud
+                ]
+            );
+            return $id_mov;
+        }
+
+
+        public function InsertaMovimientoCGA($responsable,$movimiento,$id_solicitud){
+            date_default_timezone_set('America/Mexico_City');
+            $id_mov = DB::table('SOLICITUDES_MOVIMIENTOS')->insertGetId(
+                [
+                    'MOVIMIENTOS_RESPONSABLE' => $responsable,
+                    'MOVIMIENTOS_MOVIMIENTO' => $movimiento,
+                    'created_at' => date('Y-m-d H:i:s')
+                ]
+            );
+            DB::table('REL_MOVIMIENTOS_CGA')->insert(
+                [
+                    'FK_MOVIMIENTO' => $id_mov,
+                    'FK_SOLICITUD_ID' => $id_solicitud
+                ]
+            );
+            return $id_mov;
+        }
+
+        public function InsertaMovimientoSPR($responsable,$movimiento,$id_solicitud){
+            date_default_timezone_set('America/Mexico_City');
+            $id_mov = DB::table('SOLICITUDES_MOVIMIENTOS')->insertGetId(
+                [
+                    'MOVIMIENTOS_RESPONSABLE' => $responsable,
+                    'MOVIMIENTOS_MOVIMIENTO' => $movimiento,
+                    'created_at' => date('Y-m-d H:i:s')
+                ]
+            );
+            DB::table('REL_MOVIMIENTOS_SPR')->insert(
+                [
+                    'FK_MOVIMIENTO' => $id_mov,
+                    'FK_SOLICITUD_ID' => $id_solicitud
+                ]
+            );
+        }//*/
+
         public function VistaCrearContratacion(){
             $categoria = \Session::get('categoria')[0];
+            $fl_horario = SolicitudesController::VerificarHorario();
             if(strcmp($categoria, 'TITULAR')==0){
-                return view('nuevo_contratacion');
+                if(!$fl_horario){
+                    return view('errors.timeout');
+                }else{
+                    return view('nuevo_contratacion');
+                }
             }else{
                 return view('errors.505');
             }
@@ -1781,8 +1948,13 @@
 
         public function VistaCrearSustitucion(){
             $categoria = \Session::get('categoria')[0];
+            $fl_horario = SolicitudesController::VerificarHorario();
             if(strcmp($categoria, 'TITULAR')==0){
-                return view('nuevo_sustitucion');
+                if(!$fl_horario){
+                    return view('errors.timeout');
+                }else{
+                    return view('nuevo_sustitucion');
+                }
             }else{
                 return view('errors.505');
             }
@@ -1790,19 +1962,29 @@
 
         public function VistaCrearPromocion(){
             $categoria = \Session::get('categoria')[0];
+            $fl_horario = SolicitudesController::VerificarHorario();
             if(strcmp($categoria, 'TITULAR')==0){
-                $dependencias = DependenciasController::ObtenerSoloDependencias();
-                return view('nuevo_promocion');
+                if(!$fl_horario){
+                    return view('errors.timeout');
+                }else{
+                    $dependencias = DependenciasController::ObtenerSoloDependencias();
+                    return view('nuevo_promocion');
+                }
             }else{
                 return view('errors.505');
             }
         }
 
         public function VistaCrearCambioAdscripcion(){
+            $fl_horario = SolicitudesController::VerificarHorario();
             $categoria = \Session::get('categoria')[0];
             if(strcmp($categoria, 'TITULAR')==0){
-                $dependencias = DependenciasController::ObtenerSoloDependencias();
-                return view('nuevo_cambio_adscripcion') ->with ("dependencias",$dependencias);
+                if(!$fl_horario){
+                    return view('errors.timeout');
+                }else{
+                    $dependencias = DependenciasController::ObtenerSoloDependencias();
+                    return view('nuevo_cambio_adscripcion') ->with ("dependencias",$dependencias);
+                }
             }else{
                 return view('errors.505');
             }
@@ -2181,6 +2363,9 @@
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])
                 ->update(['DATOS_CGA_ESTATUS' => 'RECIBIDO']);
 
+            $responsable = \Session::get('responsable')[0];
+            $movimiento = $responsable.' ha validado la información como CORRECTA y el estatus de la solicitud ha cambiado a RECIBIDO';
+            SolicitudesController::InsertaMovimientoCGA($responsable,$movimiento,$request['id_sol']);
             $data = array(
                 "update"=>$update
             );
@@ -2731,10 +2916,31 @@
             return View('tablas.listado_revisadas') ->with ("solicitudes",$solicitudes);
         }
 
+        public static function VerificarHorario(){
+            $datos = SolicitudesController::DatosGenerales();
+
+
+            date_default_timezone_set('America/Mexico_City');
+            $ahora = strtotime(date('H:i'));
+            $fl_horario = false;
+            //dd($ahora);
+            $inicio = strtotime( $datos['horar_inicio'] );
+            $fin = strtotime( $datos['horar_fin'] );
+            //dd($inicio.' --- '.$fin);
+            if($ahora > $inicio && $ahora < $fin) {
+                //dd($ahora.' es mayor que '.$fin);
+                //dd('Esta en tiempo');
+                $fl_horario = true;
+            }
+            return $fl_horario;
+        }
+
         public static function DatosGenerales(){
             //en este método se sabrá si el sistema está funcionando de modo institucional o prestación de servicios
             $datos = array(
-                            'institucional' => true
+                            'institucional' => true,
+                            'horar_inicio' => "09:00",
+                            'horar_fin' => "17:00",
                         );
             return $datos;
         }

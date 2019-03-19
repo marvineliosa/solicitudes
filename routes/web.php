@@ -168,8 +168,9 @@ Route::post('/refrescar/por_revisar', 'SolicitudesController@RefrescarPorRevisar
 Route::post('/refrescar/revisadas', 'SolicitudesController@RefrescarRevisadas');
 
 //mails
-//Route::get('/enviamail','MailsController@pruebamail');
+Route::get('/enviamail','MailsController@FuncionEnviarContrasenaDependencia');
 Route::post('/mail/enviar_contrasena','MailsController@EnviarContrasena');
+Route::post('/mail/enviar_contrasena_titular','MailsController@EnviarContrasena');
 
 //archivos
 
@@ -188,6 +189,9 @@ Route::post('/comentarios/guardar_general','SolicitudesController@GuardarComenta
 Route::post('/comentarios/guardar_cga','SolicitudesController@GuardarComentarioCGA');
 Route::post('/comentarios/guardar_spr','SolicitudesController@GuardarComentarioSPR');
 Route::post('/comentarios/eliminar','SolicitudesController@EliminarComentario');
+
+//movimientos
+Route::post('/movimientos/obtener','SolicitudesController@ObtenerMovimientos');
 
  
 Route::get('qr-code', function () {

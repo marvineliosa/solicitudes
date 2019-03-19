@@ -18,7 +18,21 @@
 
         public function RecuperarContrasena(Request $request){
             $usuario = $request['usuario'];
-            $exito = MailsController::FuncionEnviarContrasena($usuario);
+            $categoria = DB::table('SOLICITUDES_LOGIN')
+                ->where('LOGIN_USUARIO',$usuario)
+                ->select('LOGIN_CATEGORIA')
+                ->get();
+            //dd($categoria[0]->LOGIN_CATEGORIA);
+            if(in_array($categoria[0]->LOGIN_CATEGORIA, ['ANALISTA_CGA','ADMINISTRADOR_CGA','COORDINADOR_CGA','TRABAJADOR_SPR','SECRETARIO_PARTICULAR'])){
+                //dd('Mail usuario normal');
+                $exito = MailsController::FuncionEnviarContrasena($usuario);
+            }else{
+                //dd('Mail titular');
+                $exito = MailsController::FuncionEnviarContrasenaDependencia($usuario);
+            }
+
+
+            //$exito = MailsController::FuncionEnviarContrasena($usuario);
             $mensaje = '';
             $titulo = '';
             if($exito){
@@ -116,21 +130,7 @@
                     $id_dependencia = $nom_dependencia[0]->DEPENDENCIA_ID;//*/
                     $id_dependencia = $rel_dependencia[0]->FK_DEPENDENCIA;
 
-                    date_default_timezone_set('America/Mexico_City');
-                    $ahora = strtotime(date('H:i'));
-                    //dd($ahora);
-                    $inicio = strtotime( "09:00" );
-                    $fin = strtotime( "17:00" );
-                    //dd($inicio.' --- '.$fin);
-                    if($ahora > $inicio && $ahora < $fin) {
-                        //dd($ahora.' es mayor que '.$fin);
-                        //dd('Esta en tiempo');
-                        $fl_horario = true;
-                    } else {
-                        //dd($ahora.' es menor que '.$fin);
-                        $fl_horario = false;
-                        //dd('No sta en tiempo');
-                    }
+                    $fl_horario = SolicitudesController::VerificarHorario();
                 }
                 //$usuario = $existe[0]->LOGIN_USUARIO;
                 if(\Session::get('usuario')!=null){

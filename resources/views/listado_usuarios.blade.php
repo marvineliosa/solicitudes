@@ -129,7 +129,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Contraseña</label>
             <div class="col-sm-10">
-              <div hidden="true" id="div-BtnPass"><button type="button" class="btn btn-success" onclick="EnviarContrasena()">Enviar por correo</button></div>
+              <div hidden="true" id="div-BtnPass"><button type="button" class="btn btn-success" onclick="EnviarContrasenaTitular()">Enviar por correo</button></div>
             </div>
           </div>
           <!--<div class="form-group">
@@ -306,7 +306,7 @@
       }
     }
 
-    function EnviarContrasena(){
+    function EnviarContrasenaTitular(){
       var usuario = $("#usuario-titular").val();
       console.log(usuario);
       var success;

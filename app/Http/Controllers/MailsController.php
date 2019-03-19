@@ -28,7 +28,7 @@
                 $exito = false;
                 $exito = Mail::send($template_path,$data, function($message) use ($nombre_usuario,$destinatario,$asunto){
                     // Set the sender
-                    $message->from('marvineliosa@gmail.com','Solicitudes CGA');
+                    $message->from('solicitudesc@gmail.com','Solicitudes CGA');
                     // Set the receiver and subject of the mail.
                     $message->to($destinatario, $nombre_usuario)->subject('[Sistema de Solicitudes]'.$asunto);
                 });
@@ -47,7 +47,19 @@
 
         public function EnviarContrasena(Request $request){
             $usuario = $request['usuario'];
-            $exito = MailsController::FuncionEnviarContrasena($usuario);
+            $categoria = DB::table('SOLICITUDES_LOGIN')
+                ->where('LOGIN_USUARIO',$usuario)
+                ->select('LOGIN_CATEGORIA')
+                ->get();
+            //dd($categoria[0]->LOGIN_CATEGORIA);
+            if(in_array($categoria[0]->LOGIN_CATEGORIA, ['ANALISTA_CGA','ADMINISTRADOR_CGA','COORDINADOR_CGA','TRABAJADOR_SPR','SECRETARIO_PARTICULAR'])){
+                //dd('Mail usuario normal');
+                $exito = MailsController::FuncionEnviarContrasena($usuario);
+            }else{
+                //dd('Mail titular');
+                $exito = MailsController::FuncionEnviarContrasenaDependencia($usuario);
+            }
+            //$exito = MailsController::FuncionEnviarContrasena($usuario);
             $data = array(
                 'exitoMail' => $exito
             );
@@ -59,10 +71,13 @@
         public static function FuncionEnviarContrasena($usuario){
             $datos_sistema = SolicitudesController::DatosGenerales();
             $tipo_sistema = '';
+            $url = '';
             if($datos_sistema['institucional']){
                 $tipo_sistema = 'institucional';
+                $url = '148.228.11.182';
             }else{
                 $tipo_sistema = 'de prestación de servicios';
+                $url = '148.228.11.181';
             }
             //dd($usuario);
             $pass = DB::table('SOLICITUDES_LOGIN')
@@ -70,7 +85,12 @@
                 ->select('LOGIN_CONTRASENIA','LOGIN_RESPONSABLE')
                 ->get();
             //dd($pass[0]);
-            $data = array('pass'=>$pass[0]->LOGIN_CONTRASENIA,'tipo_sistema'=>$tipo_sistema);
+            $data = array(
+                'pass'=>$pass[0]->LOGIN_CONTRASENIA,
+                'tipo_sistema'=>$tipo_sistema,
+                'user'=>$usuario,
+                'url'=>$url,
+            );
             // Path or name to the blade template to be rendered
             $template_path = 'mails.enviar_contrasena';
             $nombre_usuario = $pass[0]->LOGIN_RESPONSABLE;
@@ -78,7 +98,55 @@
             $exito = false;
             $exito = Mail::send($template_path,$data, function($message) use ($nombre_usuario,$destinatario) {
                 // Set the sender
-                $message->from('marvineliosa@gmail.com','Solicitudes CGA');
+                $message->from('solicitudesc@gmail.com','Solicitudes CGA');
+                // Set the receiver and subject of the mail.
+                $message->to($destinatario, $nombre_usuario)->subject('[Sistema de Solicitudes]Envío de contraseña');
+            });
+            return true;
+        }
+
+        public static function FuncionEnviarContrasenaDependencia($usuario){
+        //public static function FuncionEnviarContrasenaDependencia(){
+            //dd('epale');
+            $usuario = "marvineliosa@hotmail.com";
+            $datos_sistema = SolicitudesController::DatosGenerales();
+            $tipo_sistema = '';
+            $url='';
+            if($datos_sistema['institucional']){
+                $tipo_sistema = 'institucional';
+                $url = '148.228.11.182';
+            }else{
+                $tipo_sistema = 'de prestación de servicios';
+                $url = '148.228.11.181';
+            }
+
+            //dd($usuario);
+            $pass = DB::table('SOLICITUDES_LOGIN')
+                ->where('LOGIN_USUARIO',$usuario)
+                ->select('LOGIN_CONTRASENIA','LOGIN_RESPONSABLE')
+                ->get();
+            //dd($pass);
+            $rel_dependencia = DB::table('REL_DEPENCENCIA_TITULAR')
+                ->where('FK_USUARIO',$usuario)
+                ->get();
+            $clave_dependencia = DependenciasController::ObtenerCodigoDependencia($rel_dependencia[0]->FK_DEPENDENCIA);
+            //dd($clave_dependencia);
+
+            $data = array(
+                'pass'=>$pass[0]->LOGIN_CONTRASENIA,
+                'tipo_sistema'=>$tipo_sistema,
+                'user'=>$usuario,
+                'url'=>$url,
+                'codigo_dependencia'=>$clave_dependencia->NOMBRE_DEPENDENCIA
+            );
+            // Path or name to the blade template to be rendered
+            $template_path = 'mails.enviar_password_dependencia';
+            $nombre_usuario = $pass[0]->LOGIN_RESPONSABLE;
+            $destinatario = $usuario;
+            $exito = false;
+            $exito = Mail::send($template_path,$data, function($message) use ($nombre_usuario,$destinatario) {
+                // Set the sender
+                $message->from('solicitudesc@gmail.com','Solicitudes CGA');
                 // Set the receiver and subject of the mail.
                 $message->to($destinatario, $nombre_usuario)->subject('[Sistema de Solicitudes]Envío de contraseña');
             });
@@ -90,8 +158,8 @@
     		$data = array('pass'=>"123456789");
 	        // Path or name to the blade template to be rendered
 	        $template_path = 'mails.enviar_contrasena';
-            $nombre_usuario = 'Marvin Eliosa Abaroa';
-            $destinatario = 'marvineliosa@hotmail.com';
+            $nombre_usuario = 'Coordinación General Administrativa';
+            $destinatario = 'solicitudesc@hotmail.com';
 	        Mail::send($template_path,$data, function($message) use ($nombre_usuario,$destinatario) {
 	            // Set the receiver and subject of the mail.
 	            $message->to($destinatario, $nombre_usuario)->subject('[Sistema de Solicitudes]Envío de contraseña');

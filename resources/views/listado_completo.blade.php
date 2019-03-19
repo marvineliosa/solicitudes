@@ -90,9 +90,10 @@
 @section('script')
 	<script type="text/javascript">
 		var gl_solicitudes = <?php echo json_encode($solicitudes) ?>;
-    	console.log(gl_solicitudes);
+    	//console.log(gl_solicitudes);
 		var gl_analistas = <?php echo json_encode($analistas) ?>;
-    	console.log(gl_analistas);
+    	//console.log(gl_analistas);
+
 
     	function AsignarAnalista(){
     		var analista = $("#SelectAnalistas").val();
@@ -142,15 +143,31 @@
 			dataForm.append('estatus',estatus);
 			//lamando al metodo ajax
 			if(estatus!='SELECCIONAR'&&estatus!='CANCELADO POR TITULAR'){
-				metodoAjax(url,dataForm,function(success){
-					//aquí se escribe todas las operaciones que se harían en el succes
-					//la variable success es el json que recibe del servidor el método AJAX
-					gl_solicitudes[id_sol]['ESTATUS_SOLICITUD'] = estatus;
-					//$("#td_estatus_"+gl_solicitudes[id_sol]['ID_ESCAPE']).html(estatus);
-					//console.log(gl_solicitudes);
-					recargarTablaAjax('/refrescar/listado_completo');
-					MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente.");
-				});//*/
+				var permitidos_analista = ['RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN'];
+				if(gl_categoria=='ANALISTA_CGA' && permitidos_analista.includes(estatus)){
+					metodoAjax(url,dataForm,function(success){
+						//aquí se escribe todas las operaciones que se harían en el succes
+						//la variable success es el json que recibe del servidor el método AJAX
+						gl_solicitudes[id_sol]['ESTATUS_SOLICITUD'] = estatus;
+						//$("#td_estatus_"+gl_solicitudes[id_sol]['ID_ESCAPE']).html(estatus);
+						//console.log(gl_solicitudes);
+						recargarTablaAjax('/refrescar/listado_completo');
+						MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente.");
+					});//*/
+				}else if(gl_categoria=='ADMINISTRADOR_CGA'){
+					metodoAjax(url,dataForm,function(success){
+						//aquí se escribe todas las operaciones que se harían en el succes
+						//la variable success es el json que recibe del servidor el método AJAX
+						gl_solicitudes[id_sol]['ESTATUS_SOLICITUD'] = estatus;
+						//$("#td_estatus_"+gl_solicitudes[id_sol]['ID_ESCAPE']).html(estatus);
+						//console.log(gl_solicitudes);
+						recargarTablaAjax('/refrescar/listado_completo');
+						MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente.");
+					});//*/
+				}else{
+					MensajeModal("¡ATENCIÓN!","La solicitud no puede ponerse en '"+estatus+"' por un analista.");
+				}
+				
 			}else if(estatus=='CANCELADO POR TITULAR'){
 				MensajeModal("¡ATENCIÓN!","El estatus 'CANCELADO POR TITULAR' solo puede ser seleccionado por un titular.");
 			}else{

@@ -164,7 +164,7 @@
 			metodoAjax(url,dataForm,function(success){
 				//aquí se escribe todas las operaciones que se harían en el succes
 				//la variable success es el json que recibe del servidor el método AJAX
-				console.log(success);
+				//console.log(success);
 				$("#CuerpoTablaPropuesta").html('');
 				for(var i = 0; i < success['cabeceras'].length; i++){
 					//console.log(success['cabeceras'][i]);
@@ -206,7 +206,7 @@
     	function AceptarSolicitud(){
     		var id_sol = $("#hide_solicitud").val();
     		var estatus = 'VALIDAR';
-    		console.log(id_sol);
+    		//console.log(id_sol);
     		var success;
 			var url = "/solicitud/validacion_titular";
 			var dataForm = new FormData();

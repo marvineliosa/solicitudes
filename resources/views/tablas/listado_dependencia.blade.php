@@ -24,7 +24,7 @@
             <div class="btn-group">
       			<a class="btn btn-primary" href="javascript:void(0)" onclick="AbreModalInformacion('{{$solicitud->ID_SOLICITUD}}','{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}')"><i class="icon_info_alt"></i></a></div>
           	@if(strcmp($solicitud->ESTATUS_SOLICITUD,'VALIDACIÓN DE INFORMACIÓN')==0)
-    					<a class="btn btn-warning" href="#" onclick="modalArchivosDependencia('{{$solicitud->ID_SOLICITUD}}')"><i class="icon_link_alt"></i></a>
+    					<a class="btn btn-warning" href="javascript:void(0)" onclick="modalArchivosDependencia('{{$solicitud->ID_SOLICITUD}}')"><i class="icon_link_alt"></i></a>
     				@endif
             @if(strcmp($solicitud->ESTATUS_SOLICITUD,'FIRMAS')==0)
               <a class="btn btn-success" href="javascript:void(0)" onclick="VerDatosCuadro('{{$solicitud->ID_SOLICITUD}}','{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}')" style="background-color: YellowGreen;"><i class="icon_menu-square_alt2"></i></a>

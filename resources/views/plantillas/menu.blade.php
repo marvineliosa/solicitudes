@@ -212,6 +212,37 @@
       </div>
     </div>
 
+    <!-- Modal Archivos -->
+    <div class="modal fade" id="ModalMovimientos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title" id="TituloModalMovimientos" align="center">Fechas</h2>
+            <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>-->
+          </div>
+          <div class="modal-body">
+            <h3  id="CuerpoModalFechas" align="center"> </h3>
+            <table class="table table-bordered">
+              <thead id="HeadTablaMovimientos">
+                <tr>
+                  <th scope="col">Movimiento</th>
+                  <th scope="col">Fecha</th>
+                </tr>
+              </thead>
+              <tbody id="CuerpoTablaMovimientos">
+                
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Modal mensajes -->
     <div class="modal fade" id="ModalComentarios" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -331,7 +362,7 @@
 <script type="text/javascript">
 
   var gl_categoria = <?php echo json_encode(\Session::get('categoria')[0]) ?>;
-  console.log(gl_categoria);
+  //console.log(gl_categoria);
 
   function guardarComentario(id_archivo){
     var mensaje = $("#mensaje_archivo_"+id_archivo).val();
@@ -460,6 +491,7 @@
       error : function(xhr, status) {
         $("#textoModalMensaje").text('Existió un problema con la operación');
         $("#modalMensaje").modal();
+        MensajeModal('¡ERROR!','Existió un problema, intentelo de nuevo, si el problema persiste favor de reportarlo a la extensión 5897.')
       },
       complete : function(xhr, status){
          $("#modalCarga").modal('hide');
@@ -624,7 +656,7 @@
     metodoAjax(url,dataForm,function(success){
       //aquí se escribe todas las operaciones que se harían en el succes
       //la variable success es el json que recibe del servidor el método AJAX
-      console.log(success);
+      //console.log(success);
       $("#CuerpoTablaFechas").html('');
       for(var i = 0; i < success['cabeceras'].length; i++){
         //console.log(success['cabeceras'][i]);
@@ -786,6 +818,27 @@
       });//*/
     }
     //console.log(id_solicitud);
+  }
+
+  function ObtenerHistorial(id_solicitud){
+    var success;
+    var url = '/movimientos/obtener';
+    //var url = "/solicitud/obtener_datos_contratacion";
+    var dataForm = new FormData();
+    dataForm.append('id_solicitud',id_solicitud);
+    $("#CuerpoTablaMovimientos").html('');
+    metodoAjax(url,dataForm,function(success){
+      //console.log(success);
+      for(var i = 0; i < success['movimientos'].length;i++){
+        $("#CuerpoTablaMovimientos").append(
+          '<tr>'+
+            '<td>' + success['movimientos'][i]['MOVIMIENTO'] + '</td>'+
+            '<td>'+ success['movimientos'][i]['FECHA_MOVIMIENTO'] +'</td>'+
+          '</tr>'
+        );//*/
+      }
+      $("#ModalMovimientos").modal();
+    });//*/
   }
 
 

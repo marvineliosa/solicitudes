@@ -122,6 +122,18 @@
 
         }
 
+        public static function ObtenerCodigoDependencia($id_dependencia){
+            $fl_sistema = SolicitudesController::DatosGenerales();
+            $dependencia = DB::table('SOLICITUDES_DEPENDENCIA')
+                ->where('DEPENDENCIA_ID',$id_dependencia)
+                ->select(
+                            'DEPENDENCIA_CODIGO as NOMBRE_DEPENDENCIA'
+                        )
+                ->get();
+            return $dependencia[0];
+
+        }
+
         public function VistaDependencias(){
             $dependencias = DependenciasController::ObtenerSoloDependencias();
             return view('dependencias') ->with ("dependencias",$dependencias);
