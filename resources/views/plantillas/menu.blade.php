@@ -591,7 +591,7 @@
         }
       }
       var array_cga = ['COORDINADOR_CGA','ANALISTA_CGA','ADMINISTRADOR_CGA','ADMINISTRADOR_CGA'];
-      var permitidos_cga = ['RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN','FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR'];
+      var permitidos_cga = ['RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN','FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR','CANCELADO POR TITULAR'];
       //console.log(permitidos_cga.includes(success['datos']['Estatus']));
       if(array_cga.includes(gl_categoria)){
         if(tipo_solicitud == 'CONTRATACIÓN' && permitidos_cga.includes(success['datos']['Estatus'])){
