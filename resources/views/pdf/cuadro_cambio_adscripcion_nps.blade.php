@@ -34,7 +34,7 @@
 		<div id="div-solicitud" align="right" class="" style="font-size: 13px;">H. Puebla de Z, a {{strftime('%d de %B de %Y')}} </div>
 		<div id="div-solicitud" align="left" class="" style="font-size: 13px;">
 			<p><b>A quien corresponda:</b></p>
-			<p align="justify">Por este medio reciba un cordial saludo, asimismo, en atención a la solicitude de la Esmpresa de Productos y Servicios Munich, SA de CV, la cual solicita el cambio de adscripción del <b>C.{{$solicitud->NOMBRE_SOLICITUD}},</b> que presta sus servicios en la sede {{$solicitud->NOMBRE_DEPENDENCIA}} a la sede {{$adscripcion->NUEVA_DEPENDENCIA}}, le informo lo siguiente:</p>
+			<p align="justify">Por este medio reciba un cordial saludo, asimismo, en atención a la solicitud de {{(($adscripcion->EMPRESA_NPS)?$adscripcion->EMPRESA_NPS:"FALTA AGREGAR NOMBRE DE EMPRESA NPS")}} , la cual solicita el cambio de adscripción del <b>C.{{$solicitud->NOMBRE_SOLICITUD}},</b> que presta sus servicios en la sede {{$solicitud->NOMBRE_DEPENDENCIA}} a la sede {{$adscripcion->NUEVA_DEPENDENCIA}}, le informo lo siguiente:</p>
 		</div>
 		<div id="div-tabla_datos" align="right" class="">
 			<table style="width:100%;" class="table table-bordered">

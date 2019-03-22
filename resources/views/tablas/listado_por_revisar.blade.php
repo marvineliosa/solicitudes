@@ -14,7 +14,7 @@
         <tr class="{{ $solicitud->CLASE_TR}}">
           <td>{{$solicitud->ID_SOLICITUD}}</td>
           <td>{{$solicitud->NOMBRE_SOLICITUD}}</td>
-          <td>{{$solicitud->NOMBRE_DEPENDENCIA}}</td>
+          <td>{{$solicitud->NOMBRE_INTERNO_DEPENDENCIA}}</td>
           <td>{{$solicitud->FECHA_ENVIO}}</td>
           <td>{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}</td>
           <td>

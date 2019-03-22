@@ -822,7 +822,7 @@
             date_default_timezone_set('America/Mexico_City');
 
             $update = DB::table('SOLICITUDES_SOLICITUD')
-                ->where('SOLICITUD_ID', $requests['id_sol'])
+                ->where('SOLICITUD_ID', $request['id_sol'])
                 ->update([
                             'SOLICITUD_URGENCIA' => $request['prioridad'],
                             'updated_at' => date('Y-m-d H:i:s')
@@ -1095,11 +1095,12 @@
         public function GuardaDatosCambioAdscripcion(Request $request){
             //dd($request['actividades']);
             $update = SolicitudesController::UpdateDatosCGA($request);
-
+            //dd($request['empresa_nps']);
             $update = DB::table('SOLICITUDES_CAMBIO_ADSCRIPCION')
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])
                 ->update([
                             'CAMBIO_ADSCRIPCION_ACTIVIDADES_NUEVAS' => $request['actividades'],
+                            'CAMBIO_ADSCRIPCION_EMPRESA' => $request['empresa_nps'],
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
 
@@ -1302,7 +1303,8 @@
                             'CAMBIO_ADSCRIPCION_CATEGORIA_NUEVA as NUEVA_CATEGORIA',
                             'CAMBIO_ADSCRIPCION_PUESTO_NUEVO as PUESTO_NUEVO',
                             'CAMBIO_ADSCRIPCION_ACTIVIDADES_NUEVAS as NUEVAS_ACTIVIDADES',
-                            'CAMBIO_ADSCRIPCION_SALARIO_NUEVO as NUEVO_SALARIO'
+                            'CAMBIO_ADSCRIPCION_SALARIO_NUEVO as NUEVO_SALARIO',
+                            'CAMBIO_ADSCRIPCION_EMPRESA as EMPRESA_NPS'
                         )
                 ->get();
             $dependencia = DependenciasController::ObtenerNombreDependencia($datos[0]->NUEVA_DEPENDENCIA);
@@ -1369,6 +1371,7 @@
             }else{
                 //dd('Modo NPS');
                 $solicitud[0]->NOMBRE_DEPENDENCIA = $dependencia->CODIGO_DEPENDENCIA;
+                $solicitud[0]->NOMBRE_INTERNO_DEPENDENCIA = $dependencia->NOMBRE_DEPENDENCIA;
             }
 
             if(strcmp($solicitud[0]->TIPO_SOLICITUD_SOLICITUD, 'CONTRATACIÓN POR SUSTITUCIÓN')==0){
@@ -1978,12 +1981,15 @@
         public function VistaCrearCambioAdscripcion(){
             $fl_horario = SolicitudesController::VerificarHorario();
             $categoria = \Session::get('categoria')[0];
+            $datos = SolicitudesController::DatosGenerales();
+            $institucional = $datos['institucional'];
+            //dd($institucional);
             if(strcmp($categoria, 'TITULAR')==0){
                 if(!$fl_horario){
                     return view('errors.timeout');
                 }else{
                     $dependencias = DependenciasController::ObtenerSoloDependencias();
-                    return view('nuevo_cambio_adscripcion') ->with ("dependencias",$dependencias);
+                    return view('nuevo_cambio_adscripcion') ->with (["dependencias"=>$dependencias,"institucional"=>$institucional]);
                 }
             }else{
                 return view('errors.505');
@@ -2384,6 +2390,9 @@
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])
                 ->update(['FECHAS_TURNADO_CGA' =>  date('Y-m-d H:i:s')]);
 
+            $responsable = \Session::get('responsable')[0];
+            $movimiento = $responsable.' ha turnado la solicitud a CGA';
+            $id_mov = SolicitudesController::InsertaMovimientoSPR($responsable,$movimiento,$request['id_sol']);
             $data = array(
                 "update"=>$update
             );
@@ -2779,6 +2788,13 @@
             $justificacion = $request['Justificacion'];
             $id_dependencia = \Session::get('id_dependencia')[0];
             $fuente_recursos = 'NA';
+            $empresa = $request['empresa'];
+            //dd($empresa);
+            //dd(gettype($empresa));
+            if(strcasecmp($empresa, "undefined")==0){
+                $empresa = null;
+                //dd('no tiene empresa por ser institucional');
+            }
 
             $datos_solicitud = array(
                 'candidato' => $NombreCandidato,
@@ -2804,6 +2820,8 @@
                     'CAMBIO_ADSCRIPCION_PUESTO_NUEVO' => $PuestoNuevo,
                     'CAMBIO_ADSCRIPCION_ACTIVIDADES_NUEVAS' => $ActividadesNuevas,
                     'CAMBIO_ADSCRIPCION_SALARIO_NUEVO' => $SalarioSolicitado,
+                    'CAMBIO_ADSCRIPCION_SALARIO_NUEVO' => $SalarioSolicitado,
+                    'CAMBIO_ADSCRIPCION_EMPRESA' => $empresa,
                      'created_at' => date('Y-m-d H:i:s')
                 ]
             );
@@ -2938,7 +2956,7 @@
         public static function DatosGenerales(){
             //en este método se sabrá si el sistema está funcionando de modo institucional o prestación de servicios
             $datos = array(
-                            'institucional' => true,
+                            'institucional' => false,
                             'horar_inicio' => "09:00",
                             'horar_fin' => "17:00",
                         );

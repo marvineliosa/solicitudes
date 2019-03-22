@@ -95,6 +95,7 @@
         public function EliminarUsuario(Request $request){
 
             $delete2 = DB::table('REL_DEPENCENCIA_TITULAR')->where('FK_USUARIO', $request['usuario'])->delete();
+            $delete2 = DB::table('REL_SOLICITUDES_ANALISTA')->where('FK_USUARIO', $request['usuario'])->delete();
             $delete = DB::table('SOLICITUDES_LOGIN')->where('LOGIN_USUARIO', $request['usuario'])->delete();
             $data = array(
                 "delete" => $delete,
@@ -125,13 +126,12 @@
                 if(strcmp($existe[0]->LOGIN_CATEGORIA, 'TITULAR')==0){
                     //dd('TITULAR');
                     $rel_dependencia = DB::table('REL_DEPENCENCIA_TITULAR')->where(['FK_USUARIO'=> $existe[0]->LOGIN_USUARIO])->get();
-                    //if($id_dependencia>)
-                    /*$nom_dependencia = DB::table('SOLICITUDES_DEPENDENCIA')->where(['DEPENDENCIA_ID'=> $id_dependencia[0]->FK_DEPENDENCIA)->get();
-                    $id_dependencia = $nom_dependencia[0]->DEPENDENCIA_ID;//*/
                     $id_dependencia = $rel_dependencia[0]->FK_DEPENDENCIA;
 
                     $fl_horario = SolicitudesController::VerificarHorario();
                 }
+
+                
                 //$usuario = $existe[0]->LOGIN_USUARIO;
                 if(\Session::get('usuario')!=null){
                     //dd('Aqui olvidamos');
@@ -142,12 +142,14 @@
                     \Session::forget('horario');
                     //\Session::forget('nombre');
                 }
+                $datos = SolicitudesController::DatosGenerales();
                 //dd($existe[0]->LOGIN_RESPONSABLE);
                 \Session::push('usuario',$existe[0]->LOGIN_USUARIO);
                 \Session::push('categoria',$existe[0]->LOGIN_CATEGORIA);
                 \Session::push('id_dependencia',$id_dependencia);
                 \Session::push('responsable',$existe[0]->LOGIN_RESPONSABLE);
                 \Session::push('horario',$fl_horario);
+                //\Session::push('institucional',$datos['institucional']);
                 //dd(\Session::get('responsable')[0]);
                 //\Session::push('nombre',$n_usuario[0]->USUARIOS_NOMBRE_RESPONSABLE);
             }

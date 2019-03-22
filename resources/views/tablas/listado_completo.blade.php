@@ -11,11 +11,12 @@
     </tr>
   </thead>
   <tbody>
+    <!-- {{$i=1}} -->
   	@foreach($solicitudes as $solicitud)
       <tr class="{{ $solicitud->CLASE_TR}}">
         <td>{{$solicitud->ID_SOLICITUD}}</td>
         <td>{{$solicitud->NOMBRE_SOLICITUD}}</td>
-        <td>{{$solicitud->NOMBRE_DEPENDENCIA}}</td>
+        <td>{{$solicitud->NOMBRE_INTERNO_DEPENDENCIA}}</td>
         <td>{{$solicitud->FECHA_TURNADO_CGA}}</td>
         <td>{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}</td>
         <td id="td_estatus_{{$solicitud->ID_ESCAPE}}">{{$solicitud->ESTATUS_SOLICITUD}}</td>
@@ -43,6 +44,7 @@
             </div>
         </td>
       </tr>
+      <!-- {{$i++}} -->
     @endforeach
     
     <!--<tr class="success">

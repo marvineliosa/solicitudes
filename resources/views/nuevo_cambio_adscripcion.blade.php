@@ -81,7 +81,14 @@
               <input type="number" class="form-control" placeholder="Puesto del Candidato" id="CambioAdscripcion-SalarioSolicitado" step=".01">
             </div>
           </div>
-          
+          @if(!$institucional)
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Empresa de prestación de servicios*</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" placeholder="Escriba aquí el nombre de la empresa de prestación de servicios" id="CambioAdscripcion-Empresa_nps">
+            </div>
+          </div>
+          @endif
           <div class="form-group">
             <label class="col-sm-2 control-label">Justificación*</label>
             <div class="col-sm-6">
@@ -151,6 +158,8 @@
 @section('script')
   <script type="text/javascript">
     id_dependencia = <?php echo json_encode(\Session::get('id_dependencia')[0]) ?>;
+    institucional = <?php echo json_encode($institucional) ?>;
+    console.log(institucional);
     autollenado();
 
     function listado(){
@@ -200,6 +209,8 @@
       var PuestoNuevo = $("#CambioAdscripcion-PuestoNuevo").val();
       var SalarioSolicitado = $("#CambioAdscripcion-SalarioSolicitado").val();
       var ActividadesNuevas = $("#CambioAdscripcion-ActividadesNuevas").val();
+      var empresa = $("#CambioAdscripcion-Empresa_nps").val();
+      console.log(empresa);
       //archivos
       var archivo_organigrama = document.getElementById('archivo-organigrama');
       var archivo_plantilla = document.getElementById('archivo-plantilla');
@@ -210,6 +221,8 @@
 
       if(NombreCandidato==''){
         MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+      }else if(!institucional&&empresa==''){
+        MensajeModal("¡ATENCIÓN!",'El campo "Empresa" se encuentra vacío, los campos marcados con * son obligatorios');
       }else if(CategoriaActual==''){
         MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
       }else if(PuestoActual==''){
@@ -256,6 +269,7 @@
         dataForm.append('PuestoNuevo',PuestoNuevo);
         dataForm.append('SalarioSolicitado',SalarioSolicitado);
         dataForm.append('ActividadesNuevas',ActividadesNuevas);
+        dataForm.append('empresa',empresa);
         //console.log(ActividadesNuevas);
 
 

@@ -95,6 +95,12 @@
             </div>
           </div>
           <div class="form-group">
+            <label class="col-sm-2 control-label">Empresa</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" placeholder="Escriba aquí el nombre de la empresa de prestación de servicios" value="{{$datos_extra->EMPRESA_NPS}}" id="propuesta-empresa_nps">
+            </div>
+          </div>
+          <div class="form-group">
             <label class="col-sm-2 control-label">Puesto Propuesto</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Puesto Propuesto" value="{{$solicitud->PUESTO_PROPUESTO}}" id="propuesta-puesto">
@@ -216,6 +222,7 @@
 
       var salario_inferior = $("#propuesta-salario_inferior").val();
       var categoria_inferior = $("#propuesta-categoria_inferior").val();
+      var empresa_nps = $("#propuesta-empresa_nps").val();
 
       var ahorro_solicitud = $("#ahorro_solicitud").val();
       //console.log(ahorro_solicitud);
@@ -234,6 +241,7 @@
       dataForm.append('salario_inferior',salario_inferior);
       dataForm.append('categoria_inferior',categoria_inferior);
       dataForm.append('ahorro_solicitud',ahorro_solicitud);
+      dataForm.append('empresa_nps',empresa_nps);
       //lamando al metodo ajax
 
       metodoAjax(url,dataForm,function(success){

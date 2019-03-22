@@ -12,6 +12,7 @@
     </tr>
   </thead>
   <tbody>
+    <!-- {{$i=1}} -->
   	@foreach($solicitudes as $solicitud)
         <tr class="">
           <td>{{$solicitud->ID_SOLICITUD}}</td>
@@ -42,6 +43,7 @@
             @endif
           </td>
         </tr>
+      <!-- {{$i++}} -->
     @endforeach
     
     <!--<tr class="success">

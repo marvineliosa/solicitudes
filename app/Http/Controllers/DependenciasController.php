@@ -114,10 +114,12 @@
                 $dependencia = DB::table('SOLICITUDES_DEPENDENCIA')
                     ->where('DEPENDENCIA_ID',$id_dependencia)
                     ->select(
-                                'DEPENDENCIA_CODIGO as NOMBRE_DEPENDENCIA'
+                                'DEPENDENCIA_CODIGO as NOMBRE_DEPENDENCIA',
+                                'DEPENDENCIA_NOMBRE as NOMBRE_INTERNO_DEPENDENCIA'
                             )
                     ->get();
             }
+            //dd($dependencia);
             return $dependencia;
 
         }
