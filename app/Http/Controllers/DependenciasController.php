@@ -142,9 +142,10 @@
         }
 
         public static function ObtenerSoloDependencias(){
+            $categoria = \Session::get('categoria')[0];
             $fl_sistema = SolicitudesController::DatosGenerales();
             $dependencias = null;
-            if($fl_sistema['institucional']){
+            if($fl_sistema['institucional'] || in_array($categoria, ['TRABAJADOR_SPR'])){
                 $dependencias = DB::table('SOLICITUDES_DEPENDENCIA')
                     ->select(
                                 'DEPENDENCIA_ID as ID_DEPENDENCIA',

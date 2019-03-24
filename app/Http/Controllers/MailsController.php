@@ -108,7 +108,7 @@
         public static function FuncionEnviarContrasenaDependencia($usuario){
         //public static function FuncionEnviarContrasenaDependencia(){
             //dd('epale');
-            $usuario = "marvineliosa@hotmail.com";
+            //$usuario = "marvineliosa@hotmail.com";
             $datos_sistema = SolicitudesController::DatosGenerales();
             $tipo_sistema = '';
             $url='';

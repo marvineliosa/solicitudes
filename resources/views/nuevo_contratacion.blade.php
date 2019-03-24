@@ -8,12 +8,27 @@
 		  </header>
 		  <div class="panel-body">
         <div class="form-horizontal">
+          @if(in_array(\Session::get('categoria')[0],['TRABAJADOR_SPR']))
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Dependencia*</label>
+              <div class="col-sm-6">
+                <!--<input type="text" class="form-control" placeholder="Dependencia destino" id="CambioAdscripcion-DependenciaDestino">-->
+                <select class="form-control m-bot15" id="select-dependencia_spr">
+                    <option value="SELECCIONAR">--SELECCIONAR DEPENDENCIA--</option>
+                    @foreach($dependencias as $dependencia)
+                      <option value="{{$dependencia->ID_DEPENDENCIA}}">{{$dependencia->NOMBRE_DEPENDENCIA}}</option>
+                    @endforeach
+                </select>
+              </div>
+            </div>
+          @else
           <div class="form-group">
             <label class="col-sm-2 control-label">Dependencia</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Dependencia" id="nombre_dependencia" value="" disabled>
             </div>
           </div>
+          @endif
           <div class="form-group">
             <label class="col-sm-2 control-label">Candidato*</label>
             <div class="col-sm-6">
@@ -117,7 +132,7 @@
 
 @section('script')
   <script type="text/javascript">
-    autollenado();
+    //autollenado();
 
     function Regresar(){
       location.href='/listado/dependencia';
@@ -136,7 +151,8 @@
     }
 
     id_dependencia = <?php echo json_encode(\Session::get('id_dependencia')[0]) ?>;
-    //console.log(id_dependencia);
+    tipo_usuario = <?php echo json_encode(\Session::get('categoria')[0]) ?>;
+    //console.log(tipo_usuario);
     function autollenado(){
       $("#Contratacion-Candidato").val('Marvin Eliosa Abaroa');
       $("#Contratacion-CategoriaSolicitada").val('Auxiliar Administrativo');
@@ -147,6 +163,7 @@
       //MensajeModal("TITULO DEL MODAL","MENSAJE DEL MODAL");
     }
     function AlmacenarSolicitud(){
+      var dependencia_spr = $("#select-dependencia_spr").val();
       var candidato = $("#Contratacion-Candidato").val();
       var categoria = $("#Contratacion-CategoriaSolicitada").val();
       var puesto = $("#Contratacion-PuestoSolicitado").val();
@@ -164,8 +181,8 @@
       var archivo_mapa_ubicacion = document.getElementById('archivo-mapa_ubicacion');
       if(candidato==''){
         MensajeModal("¡ATENCIÓN!",'El nombre del candidato es un campo obligatorio');
-      }else if(actividades==''){
-        MensajeModal("¡ATENCIÓN!",'Las actividades son un campo obligatorio');
+      }else if(dependencia_spr=='SELECCIONAR'&&tipo_usuario=='TRABAJADOR_SPR'){
+        MensajeModal("¡ATENCIÓN!",'Debe seleccionar la depencia');
       }else if(actividades==''){
         MensajeModal("¡ATENCIÓN!",'Las actividades son un campo obligatorio');
       }else if(salario==''){
@@ -184,10 +201,12 @@
       }else if(archivo_curriculum.value==''){
         MensajeModal("¡ATENCIÓN!",'Debe adjuntar el curriculum del candidato');
       }else{
-        console.log('Enviando');
+        //console.log('Enviando');
+        //console.log(dependencia_spr);
         var success;
         var url = "/contratacion/insertar";
         var dataForm = new FormData();
+        dataForm.append('dependencia_spr',dependencia_spr);
         dataForm.append('candidato',candidato);
         dataForm.append('categoria',categoria);
         dataForm.append('puesto',puesto);
@@ -224,18 +243,20 @@
 
     ObtenerNombreDependencia();
     function ObtenerNombreDependencia(){
-      var success;
-      var url = "/dependencias/obtener_nombre";
-      var dataForm = new FormData();
-      dataForm.append('id_dependencia',id_dependencia);
-      //lamando al metodo ajax
-      metodoAjax(url,dataForm,function(success){
-        //aquí se escribe todas las operaciones que se harían en el succes
-        //la variable success es el json que recibe del servidor el método AJAX
-        //MensajeModal("TITULO DEL MODAL","MENSAJE DEL MODAL");
-        //console.log(success['dependencia']);
-        $("#nombre_dependencia").val(success['dependencia']['NOMBRE_DEPENDENCIA']);
-      });
+      if(tipo_usuario=='TITULAR'){
+        var success;
+        var url = "/dependencias/obtener_nombre";
+        var dataForm = new FormData();
+        dataForm.append('id_dependencia',id_dependencia);
+        //lamando al metodo ajax
+        metodoAjax(url,dataForm,function(success){
+          //aquí se escribe todas las operaciones que se harían en el succes
+          //la variable success es el json que recibe del servidor el método AJAX
+          //MensajeModal("TITULO DEL MODAL","MENSAJE DEL MODAL");
+          //console.log(success['dependencia']);
+          $("#nombre_dependencia").val(success['dependencia']['NOMBRE_DEPENDENCIA']);
+        });
+      }
     }
 
 

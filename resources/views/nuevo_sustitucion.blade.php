@@ -8,12 +8,27 @@
 		  </header>
 		  <div class="panel-body">
         <div class="form-horizontal " method="get">
+          @if(in_array(\Session::get('categoria')[0],['TRABAJADOR_SPR']))
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Dependencia*</label>
+              <div class="col-sm-6">
+                <!--<input type="text" class="form-control" placeholder="Dependencia destino" id="CambioAdscripcion-DependenciaDestino">-->
+                <select class="form-control m-bot15" id="select-dependencia_spr">
+                    <option value="SELECCIONAR">--SELECCIONAR DEPENDENCIA--</option>
+                    @foreach($dependencias as $dependencia)
+                      <option value="{{$dependencia->ID_DEPENDENCIA}}">{{$dependencia->NOMBRE_DEPENDENCIA}}</option>
+                    @endforeach
+                </select>
+              </div>
+            </div>
+          @else
           <div class="form-group">
             <label class="col-sm-2 control-label">Dependencia</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Dependencia" id="nombre_dependencia" value="" disabled>
             </div>
           </div>
+          @endif
           <div class="form-group">
             <label class="col-sm-2 control-label">Persona anterior*</label>
             <div class="col-sm-6">
@@ -146,7 +161,9 @@
 @section('script')
   <script type="text/javascript">
     id_dependencia = <?php echo json_encode(\Session::get('id_dependencia')[0]) ?>;
-    autollenado();
+    //autollenado();
+    tipo_usuario = <?php echo json_encode(\Session::get('categoria')[0]) ?>;
+    //console.log(tipo_usuario);
 
     function VerificarTamanio(archivo){
       arch = archivo.value;
@@ -178,6 +195,7 @@
       //MensajeModal("TITULO DEL MODAL","MENSAJE DEL MODAL");
     }
     function AlmacenarSolicitud(){
+      var dependencia_spr = $("#select-dependencia_spr").val();
       //datos de la persona que deja el puesto
       var persona_anterior = $("#Sustitucion-PersonaAnterior").val();
       var categoria_anterior = $("#Sustitucion-CategoriaAnterior").val();
@@ -204,6 +222,8 @@
 
       if(persona_anterior==''){
         MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+      }else if(dependencia_spr=='SELECCIONAR'&&tipo_usuario=='TRABAJADOR_SPR'){
+        MensajeModal("¡ATENCIÓN!",'Debe seleccionar la depencia');
       }else if(puesto_anterior==''){
         MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
       }else if(actividades_anterior==''){
@@ -236,6 +256,7 @@
         var success;
         var url = "/contratacion_sustitucion/insertar";
         var dataForm = new FormData();
+        dataForm.append('dependencia_spr',dependencia_spr);
         dataForm.append('persona_anterior',persona_anterior);
         dataForm.append('categoria_anterior',categoria_anterior);
         dataForm.append('puesto_anterior',puesto_anterior);
@@ -252,10 +273,10 @@
         dataForm.append('justificacion',justificacion);
         dataForm.append('fuente_recursos',fuente_recursos);
 
-          dataForm.append('archivo_organigrama',archivo_organigrama.files[0]);
-          dataForm.append('archivo_plantilla',archivo_plantilla.files[0]);
-          dataForm.append('archivo_descripcion',archivo_descripcion.files[0]);
-          dataForm.append('archivo_curriculum',archivo_curriculum.files[0]);
+        dataForm.append('archivo_organigrama',archivo_organigrama.files[0]);
+        dataForm.append('archivo_plantilla',archivo_plantilla.files[0]);
+        dataForm.append('archivo_descripcion',archivo_descripcion.files[0]);
+        dataForm.append('archivo_curriculum',archivo_curriculum.files[0]);
         if(archivo_mapa_ubicacion.value !=''){
           dataForm.append('archivo_mapa_ubicacion',archivo_mapa_ubicacion.files[0]);
         }else{
@@ -277,18 +298,20 @@
 
     ObtenerNombreDependencia();
     function ObtenerNombreDependencia(){
-      var success;
-      var url = "/dependencias/obtener_nombre";
-      var dataForm = new FormData();
-      dataForm.append('id_dependencia',id_dependencia);
-      //lamando al metodo ajax
-      metodoAjax(url,dataForm,function(success){
-        //aquí se escribe todas las operaciones que se harían en el succes
-        //la variable success es el json que recibe del servidor el método AJAX
-        //MensajeModal("TITULO DEL MODAL","MENSAJE DEL MODAL");
-        //console.log(success['dependencia']);
-        $("#nombre_dependencia").val(success['dependencia']['NOMBRE_DEPENDENCIA']);
-      });
+      if(tipo_usuario=='TITULAR'){
+        var success;
+        var url = "/dependencias/obtener_nombre";
+        var dataForm = new FormData();
+        dataForm.append('id_dependencia',id_dependencia);
+        //lamando al metodo ajax
+        metodoAjax(url,dataForm,function(success){
+          //aquí se escribe todas las operaciones que se harían en el succes
+          //la variable success es el json que recibe del servidor el método AJAX
+          //MensajeModal("TITULO DEL MODAL","MENSAJE DEL MODAL");
+          //console.log(success['dependencia']);
+          $("#nombre_dependencia").val(success['dependencia']['NOMBRE_DEPENDENCIA']);
+        });
+      }
     }
 
     function Regresar(){

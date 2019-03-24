@@ -256,7 +256,7 @@
                     ->where('FK_SOLICITUD_ID', $id_solicitud)
                     ->get();
             }else if(in_array($categoria, ['TRABAJADOR_SPR','SECRETARIO_PARTICULAR'])){
-                $rel_movimientos = $users = DB::table('REL_OBSERVACIONES_SPR')
+                $rel_movimientos = $users = DB::table('REL_MOVIMIENTOS_SPR')
                     ->where('FK_SOLICITUD_ID', $id_solicitud)
                     ->get();
             }
@@ -2168,11 +2168,12 @@
         public function VistaCrearContratacion(){
             $categoria = \Session::get('categoria')[0];
             $fl_horario = SolicitudesController::VerificarHorario();
-            if(strcmp($categoria, 'TITULAR')==0){
+            if(in_array($categoria, ['TITULAR','TRABAJADOR_SPR'])){
                 if(!$fl_horario){
                     return view('errors.timeout');
                 }else{
-                    return view('nuevo_contratacion');
+                    $dependencias = DependenciasController::ObtenerSoloDependencias();
+                    return view('nuevo_contratacion')->with(["dependencias"=>$dependencias]);
                 }
             }else{
                 return view('errors.505');
@@ -2182,11 +2183,12 @@
         public function VistaCrearSustitucion(){
             $categoria = \Session::get('categoria')[0];
             $fl_horario = SolicitudesController::VerificarHorario();
-            if(strcmp($categoria, 'TITULAR')==0){
+            if(in_array($categoria, ['TITULAR','TRABAJADOR_SPR'])){
                 if(!$fl_horario){
                     return view('errors.timeout');
                 }else{
-                    return view('nuevo_sustitucion');
+                    $dependencias = DependenciasController::ObtenerSoloDependencias();
+                    return view('nuevo_sustitucion')->with(["dependencias"=>$dependencias]);
                 }
             }else{
                 return view('errors.505');
@@ -2196,12 +2198,12 @@
         public function VistaCrearPromocion(){
             $categoria = \Session::get('categoria')[0];
             $fl_horario = SolicitudesController::VerificarHorario();
-            if(strcmp($categoria, 'TITULAR')==0){
+            if(in_array($categoria, ['TITULAR','TRABAJADOR_SPR'])){
                 if(!$fl_horario){
                     return view('errors.timeout');
                 }else{
                     $dependencias = DependenciasController::ObtenerSoloDependencias();
-                    return view('nuevo_promocion');
+                    return view('nuevo_promocion')->with(["dependencias"=>$dependencias]);
                 }
             }else{
                 return view('errors.505');
@@ -2214,7 +2216,7 @@
             $datos = SolicitudesController::DatosGenerales();
             $institucional = $datos['institucional'];
             //dd($institucional);
-            if(strcmp($categoria, 'TITULAR')==0){
+            if(in_array($categoria, ['TITULAR','TRABAJADOR_SPR'])){
                 if(!$fl_horario){
                     return view('errors.timeout');
                 }else{
@@ -2805,8 +2807,19 @@
             $justificacion = $request['justificacion'];
             $consecutivo = 0;
             $usuario = 'marvineliosa';
-            $id_dependencia = \Session::get('id_dependencia')[0];
+            //$id_dependencia = \Session::get('id_dependencia')[0];
             $fuente_recursos = $request['fuente_recursos'];
+
+            $dependencia_spr = $request['dependencia_spr'];
+            if(strcasecmp($dependencia_spr, "undefined")==0){
+                $id_dependencia = \Session::get('id_dependencia')[0];
+                //dd('no tiene empresa por ser institucional');
+            }else{
+                $id_dependencia = $dependencia_spr;
+
+            }
+
+            //dd($id_dependencia);
 
             //se crea un array para enviar por parametro
             $datos_solicitud = array(
@@ -2844,6 +2857,13 @@
                 SolicitudesController::AlmacenaArchivoBD($sol,$path,'MAPA DE UBICACIÓN');
             }
 
+            if(strcasecmp($dependencia_spr, "undefined")!=0){
+                $responsable = \Session::get('responsable')[0];
+                $movimiento = $responsable.' ha creado la solicitud '.$sol;
+                $id_mov = SolicitudesController::InsertaMovimientoSPR($responsable,$movimiento,$sol);
+
+            }
+
             $data = array(
                 "solicitud"=>$sol
             );
@@ -2868,8 +2888,19 @@
 
             $nomina = $request['nomina'];
             $justificacion = $request['justificacion'];
-            $id_dependencia = \Session::get('id_dependencia')[0];
+            //$id_dependencia = \Session::get('id_dependencia')[0];
             $fuente_recursos = $request['fuente_recursos'];
+            
+            $dependencia_spr = $request['dependencia_spr'];
+            if(strcasecmp($dependencia_spr, "undefined")==0){
+                $id_dependencia = \Session::get('id_dependencia')[0];
+                //dd('no tiene empresa por ser institucional');
+            }else{
+                $id_dependencia = $dependencia_spr;
+
+            }
+
+            //dd($id_dependencia);
 
             $datos_solicitud = array(
                 'candidato' => $persona_anterior,
@@ -2916,6 +2947,13 @@
                 $path = Storage::putFile('public/mapas_ubicacion', $request->file('archivo_mapa_ubicacion'));
                 SolicitudesController::AlmacenaArchivoBD($sol,$path,'MAPA DE UBICACIÓN');
             }
+
+            if(strcasecmp($dependencia_spr, "undefined")!=0){
+                $responsable = \Session::get('responsable')[0];
+                $movimiento = $responsable.' ha creado la solicitud '.$sol;
+                $id_mov = SolicitudesController::InsertaMovimientoSPR($responsable,$movimiento,$sol);
+
+            }
             //dd('Listo: '.$sol);
             //dd($descripciones);
             $data = array(
@@ -2942,8 +2980,19 @@
 
             $nomina = $request['nomina'];
             $justificacion = $request['justificacion'];
-            $id_dependencia = \Session::get('id_dependencia')[0];
+            //$id_dependencia = \Session::get('id_dependencia')[0];
             $fuente_recursos = 'NA';
+            
+            $dependencia_spr = $request['dependencia_spr'];
+            if(strcasecmp($dependencia_spr, "undefined")==0){
+                $id_dependencia = \Session::get('id_dependencia')[0];
+                //dd('no tiene empresa por ser institucional');
+            }else{
+                $id_dependencia = $dependencia_spr;
+
+            }
+
+            //dd($id_dependencia);
 
             $datos_solicitud = array(
                 'candidato' => $Candidato,
@@ -2989,6 +3038,13 @@
                 $path = Storage::putFile('public/mapas_ubicacion', $request->file('archivo_mapa_ubicacion'));
                 SolicitudesController::AlmacenaArchivoBD($sol,$path,'MAPA DE UBICACIÓN');
             }
+
+            if(strcasecmp($dependencia_spr, "undefined")!=0){
+                $responsable = \Session::get('responsable')[0];
+                $movimiento = $responsable.' ha creado la solicitud '.$sol;
+                $id_mov = SolicitudesController::InsertaMovimientoSPR($responsable,$movimiento,$sol);
+
+            }
             //dd('Listo: '.$sol);
             //dd($descripciones);
             $data = array(
@@ -3016,7 +3072,7 @@
             
             $nomina = $request['Nomina'];
             $justificacion = $request['Justificacion'];
-            $id_dependencia = \Session::get('id_dependencia')[0];
+            //$id_dependencia = \Session::get('id_dependencia')[0];
             $fuente_recursos = 'NA';
             $empresa = $request['empresa'];
             //dd($empresa);
@@ -3025,6 +3081,17 @@
                 $empresa = null;
                 //dd('no tiene empresa por ser institucional');
             }
+            
+            $dependencia_spr = $request['dependencia_spr'];
+            if(strcasecmp($dependencia_spr, "undefined")==0){
+                $id_dependencia = \Session::get('id_dependencia')[0];
+                //dd('no tiene empresa por ser institucional');
+            }else{
+                $id_dependencia = $dependencia_spr;
+
+            }
+
+            //dd($id_dependencia);
 
             $datos_solicitud = array(
                 'candidato' => $NombreCandidato,
@@ -3075,6 +3142,13 @@
             if ($request->hasFile('archivo_mapa_ubicacion')){
                 $path = Storage::putFile('public/mapas_ubicacion', $request->file('archivo_mapa_ubicacion'));
                 SolicitudesController::AlmacenaArchivoBD($sol,$path,'MAPA DE UBICACIÓN');
+            }
+
+            if(strcasecmp($dependencia_spr, "undefined")!=0){
+                $responsable = \Session::get('responsable')[0];
+                $movimiento = $responsable.' ha creado la solicitud '.$sol;
+                $id_mov = SolicitudesController::InsertaMovimientoSPR($responsable,$movimiento,$sol);
+
             }
             //dd('Listo: '.$sol);
             //dd($descripciones);

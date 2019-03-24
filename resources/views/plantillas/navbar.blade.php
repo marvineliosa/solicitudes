@@ -60,10 +60,10 @@
             <ul class="sub">
               <li><a class="" href="/listado/dependencia">Listado</a></li>
               @if(\Session::get('horario')[0])
-              <li><a class="" href="/solicitudes/contratacion">Contratación</a></li>
-              <li><a class="" href="/solicitudes/sustitucion">Sustitución</a></li>
-              <li><a class="" href="/solicitudes/promocion">Promoción</a></li>
-              <li><a class="" href="/solicitudes/cambio_adscripcion">Cambio de Adscripción</a></li>
+                <li><a class="" href="/solicitudes/contratacion">Contratación</a></li>
+                <li><a class="" href="/solicitudes/sustitucion">Sustitución</a></li>
+                <li><a class="" href="/solicitudes/promocion">Promoción</a></li>
+                <li><a class="" href="/solicitudes/cambio_adscripcion">Cambio de Adscripción</a></li>
               @endif
             </ul>
           </li>
@@ -89,6 +89,22 @@
                 <span>Reportes</span>
               </a>
             </li>
+          @endif
+
+          @if(in_array(\Session::get('categoria')[0], ['TRABAJADOR_SPR']))
+          <li class="sub-menu">
+            <a href="javascript:;" class="">
+              <i class="icon_pencil"></i>
+              <span>Solicitudes</span>
+              <span class="menu-arrow arrow_carrot-right"></span>
+            </a>
+            <ul class="sub">
+                <li><a class="" href="/solicitudes/contratacion">Contratación</a></li>
+                <li><a class="" href="/solicitudes/sustitucion">Sustitución</a></li>
+                <li><a class="" href="/solicitudes/promocion">Promoción</a></li>
+                <li><a class="" href="/solicitudes/cambio_adscripcion">Cambio de Adscripción</a></li>
+            </ul>
+          </li>
           @endif
 
           <li class="">
