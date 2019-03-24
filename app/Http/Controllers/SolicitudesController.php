@@ -17,6 +17,223 @@
          * @return Response
          */
 
+        public function GenerarReporte(Request $request){
+            date_default_timezone_set('America/Mexico_City');
+            $hoy = date('Y-m-d');
+            /*$solicitudes = DB::table('SOLICITUDES_SOLICITUD')
+                ->leftJoin('SOLICITUDES_DATOS_CGA', 'SOLICITUDES_SOLICITUD.SOLICITUD_ID', '=', 'SOLICITUDES_DATOS_CGA.FK_SOLICITUD_ID')
+                ->get();
+            //*/
+            $fecha_inicial=$request['fecha_inicial'];
+            $fecha_final=$request['fecha_final'];
+            $estatus=$request['estatus'];
+            $tipo_solicitud=$request['tipo_solicitud'];
+            //dd($tipo_solicitud);
+            $array_estatus = array();
+            $array_tipo_solicitud = array();
+            if(strcmp($estatus ,'TODO')==0){
+                $array_estatus=['RECIBIDO SPR','VALIDACIÓN DE INFORMACIÓN','INFORMACIÓN CORRECTA','RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN','FIRMAS','CANCELADO POR TITULAR','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR','CANCELADO','OTRO'];
+            }else{
+                $array_estatus[]=$estatus;
+            }
+            if(strcmp($tipo_solicitud ,'TODO')==0){
+                $array_tipo_solicitud=['CONTRATACIÓN','CONTRATACIÓN POR SUSTITUCIÓN','PROMOCION','CAMBIO DE ADSCRIPCIÓN'];
+            }else{
+                $array_tipo_solicitud[] = $tipo_solicitud;
+            }
+            //dd($array_tipo_solicitud);
+            $datos_cga = DB::table('SOLICITUDES_DATOS_CGA')
+                     ->select('FK_SOLICITUD_ID')
+                     ->whereIn('DATOS_CGA_ESTATUS',$array_estatus)
+                     ->whereBetween('created_at', [$fecha_inicial, $fecha_final])
+                     ->get();
+            //dd($datos_cga);
+
+            $array_datos_cga = array();
+            foreach ($datos_cga as $dato) {
+                $array_datos_cga[] = $dato->FK_SOLICITUD_ID;
+            }
+            //dd($array_datos_cga);
+
+            $solicitudes = DB::table('SOLICITUDES_SOLICITUD')
+                     ->select('SOLICITUD_ID')
+                     ->whereIn('SOLICITUD_ID',$array_datos_cga)
+                     ->whereIn('SOLICITUD_TIPO_SOLICITUD',$array_tipo_solicitud)
+                     ->get();//*/
+            //$solicitudes = DB::table('SOLICITUDES_SOLICITUD')->get();
+            //dd($solicitudes);
+            
+            $return_sol = array();
+            foreach ($solicitudes as $solicitud) {
+                $return_sol[] = SolicitudesController::ObtenerDatosReporte($solicitud->SOLICITUD_ID);
+            }
+            //dd($return_sol);
+
+            //dd($solicitudes);
+            //dd($request);
+            $data = array(
+                "solicitudes"=>$return_sol
+            );
+
+            echo json_encode($data);//*/
+
+        }
+
+        public function ObtenerDatosReporte($id_solicitud){
+            $solicitudes = array();
+            $DatosGenerales = SolicitudesController::DatosGenerales();
+            $institucional = $DatosGenerales['institucional'];
+            //dd($id_solicitud);
+            $solicitud = (object)(array());
+            //$solicitud->epale = 'algo';
+            //dd($solicitud);
+            $tmp_solicitud = DB::table('SOLICITUDES_SOLICITUD')
+                    ->where('SOLICITUD_ID',$id_solicitud)
+                    ->select(
+                                'SOLICITUD_ID as ID_SOLICITUD',
+                                'SOLICITUD_OFICIO as OFICIO_SOLICITUD',
+                                'SOLICITUD_NOMBRE as NOMBRE_SOLICITUD',
+                                'SOLICITUD_DEPENDENCIA as DEPENDENCIA_SOLICITUD',
+                                'SOLICITUD_CATEGORIA as CATEGORIA_SOLICITUD',
+                                'SOLICITUD_PUESTO as PUESTO_SOLICITUD',
+                                'SOLICITUD_ACTIVIDADES as ACTIVIDADES_SOLICITUD',
+                                'SOLICITUD_NOMINA as NOMINA_SOLICITUD',
+                                'SOLICITUD_SALARIO as SALARIO_SOLICITUD',
+                                'SOLICITUD_JUSTIFICACION as JUSTIFICACION_SOLICITUD',
+                                'SOLICITUD_TIPO_SOLICITUD as TIPO_SOLICITUD_SOLICITUD',
+                                'SOLICITUD_FUENTE_RECURSOS as FUENTE_RECURSOS_SOLICITUD',
+                                'SOLICITUD_URGENCIA as PRIORIDAD_SOLICITUD',
+                                'created_at as FECHA_DE_SOLICITUD'
+                            )
+                    ->get();
+            //dd($tmp_solicitud[0]);
+            $solicitud->ID_SOLICITUD = $tmp_solicitud[0]->ID_SOLICITUD;
+            //datos de candidato
+            $solicitud->DEPENDENCIA = null;
+            $solicitud->CODIGO_DEPENDENCIA = null;
+            $solicitud->CANDIDATO = $tmp_solicitud[0]->NOMBRE_SOLICITUD;
+            $solicitud->NOMINA = $tmp_solicitud[0]->NOMINA_SOLICITUD;
+            $solicitud->TIPO_SOLICITUD = $tmp_solicitud[0]->TIPO_SOLICITUD_SOLICITUD;
+            $solicitud->FUENTE_RECURSOS = $tmp_solicitud[0]->FUENTE_RECURSOS_SOLICITUD;
+            $solicitud->PRIORIDAD = $tmp_solicitud[0]->PRIORIDAD_SOLICITUD;
+            //$solicitud->JUSTIFICACION = $tmp_solicitud[0]->JUSTIFICACION_SOLICITUD;
+
+            //datos de candidato
+            $solicitud->CANDIDATO = $tmp_solicitud[0]->NOMBRE_SOLICITUD;
+            $solicitud->CATEGORIA_SOLICITADA = $tmp_solicitud[0]->CATEGORIA_SOLICITUD;
+            $solicitud->PUESTO_SOLICITADO = $tmp_solicitud[0]->PUESTO_SOLICITUD;
+            $solicitud->ACTIVIDADES_SOLICITADAS = $tmp_solicitud[0]->ACTIVIDADES_SOLICITUD;
+            $solicitud->SALARIO_SOLICITADO = $tmp_solicitud[0]->SALARIO_SOLICITUD;
+
+            //datos extras en CxS y CA
+            $solicitud->EN_SUSTITUCION_DE = null;
+            $solicitud->DEPENDENCIA_DESTINO = null;
+            $solicitud->FECHA_DE_SOLICITUD = $tmp_solicitud[0]->FECHA_DE_SOLICITUD;
+
+            if(strcmp($tmp_solicitud[0]->TIPO_SOLICITUD_SOLICITUD, 'CONTRATACIÓN')==0){
+                $solicitud->CATEGORIA_ANTERIOR = null;
+                $solicitud->PUESTO_ANTERIOR = null;
+                $solicitud->ACTIVIDADES_ANTERIORES = null;
+                $solicitud->SALARIO_ANTERIOR = null;
+            }else{
+                $solicitud->CATEGORIA_ANTERIOR = $tmp_solicitud[0]->CATEGORIA_SOLICITUD;
+                $solicitud->PUESTO_ANTERIOR = $tmp_solicitud[0]->PUESTO_SOLICITUD;
+                $solicitud->ACTIVIDADES_ANTERIORES = $tmp_solicitud[0]->ACTIVIDADES_SOLICITUD;
+                $solicitud->SALARIO_ANTERIOR = $tmp_solicitud[0]->SALARIO_SOLICITUD;
+            }
+
+            $dependencia = DependenciasController::ObtenerDatosDependencia($tmp_solicitud[0]->DEPENDENCIA_SOLICITUD);
+            $solicitud->CODIGO_DEPENDENCIA = $dependencia->CODIGO_DEPENDENCIA;
+            $solicitud->DEPENDENCIA = $dependencia->NOMBRE_DEPENDENCIA;
+
+            switch ($tmp_solicitud[0]->TIPO_SOLICITUD_SOLICITUD) {
+                case 'CONTRATACIÓN':
+                    # code...
+                    break;
+                case 'CONTRATACIÓN POR SUSTITUCIÓN':
+                    $sustitucion = SolicitudesController::ObtenerDatosSustitucion($id_solicitud);
+                    if($sustitucion){
+                        $solicitud->EN_SUSTITUCION_DE = $tmp_solicitud[0]->NOMBRE_SOLICITUD;
+
+                        $solicitud->CANDIDATO = $sustitucion->NUEVO_CANDIDATO;
+                        $solicitud->CATEGORIA_SOLICITADA = $sustitucion->NUEVA_CATEGORIA;
+                        $solicitud->PUESTO_SOLICITADO = $sustitucion->PUESTO_NUEVO;
+                        $solicitud->ACTIVIDADES_SOLICITADAS = $sustitucion->NUEVAS_ACTIVIDADES;
+                        $solicitud->SALARIO_SOLICITADO = $sustitucion->NUEVO_SALARIO;
+                    }
+                    break;
+                case 'PROMOCION':
+                    $promocion = SolicitudesController::ObtenerDatosPromocion($id_solicitud);
+                    if($promocion){
+                        $solicitud->CATEGORIA_ANTERIOR = $promocion->NUEVA_CATEGORIA;
+                        $solicitud->PUESTO_ANTERIOR = $promocion->PUESTO_NUEVO;
+                        $solicitud->ACTIVIDADES_ANTERIORES = $promocion->NUEVAS_ACTIVIDADES;
+                        $solicitud->SALARIO_ANTERIOR = $promocion->NUEVO_SALARIO;
+                    }
+                    break;
+                case 'CAMBIO DE ADSCRIPCIÓN':
+                    //dd($id_solicitud);
+                    $adscripcion = SolicitudesController::ObtenerDatosCambioAdscripcion($id_solicitud);
+                    //dd($adscripcion);
+                    if($adscripcion){
+                        $solicitud->DEPENDENCIA_DESTINO = $adscripcion->NUEVA_DEPENDENCIA;
+
+                        $solicitud->CATEGORIA_ANTERIOR = $adscripcion->NUEVA_CATEGORIA;
+                        $solicitud->PUESTO_ANTERIOR = $adscripcion->PUESTO_NUEVO;
+                        $solicitud->ACTIVIDADES_ANTERIORES = $adscripcion->NUEVAS_ACTIVIDADES;
+                        $solicitud->SALARIO_ANTERIOR = $adscripcion->NUEVO_SALARIO;//*/
+                    }
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+
+
+            $fechas = DB::table('SOLICITUDES_FECHAS')
+                ->where('FK_SOLICITUD_ID',$id_solicitud)
+                ->get();
+            //dd($fechas[0]);
+            $solicitud->FECHA_DE_SOLICITUD = $fechas[0]->FECHAS_CREACION_SOLICITUD;
+
+            $datos_cga = DB::table('SOLICITUDES_DATOS_CGA')
+                ->where('FK_SOLICITUD_ID',$id_solicitud)
+                ->get();
+
+            //if()
+
+            $solicitud->ESTATUS_SOLICITUD = $datos_cga[0]->DATOS_CGA_ESTATUS;//estatus
+            $solicitud->CATEGORIA_PROPUESTA = $datos_cga[0]->DATOS_CGA_CATEGORIA_PROPUESTA;
+            $solicitud->PUESTO_PROPUESTO = $datos_cga[0]->DATOS_CGA_PUESTO_PROPUESTO;
+            $solicitud->SALARIO_PROPUESTO = $datos_cga[0]->DATOS_CGA_SALARIO_PROPUESTO;
+            $solicitud->PROCEDE = $datos_cga[0]->DATOS_CGA_PROCEDENTE;
+            //$solicitud->RESPUESTA_CGA = $datos_cga[0]->DATOS_CGA_RESPUESTA;
+            /*$solicitud->CATEGORIA_SUPERIOR = $datos_cga[0]->DATOS_CGA_CATEGORIA_SUPERIOR;
+            $solicitud->SALARIO_SUPERIOR = $datos_cga[0]->DATOS_CGA_SALARIO_SUPERIOR;
+            $solicitud->CATEGORIA_INFERIOR = $datos_cga[0]->DATOS_CGA_CATEGORIA_INFERIOR;
+            $solicitud->SALARIO_INFERIOR = $datos_cga[0]->DATOS_CGA_SALARIO_INFERIOR;//*/
+            $solicitud->AHORRO_SOLICITUD = $datos_cga[0]->DATOS_CGA_AHORRO;
+            $solicitud->COMPENSACION_SOLICITUD = $datos_cga[0]->DATOS_CGA_COMPENSACION;
+
+            return $solicitud;
+
+        }
+
+        public function VistaGenerarReporte(){
+            date_default_timezone_set('America/Mexico_City');
+            /*$hoy = date('Y-m-d');
+            return view('crear_reporte')->with (["hoy"=>$hoy]);//*/
+
+            $categoria = \Session::get('categoria')[0];
+            if(in_array($categoria, ['ANALISTA_CGA','ADMINISTRADOR_CGA','COORDINADOR_CGA','TRABAJADOR_SPR','SECRETARIO_PARTICULAR'])){
+                $hoy = date('Y-m-d');
+                return view('crear_reporte')->with (["hoy"=>$hoy]);
+            }else{
+                return view('errors.505');
+            }
+        }
+
         public function ObtenerMovimientos(Request $request){
             //dd($request['id_solicitud']);
             $movimientos = SolicitudesController::ObtenerMovimientosId($request['id_solicitud']);
@@ -1296,6 +1513,7 @@
         }
 
         public function ObtenerDatosCambioAdscripcion($id_solicitud){
+            //dd($id_solicitud);
             $datos = DB::table('SOLICITUDES_CAMBIO_ADSCRIPCION')
                 ->where('FK_SOLICITUD_ID', $id_solicitud)
                 ->select(
@@ -1307,9 +1525,15 @@
                             'CAMBIO_ADSCRIPCION_EMPRESA as EMPRESA_NPS'
                         )
                 ->get();
-            $dependencia = DependenciasController::ObtenerNombreDependencia($datos[0]->NUEVA_DEPENDENCIA);
-            $datos[0]->NUEVA_DEPENDENCIA = $dependencia[0]->NOMBRE_DEPENDENCIA;
+            //dd($datos);
+            if(count($datos)>0){
+                $dependencia = DependenciasController::ObtenerNombreDependencia($datos[0]->NUEVA_DEPENDENCIA);
+                $datos[0]->NUEVA_DEPENDENCIA = $dependencia[0]->NOMBRE_DEPENDENCIA;
+            }else{
+                $datos[0]=null;
+            }
             //dd($datos[0]->NUEVA_DEPENDENCIA);
+            //dd($datos[0]);
             return $datos[0];
          }
 
@@ -1323,6 +1547,9 @@
                             'PROMOCION_SALARIO_NUEVO as NUEVO_SALARIO'
                         )
                 ->get();
+            if(count($datos)==0){
+                $datos[0]==null;
+            }
             return $datos[0];
          }
 
@@ -1337,6 +1564,9 @@
                             'SUSTITUCION_SALARIO_NUEVO as NUEVO_SALARIO'
                         )
                 ->get();
+            if(count($datos)==0){
+                $datos[0]==null;
+            }
             return $datos[0];
         }
 

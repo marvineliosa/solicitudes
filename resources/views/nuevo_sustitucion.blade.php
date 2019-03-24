@@ -204,8 +204,6 @@
 
       if(persona_anterior==''){
         MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
-      }else if(categoria_anterior==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
       }else if(puesto_anterior==''){
         MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
       }else if(actividades_anterior==''){

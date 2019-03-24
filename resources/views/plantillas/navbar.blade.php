@@ -82,6 +82,14 @@
             </ul>
           </li>
           @endif
+          @if(in_array(\Session::get('categoria')[0], ['ANALISTA_CGA','ADMINISTRADOR_CGA','COORDINADOR_CGA','TRABAJADOR_SPR']))
+            <li class="">
+              <a class="" href="/reportes">
+                <i class="icon_document_alt"></i>
+                <span>Reportes</span>
+              </a>
+            </li>
+          @endif
 
           <li class="">
             <a class="" href="/salir">

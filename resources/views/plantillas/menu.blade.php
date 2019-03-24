@@ -111,6 +111,9 @@
     <script src="{{ asset('js/datatables/dataTables.bootstrap4.js')}}"></script>
     <link href="{{asset('js/datatables/dataTables.bootstrap4.css')}}" rel="stylesheet" />
 
+    <!-- Exportar a excel -->
+    <script src="{{ asset('js-xlsx/dist/xlsx.full.min.js')}}"></script>
+    <script src="{{ asset('FileSaver/dist/FileSaver.min.js')}}"></script>
     <!-- modales -->
 
     <!-- MODAL MOSTRAR CONTRATACION -->

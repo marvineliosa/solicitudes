@@ -198,5 +198,8 @@ Route::get('qr-code', function () {
     $qr = QrCode::size(100)->generate('Welcome to kerneldev.com!');
     return $qr;
 });
+
+Route::get('/reportes','SolicitudesController@VistaGenerarReporte');
+Route::post('/reportes/generar','SolicitudesController@GenerarReporte');
 /*Route::get('/lock','SolicitudesController@BloquearSql');
 Route::get('/unlock','SolicitudesController@DesbloquearSql');//*/
