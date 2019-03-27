@@ -1,5 +1,5 @@
 @extends('plantillas.menu')
-@section('titulo','Editar Contratación')
+@section('titulo','Editar Sustitución')
 @section('content')
 	<div class="col-lg-12">
 		<section class="panel">
@@ -29,7 +29,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Nombre de quien causa baja</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" placeholder="Nombre de la persona que causa baja" id="Sustitucion-PersonaAnterior" value="{{$solicitud->NOMBRE_SOLICITUD}}" disabled>
+              <input type="text" class="form-control" placeholder="Nombre de la persona que causa baja" value="{{$solicitud->EN_SUSTITUCION_DE}}" id="en_sustitucion_de">
             </div>
           </div>
           <div class="form-group">
@@ -53,26 +53,26 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Salario neto de quien causa baja</label>
             <div class="col-sm-6">
-              <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" step=".01" id="Sustitucion-SalarioAnterior" value="{{$solicitud->SALARIO_SOLICITUD}}" disabled>
+              <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" step=".01" value="{{$solicitud->SALARIO_SOLICITUD}}" id="salario_persona_anterior">
             </div>
           </div>
 
           <div class="form-group">
             <label class="col-sm-2 control-label">Candidato Solicitado</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" placeholder="Nombre del Candidato" value="{{$datos_extra->NUEVO_CANDIDATO}}" disabled>
+              <input type="text" class="form-control" placeholder="Nombre del Candidato" value="{{$datos_extra->NUEVO_CANDIDATO}}" id="nombre_candidato">
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label">Categoría Solicitada</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" placeholder="Categoría solicitada" value="{{$datos_extra->NUEVA_CATEGORIA}}" disabled>
+              <input type="text" class="form-control" placeholder="Categoría solicitada" value="{{$datos_extra->NUEVA_CATEGORIA}}" id="categoria_solicitada">
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label">Puesto Solicitado</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" placeholder="Puesto del Candidato" value="{{$datos_extra->PUESTO_NUEVO}}" disabled>
+              <input type="text" class="form-control" placeholder="Puesto del Candidato" value="{{$datos_extra->PUESTO_NUEVO}}" id="puesto_solicitado">
             </div>
           </div>
           <div class="form-group">
@@ -90,7 +90,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Salario Neto Solicitado</label>
             <div class="col-sm-6">
-              <input type="number" class="form-control" placeholder="Puesto del Candidato" value="{{$datos_extra->NUEVO_SALARIO}}" step=".01" disabled>
+              <input type="number" class="form-control" placeholder="Puesto del Candidato" value="{{$datos_extra->NUEVO_SALARIO}}" step=".01" id="salario_solicitado">
             </div>
           </div>
           <div class="form-group">
@@ -192,9 +192,9 @@
 
   <script type="text/javascript">
     var gl_solicitud = <?php echo json_encode($solicitud) ?>;
-    console.log(gl_solicitud);
+    //console.log(gl_solicitud);
     var categoria = <?php echo json_encode(\Session::get('categoria')[0]) ?>;
-    console.log(categoria);
+    //console.log(categoria);
 
     
 
@@ -214,7 +214,13 @@
 
     function guardarDatos(id_solicitud){
       //console.log(id_solicitud);
+      var en_sustitucion_de = $("#en_sustitucion_de").val();
+      var salario_persona_anterior = $("#salario_persona_anterior").val();
       var actividades = $("#Actividades_candidato").val();
+      var candidato = $("#nombre_candidato").val();
+      var categoria_solicitada = $("#categoria_solicitada").val();
+      var puesto_solicitado = $("#puesto_solicitado").val();
+      var salario_solicitado = $("#salario_solicitado").val();
       //console.log(actividades);
       var categoria = $("#propuesta-categoria").val();
       var puesto = $("#propuesta-puesto").val();
@@ -235,7 +241,16 @@
       var url = "/contratacion_sustitucion/guardar_datos_sustitucion";
       var dataForm = new FormData();
       dataForm.append('id_sol',id_solicitud);
+      //dataForm.append('actividades',actividades);
+      dataForm.append('en_sustitucion_de',en_sustitucion_de);
+      dataForm.append('salario_persona_anterior',salario_persona_anterior);
+      dataForm.append('candidato',candidato);
+      dataForm.append('categoria_solicitada',categoria_solicitada);
+      dataForm.append('puesto_solicitado',puesto_solicitado);
       dataForm.append('actividades',actividades);
+      dataForm.append('salario_solicitado',salario_solicitado);
+      //console.log(salario_persona_anterior);
+
       dataForm.append('categoria',categoria);
       dataForm.append('puesto',puesto);
       dataForm.append('salario',salario);
@@ -249,7 +264,28 @@
       dataForm.append('compensacion_solicitud',compensacion_solicitud);
       //lamando al metodo ajax
 
-      metodoAjax(url,dataForm,function(success){
+      if(en_sustitucion_de==''){
+        MensajeModal('¡ATENCIÓN!','El nombre de la persona qe causa baja no puede estar vacío');
+      }else if(salario_persona_anterior=='' || salario_persona_anterior < 1){
+        MensajeModal('¡ATENCIÓN!','El salario de la persona qe causa baja no puede estar vacío o igual a 0');
+      }else if(candidato==''){
+        MensajeModal('¡ATENCIÓN!','El nombre del candidato no puede estar vacío');
+      }else if(actividades == ''){
+        MensajeModal('¡ATENCIÓN!','Las actividades no pueden estar vacías');
+
+      }else if(salario_solicitado == '' || salario_solicitado < 1){
+        MensajeModal('¡ATENCIÓN!','El salario no puede estar vacío y debe ser mayor a 0');
+
+      }else{
+        metodoAjax(url,dataForm,function(success){
+          //aquí se escribe todas las operaciones que se harían en el succes
+          //la variable success es el json que recibe del servidor el método AJAX
+          MensajeModal("¡EXITO!","La información se ha actualizado correctamente.");
+        });//*/
+
+      }
+
+      /*metodoAjax(url,dataForm,function(success){
         //aquí se escribe todas las operaciones que se harían en el succes
         //la variable success es el json que recibe del servidor el método AJAX
         MensajeModal("¡EXITO!","La información se ha actualizado correctamente.");

@@ -54,7 +54,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Salario neto solicitado</label>
+            <label class="col-sm-2 control-label">Salario neto solicitado*</label>
             <div class="col-sm-6">
               <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" id="Contratacion-SalarioSolicitado" step=".01">
             </div>
@@ -185,8 +185,8 @@
         MensajeModal("¡ATENCIÓN!",'Debe seleccionar la depencia');
       }else if(actividades==''){
         MensajeModal("¡ATENCIÓN!",'Las actividades son un campo obligatorio');
-      }else if(salario==''){
-        MensajeModal("¡ATENCIÓN!",'Debe proponer un salario para el candidato');
+      }else if(salario=='' || salario < 1){
+        MensajeModal("¡ATENCIÓN!",'El salario no puede estar vacío o ser menor a 1');
       }else if(justificacion==''){
         MensajeModal("¡ATENCIÓN!",'La justificación es un campo obligatorio');
       }else if(fuente_recursos=='NADA'){

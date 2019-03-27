@@ -1310,14 +1310,26 @@
         }
 
         public function GuardaDatosCambioAdscripcion(Request $request){
-            //dd($request['actividades']);
+            //dd($request);
             $update = SolicitudesController::UpdateDatosCGA($request);
             //dd($request['empresa_nps']);
             $update = DB::table('SOLICITUDES_CAMBIO_ADSCRIPCION')
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])
                 ->update([
+                            'CAMBIO_ADSCRIPCION_CATEGORIA_NUEVA' => $request['categoria_solicitada'],
+                            'CAMBIO_ADSCRIPCION_PUESTO_NUEVO' => $request['puesto_solicitado'],
+                            'CAMBIO_ADSCRIPCION_SALARIO_NUEVO' => $request['salario_solicitado'],
                             'CAMBIO_ADSCRIPCION_ACTIVIDADES_NUEVAS' => $request['actividades'],
                             'CAMBIO_ADSCRIPCION_EMPRESA' => $request['empresa_nps'],
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]);
+            $update = DB::table('SOLICITUDES_SOLICITUD')
+                ->where('SOLICITUD_ID', $request['id_sol'])
+                ->update([
+                            'SOLICITUD_NOMBRE' => $request['nombre_candidato'],
+                            'SOLICITUD_CATEGORIA' => $request['categoria_actual'],
+                            'SOLICITUD_PUESTO' => $request['puesto_actual'],
+                            'SOLICITUD_SALARIO' => $request['salario_actual'],
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
 
@@ -1333,13 +1345,24 @@
         }
 
         public function GuardaDatosPromocion(Request $request){
-            //dd($request['actividades']);
+            //dd($request);
             $update = SolicitudesController::UpdateDatosCGA($request);
 
             $update = DB::table('SOLICITUDES_PROMOCION')
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])
                 ->update([
+                            'PROMOCION_CATEGORIA_SOLICITADA' => $request['categoria_solicitada'],
                             'PROMOCION_ACTIVIDADES_NUEVAS' => $request['actividades'],
+                            'PROMOCION_SALARIO_NUEVO' => $request['salario_solicitado'],
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]);
+            $update = DB::table('SOLICITUDES_SOLICITUD')
+                ->where('SOLICITUD_ID', $request['id_sol'])
+                ->update([
+                            'SOLICITUD_NOMBRE' => $request['nombre_candidato'],
+                            'SOLICITUD_CATEGORIA' => $request['categoria_actual'],
+                            'SOLICITUD_PUESTO' => $request['puesto_actual'],
+                            'SOLICITUD_SALARIO' => $request['salario_actual'],
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
 
@@ -1355,13 +1378,24 @@
         }
 
         public function GuardaDatosSustitucion(Request $request){
-            //dd($request['actividades']);
+            //dd($request);
             $update = SolicitudesController::UpdateDatosCGA($request);
 
             $update = DB::table('SOLICITUDES_SUSTITUCION')
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])
                 ->update([
+                            'SUSTITUCION_CANDIDATO_NUEVO' => $request['candidato'],
+                            'SUSTITUCION_CATEGORIA_NUEVA' => $request['categoria_solicitada'],
+                            'SUSTITUCION_PUESTO_NUEVO' => $request['puesto_solicitado'],
                             'SUSTITUCION_ACTIVIDADES_NUEVAS' => $request['actividades'],
+                            'SUSTITUCION_SALARIO_NUEVO' => $request['salario_solicitado'],
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]);
+            $update = DB::table('SOLICITUDES_SOLICITUD')
+                ->where('SOLICITUD_ID', $request['id_sol'])
+                ->update([
+                            'SOLICITUD_NOMBRE' => $request['en_sustitucion_de'],
+                            'SOLICITUD_SALARIO' => $request['salario_persona_anterior'],
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
 
@@ -1378,12 +1412,17 @@
 
         public function GuardaDatosContratacion(Request $request){
             //dd($request['compensacion_solicitud']);
+            //dd($request);
             $update = SolicitudesController::UpdateDatosCGA($request);
             //dd($request['actividades']);
             $update = DB::table('SOLICITUDES_SOLICITUD')
                 ->where('SOLICITUD_ID', $request['id_sol'])
                 ->update([
+                            'SOLICITUD_NOMBRE' => $request['candidato'],
+                            'SOLICITUD_CATEGORIA' => $request['categoria_solicitada'],
+                            'SOLICITUD_PUESTO' => $request['puesto_solicitado'],
                             'SOLICITUD_ACTIVIDADES' => $request['actividades'],
+                            'SOLICITUD_SALARIO' => $request['salario_solicitado'],
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
 
@@ -1598,11 +1637,14 @@
             if($institucional){
                 //dd('Modo Institucional');
                 $solicitud[0]->NOMBRE_DEPENDENCIA = $dependencia->NOMBRE_DEPENDENCIA;
+                $solicitud[0]->NOMBRE_INTERNO_DEPENDENCIA = $dependencia->NOMBRE_DEPENDENCIA;
             }else{
                 //dd('Modo NPS');
                 $solicitud[0]->NOMBRE_DEPENDENCIA = $dependencia->CODIGO_DEPENDENCIA;
                 $solicitud[0]->NOMBRE_INTERNO_DEPENDENCIA = $dependencia->NOMBRE_DEPENDENCIA;
             }
+
+            //dd($solicitud[0]);
 
             if(strcmp($solicitud[0]->TIPO_SOLICITUD_SOLICITUD, 'CONTRATACIÓN POR SUSTITUCIÓN')==0){
                 $sustitucion = SolicitudesController::ObtenerDatosSustitucion($id_solicitud);
@@ -2011,6 +2053,34 @@
             }
         }
 
+        public function ObtenerTitularDeSolicitud($id_solicitud){
+            $titular = null;
+            $rel_dep = DB::table('REL_DEPENCENCIA_SOLICITUD')
+                ->where('FK_SOLICITUD_ID',$id_solicitud)
+                ->get();
+            //dd($rel_dep);
+            if(count($rel_dep)>0){
+                $rel_titular = DB::table('REL_DEPENCENCIA_TITULAR')
+                    ->where('FK_DEPENDENCIA',$rel_dep[0]->FK_DEPENDENCIA)
+                    ->get();
+                    //dd($rel_titular);
+                if(count($rel_titular)>0){
+                    $titular = $rel_titular[0]->FK_USUARIO;
+                }
+            }
+            return $titular;
+        }
+
+        public function NotificarFirmasTitular($id_solicitud){
+            $asunto = 'Cambio de estatus';
+            $titulo = 'Cambio de estatus';
+            $mensaje = 'Buen día, le notificamos que el estatus de la solicitud '.$id_solicitud.' ha cambiado a FIRMAS, ya está disponible la propuesta de la Coordinación General Administrativa';
+            $usuario = SolicitudesController::ObtenerTitularDeSolicitud($id_solicitud);
+            //dd($usuario);
+            $mail = MailsController::MandarMensajeGenerico($asunto,$titulo,$mensaje,$usuario);
+            return $usuario;
+        }
+
         public function CambiarEstadoCGA(Request $request){
             date_default_timezone_set('America/Mexico_City');
             //dd($request['estatus']);
@@ -2019,14 +2089,6 @@
                 ->update(['DATOS_CGA_ESTATUS' => $request['estatus']]);
             //dd($update);
             $mail = null;
-            /*if(in_array($request['estatus'], ['VALIDACIÓN DE INFORMACIÓN','INFORMACIÓN CORRECTA','RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN','FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR','CANCELADO','OTRO'])){
-                $asunto = 'Cambio de estatus';
-                $titulo = 'Cambio de estatus';
-                $mensaje = 'El estatus de la solicitud '.$request['id_sol'].' ha cambiado a '.$request['estatus'];
-                $usuario = 'marvineliosa@hotmail.com';
-                $mail = MailsController::MandarMensajeGenerico($asunto,$titulo,$mensaje,$usuario);
-                //dd($mail);
-            }//*/
 
             if(strcmp($request['estatus'],'TURNADO A SPR')==0){
                 $update_turnadospr = DB::table('SOLICITUDES_FECHAS')
@@ -2042,11 +2104,12 @@
 
                 //SolicitudesController::EliminarFirmas($request['id_sol']);
             }//*/
-
+            $fl_usr = null;
             if(strcmp($request['estatus'],'FIRMAS')==0){
                 $update_firmas = DB::table('SOLICITUDES_FECHAS')
                     ->where('FK_SOLICITUD_ID', $request['id_sol'])
-                    ->update(['FECHAS_PUESTO_FIRMAS' => date('Y-m-d H:i:s')]);//*/
+                    ->update(['FECHAS_PUESTO_FIRMAS' => date('Y-m-d H:i:s')]);//*
+                $fl_usr = SolicitudesController::NotificarFirmasTitular($request['id_sol']);
                 //SolicitudesController::EliminarFirmas($request['id_sol']);
                 //enviar coorreo electrónico
             }//*/
@@ -2098,6 +2161,7 @@
 
             $data = array(
                 "update"=>$update,
+                "fl_usr"=>$fl_usr,
                 "mail"=>$mail
             );
 
@@ -3260,9 +3324,9 @@
         public static function DatosGenerales(){
             //en este método se sabrá si el sistema está funcionando de modo institucional o prestación de servicios
             $datos = array(
-                            'institucional' => false,
+                            'institucional' => true,
                             'horar_inicio' => "09:00",
-                            'horar_fin' => "17:00",
+                            'horar_fin' => "20:00",
                         );
             return $datos;
         }

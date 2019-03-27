@@ -81,14 +81,28 @@
         }
 
         public static function ObtenerListadoAnalistas(){
-            //$usuarios = array();
-            $usuarios = DB::table('SOLICITUDES_LOGIN')
+            $usuarios = array();
+            $tmp_usuarios = DB::table('SOLICITUDES_LOGIN')
                 ->where(['LOGIN_CATEGORIA'=>'ANALISTA_CGA'])
                 ->select([
+                            'LOGIN_USUARIO AS USUARIO_LOGIN',
                             'LOGIN_RESPONSABLE AS NOMBRE_ANALISTA',
                             'LOGIN_USUARIO AS USUARIO_ANALISTA'
                         ])
                 ->get();
+            //dd($tmp_usuarios);
+            foreach ($tmp_usuarios as $usuario) {
+                $cant_sol = DB::table('REL_SOLICITUDES_ANALISTA')
+                ->where(['FK_USUARIO'=>$usuario->USUARIO_LOGIN])
+                ->select([
+                            'FK_SOLICITUD_ID'
+                        ])
+                ->get();
+                $usuario->CANTIDAD_SOLICITUDES = count($cant_sol);
+                $usuarios[] = $usuario;
+
+            }
+            //dd($usuarios);
             return $usuarios;
         }
 

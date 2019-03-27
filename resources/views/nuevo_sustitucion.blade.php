@@ -221,36 +221,35 @@
       var archivo_mapa_ubicacion = document.getElementById('archivo-mapa_ubicacion');
 
       if(persona_anterior==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+        MensajeModal("¡ATENCIÓN!",'Debe especificar el nombre de la persona que dejó el puesto');
       }else if(dependencia_spr=='SELECCIONAR'&&tipo_usuario=='TRABAJADOR_SPR'){
         MensajeModal("¡ATENCIÓN!",'Debe seleccionar la depencia');
       }else if(puesto_anterior==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+        MensajeModal("¡ATENCIÓN!",'Debe especificar el puesto que tenía la persona');
       }else if(actividades_anterior==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
-      }else if(salario_anterior==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+        MensajeModal("¡ATENCIÓN!",'Debe especificar las actividades de  la persona que dejó el puesto');
+      }else if(salario_anterior=='' || salario_anterior < 1){
+        MensajeModal("¡ATENCIÓN!",'Debe especificar el salario de la persona que dejó el puesto');
       }else if(persona_solicitada==''){//datos de la nueva persona
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+        MensajeModal("¡ATENCIÓN!",'Debe especificar el candidato que tomará el puesto');
       }else if(puesto_solicitado==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+        MensajeModal("¡ATENCIÓN!",'Debe especificar el puesto que tendrá el candidato');
       }else if(actividades_solicitadas==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
-      }else if(salario_solicitado==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+        MensajeModal("¡ATENCIÓN!",'Debe especificar la categoría que tendrá el candidato');
+      }else if(salario_solicitado=='' || salario_solicitado < 1){
+        MensajeModal("¡ATENCIÓN!",'El salario solicitado no puede estar vacío o ser menor a 1');
       }else if(justificacion==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+        MensajeModal("¡ATENCIÓN!",'Debe justificar la razón de la solicitud');
       }else if(fuente_recursos=='NADA'){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+        MensajeModal("¡ATENCIÓN!",'Debe especificar la fuente de recursos');
       }else if(archivo_organigrama.value==""){
-        console.log('falta organigrama');
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+        MensajeModal("¡ATENCIÓN!",'Debe adjuntar el organigrama de la dependencia');
       }else if(archivo_plantilla.value==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+        MensajeModal("¡ATENCIÓN!",'Debe adjuntar la plantilla de personal de la dependencia');
       }else if(archivo_descripcion.value==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+        MensajeModal("¡ATENCIÓN!",'Debe adjuntar la descripción del puesto a desempeñar');
       }else if(archivo_curriculum.value==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+        MensajeModal("¡ATENCIÓN!",'Debe adjuntar el curriculum del candidato');
       }else{
         //MensajeModal("¡ATENCIÓN!",'Enviando');
         var success;

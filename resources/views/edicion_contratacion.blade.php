@@ -29,19 +29,19 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Candidato</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" placeholder="Nombre del Candidato" value="{{$solicitud->NOMBRE_SOLICITUD}}" disabled>
+              <input type="text" class="form-control" placeholder="Nombre del Candidato" value="{{$solicitud->NOMBRE_SOLICITUD}}" id="nombre_candidato">
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label">Categoría</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" placeholder="Categoría solicitada" value="{{$solicitud->CATEGORIA_SOLICITUD}}" disabled>
+              <input type="text" class="form-control" placeholder="Categoría solicitada" value="{{$solicitud->CATEGORIA_SOLICITUD}}" id="categoria_solicitada">
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label">Puesto</label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" placeholder="Puesto del Candidato" value="{{$solicitud->PUESTO_SOLICITUD}}" disabled>
+              <input type="text" class="form-control" placeholder="Puesto del Candidato" value="{{$solicitud->PUESTO_SOLICITUD}}" id="puesto_solicitado">
             </div>
           </div>
           <div class="form-group">
@@ -59,7 +59,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">Salario Neto Solicitado</label>
             <div class="col-sm-6">
-              <input type="number" class="form-control" placeholder="Puesto del Candidato" value="{{$solicitud->SALARIO_SOLICITUD}}" step=".01" disabled>
+              <input type="number" class="form-control" placeholder="Puesto del Candidato" value="{{$solicitud->SALARIO_SOLICITUD}}" step=".01" id="salario_solicitado">
             </div>
           </div>
           <div class="form-group">
@@ -183,7 +183,11 @@
 
     function guardarDatos(id_solicitud){
       //console.log(id_solicitud);
+      var candidato = $("#nombre_candidato").val();
+      var categoria_solicitada = $("#categoria_solicitada").val();
+      var puesto_solicitado = $("#puesto_solicitado").val();
       var actividades = $("#Actividades_candidato").val();
+      var salario_solicitado = $("#salario_solicitado").val();
       //console.log(actividades);
       var categoria = $("#propuesta-categoria").val();
       var puesto = $("#propuesta-puesto").val();
@@ -204,21 +208,46 @@
       var url = "/contratacion/guardar_datos_contratacion";
       var dataForm = new FormData();
       dataForm.append('id_sol',id_solicitud);
+      dataForm.append('candidato',candidato);
+      dataForm.append('categoria_solicitada',categoria_solicitada);
+      dataForm.append('puesto_solicitado',puesto_solicitado);
       dataForm.append('actividades',actividades);
+      dataForm.append('salario_solicitado',salario_solicitado);
+
       dataForm.append('categoria',categoria);
       dataForm.append('puesto',puesto);
       dataForm.append('salario',salario);
       dataForm.append('procede',procede);
       dataForm.append('respuesta',respuesta);
+
       dataForm.append('salario_superior',salario_superior);
       dataForm.append('categoria_superior',categoria_superior);
+
       dataForm.append('salario_inferior',salario_inferior);
       dataForm.append('categoria_inferior',categoria_inferior);
+
       dataForm.append('ahorro_solicitud',ahorro_solicitud);
       dataForm.append('compensacion_solicitud',compensacion_solicitud);
       //lamando al metodo ajax
 
-      metodoAjax(url,dataForm,function(success){
+      if(candidato==''){
+        MensajeModal('¡ATENCIÓN!','El nombre del candidato no puede estar vacío');
+      }else if(actividades == ''){
+        MensajeModal('¡ATENCIÓN!','Las actividades no pueden estar vacías');
+
+      }else if(salario_solicitado == '' || salario_solicitado < 1){
+        MensajeModal('¡ATENCIÓN!','El salario no puede estar vacío y debe ser mayor a 0');
+
+      }else{
+        //MensajeModal('epale','ENVIADO');
+        metodoAjax(url,dataForm,function(success){
+          //aquí se escribe todas las operaciones que se harían en el succes
+          //la variable success es el json que recibe del servidor el método AJAX
+          MensajeModal("¡EXITO!","La información se ha actualizado correctamente.");
+        });//*/
+      }
+
+      /*metodoAjax(url,dataForm,function(success){
         //aquí se escribe todas las operaciones que se harían en el succes
         //la variable success es el json que recibe del servidor el método AJAX
         MensajeModal("¡EXITO!","La información se ha actualizado correctamente.");

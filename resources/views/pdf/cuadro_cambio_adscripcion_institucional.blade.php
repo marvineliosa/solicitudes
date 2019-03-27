@@ -35,6 +35,8 @@
 		<div id="div-solicitud" align="left" class="" style="font-size: 13px;"><b>Dr. José Alfonso Esparza Ortiz</b></div>
 		<div id="div-solicitud" align="left" class="" style="font-size: 13px;"><b>Rector de la</b></div>
 		<div id="div-solicitud" align="left" class="" style="font-size: 13px;"><b>Benemérita Universidad Autónoma de Puebla</b></div>
+		<div id="div-solicitud" align="left" class="" style="font-size: 13px;"><b>P R E S E N T E</b></div>
+		<br>
 		<div id="div-solicitud" align="left" class="" style="font-size: 13px;">
 			<p align="justify">Por este medio reciba un cordial saludo, asimismo, derivado del levantamiento de información en el que se recomendó el cambio de adscripción del <b>C.{{$solicitud->NOMBRE_SOLICITUD}},</b> de {{$solicitud->NOMBRE_DEPENDENCIA}}, le informo lo sigueinte:</p>
 		</div>
@@ -79,8 +81,19 @@
 			    <td style="font-size: 10px;border:1px solid black; background-color: rgb(255, 230, 153); width: 10%	" align="center"><b>OPINIÓN DE LA CGA:</b></td>
 			    <td style="font-size: 8px;border:1px solid black;" align="justify">{{$solicitud->RESPUESTA_CGA}}</td>
 			</table>
-		<div id="div-solicitud" align="left" class="" style="font-size: 13px;">Sin más por el momento, le reitero mi atenta y distinguida consideración</div>
-		</div>
+		<div id="div-solicitud" align="left" class="" style="font-size: 13px;"><i>Sin más por el momento, le reitero mi atenta y distinguida consideración</i></div>
+		<br>
+		<br>
+		<br>
+		<div id="div-solicitud" align="left" class="" style="font-size: 13px;"><b>
+			Atentamente<br>
+			"Pensar bien, para Vivir Mejor"<br>
+			H. Puebla de Z., {{strftime('%d de %B de %Y')}}<br>
+			<br>
+			<br>
+			CP. Rosendo Demetrio Martínez Granados<br>
+			Coordinador General Administrativo<br>
+		</b></div>
 		@if(in_array($solicitud->ESTATUS_SOLICITUD, ['TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR']))
 		<div id="div-tabla_sellos" align="right" class="">
 			<table style="width:100%" class="table" border="0">

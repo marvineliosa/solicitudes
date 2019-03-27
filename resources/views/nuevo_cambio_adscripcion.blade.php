@@ -229,7 +229,7 @@
       var SalarioSolicitado = $("#CambioAdscripcion-SalarioSolicitado").val();
       var ActividadesNuevas = $("#CambioAdscripcion-ActividadesNuevas").val();
       var empresa = $("#CambioAdscripcion-Empresa_nps").val();
-      console.log(empresa);
+      //console.log(empresa);
       //archivos
       var archivo_organigrama = document.getElementById('archivo-organigrama');
       var archivo_plantilla = document.getElementById('archivo-plantilla');
@@ -239,31 +239,31 @@
       var archivo_mapa_ubicacion = document.getElementById('archivo-mapa_ubicacion');
 
       if(NombreCandidato==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+        MensajeModal("¡ATENCIÓN!",'Debe especificar el nombre del candidato');
       }else if(dependencia_spr=='SELECCIONAR'&&tipo_usuario=='TRABAJADOR_SPR'){
         MensajeModal("¡ATENCIÓN!",'Debe seleccionar la depencia');
-      }else if(!institucional&&empresa==''){
-        MensajeModal("¡ATENCIÓN!",'El campo "Empresa" se encuentra vacío, los campos marcados con * son obligatorios. Este campo corresponde al nombre de la dependencia a la que está adscrito el candidato.');
-      }else if(CategoriaActual==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
-      }else if(PuestoActual==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
-      }else if(ActividadesActuales==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
-      }else if(SalarioActual==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
-      }else if(Justificacion==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
       }else if(DependenciaDestino=='SELECCIONAR'){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+        MensajeModal("¡ATENCIÓN!",'Debe especificar en nombre de la dependencia destino');
+      }else if(!institucional&&empresa==''){
+        MensajeModal("¡ATENCIÓN!",'El campo "Empresa" se encuentra vacío, los campos marcados con * son obligatorios. Este campo corresponde al nombre de la empresa en la que está contratado el candidato.');
+      }else if(CategoriaActual==''){
+        MensajeModal("¡ATENCIÓN!",'Debe especificar la categoría actual del candidato');
+      }else if(PuestoActual==''){
+        MensajeModal("¡ATENCIÓN!",'Debe especificar el puesto actual del candidato');
+      }else if(ActividadesActuales==''){
+        MensajeModal("¡ATENCIÓN!",'Debe especificar las actividades actuales del candidato');
+      }else if(SalarioActual=='' || SalarioActual < 1){
+        MensajeModal("¡ATENCIÓN!",'Debe especificar el salario actual del candidato');
       }else if(CategoriaNueva==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+        MensajeModal("¡ATENCIÓN!",'Debe especificar la categoría solicitada');
       }else if(PuestoNuevo==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
-      }else if(SalarioSolicitado==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+        MensajeModal("¡ATENCIÓN!",'Debe especificar el puesto solicitado');
       }else if(ActividadesNuevas==''){
-        MensajeModal("¡ATENCIÓN!",'Existen campos vacíos, los campos marcados con * son obligatorios');
+        MensajeModal("¡ATENCIÓN!",'Debe especificar las actividades que tendrá el candidato');
+      }else if(SalarioSolicitado=='' || SalarioSolicitado < 1){
+        MensajeModal("¡ATENCIÓN!",'Debe especificar el salario solicitado');
+      }else if(Justificacion==''){
+        MensajeModal("¡ATENCIÓN!",'Debe justificar la razón de la solicitud');
       }else if(archivo_organigrama.value==""){
         console.log('falta organigrama');
         MensajeModal("¡ATENCIÓN!",'Debe adjuntar el organigrama de la dependencia');

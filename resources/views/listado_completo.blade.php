@@ -49,7 +49,7 @@
 			        <option value="REVISIÓN">REVISIÓN</option>
 			        <option value="FIRMAS">FIRMAS</option>
 			        <option value="CANCELADO POR TITULAR">CANCELADO POR TITULAR</option>
-			        <!--<option value="TURNADO A SPR">TURNAR A SPR</option>-->
+			        <option value="TURNADO A SPR">TURNAR A SPR</option>
 			        <option value="CANCELADO">CANCELADO</option>
 			        <option value="OTRO">OTRO</option>
 			      </select>
@@ -63,10 +63,10 @@
 		      <th scope="row" width="50%">Asignar solicitud a un analista</th>
 		      <td>
 		      	<div class="form-check form-check-inline">
-			      <select id="SelectAnalistas" class="form-control" id="select_status">
+			      <select id="SelectAnalistas" class="form-control" id="select_analista">
 			        <option value="SELECCIONAR">SELECCIONAR</option>
 			        @foreach($analistas as $analista)
-			        	<option value="{{$analista->USUARIO_ANALISTA}}">{{$analista->NOMBRE_ANALISTA}}</option>
+			        	<option value="{{$analista->USUARIO_ANALISTA}}">{{$analista->NOMBRE_ANALISTA.' ('.$analista->CANTIDAD_SOLICITUDES.')'}}</option>
 			        @endforeach
 			      </select>
 			      <br>
@@ -90,9 +90,9 @@
 @section('script')
 	<script type="text/javascript">
 		var gl_solicitudes = <?php echo json_encode($solicitudes) ?>;
-    	//console.log(gl_solicitudes);
+    	console.log(gl_solicitudes);
 		var gl_analistas = <?php echo json_encode($analistas) ?>;
-    	//console.log(gl_analistas);
+    	console.log(gl_analistas);
 
 
     	function AsignarAnalista(){
@@ -118,14 +118,21 @@
     	}
 
     	function modalConfig(id_sol){
+    		$("#SelectAnalistas").val('SELECCIONAR');
     		var estatus_sol = gl_solicitudes[id_sol]['ESTATUS_SOLICITUD'];
-    		//if(estatus)
-    		if(estatus_sol != 'TURNADO A SPR'){
-    			$("#SelectEstatus").val(estatus_sol);
+    		var analista = gl_solicitudes[id_sol]['ANALISTA_SOLICITUD'];
 
+    		//if(estatus)
+    		console.log(gl_analistas.length);
+    		for(var i = 0; i < gl_analistas.length; i++){
+    			console.log(gl_analistas[i]['NOMBRE_ANALISTA']+"-"+analista);
+    			if(gl_analistas[i]['NOMBRE_ANALISTA'] == analista){
+    				$("#SelectAnalistas").val(gl_analistas[i]['USUARIO_ANALISTA']);
+    			}
     		}
     		//$("#select_status option[value='" + estatus_sol + "']").attr('selected','selected');
     		//console.log(estatus_sol);
+    		$("#SelectEstatus").val(estatus_sol);
     		$("#num_oficio").val(id_sol);
     		$("#ModalConfiguraciones").modal();
     	}
@@ -142,7 +149,7 @@
 			dataForm.append('id_sol',id_sol);
 			dataForm.append('estatus',estatus);
 			//lamando al metodo ajax
-			if(estatus!='SELECCIONAR'&&estatus!='CANCELADO POR TITULAR'){
+			if(estatus!='SELECCIONAR'&&estatus!='CANCELADO POR TITULAR'&&estatus!='TURNADO A SPR'){
 				var permitidos_analista = ['RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN'];
 				if(gl_categoria=='ANALISTA_CGA' && permitidos_analista.includes(estatus)){
 					metodoAjax(url,dataForm,function(success){
@@ -163,6 +170,13 @@
 						//console.log(gl_solicitudes);
 						recargarTablaAjax('/refrescar/listado_completo');
 						MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente.");
+						if(estatus == 'FIRMAS'){
+							if(success['fl_usr']){
+								MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente. Se ha notificado al titular")
+							}else{
+								MensajeModal("¡ATENCIÓN!","El estatus se ha cambiado correctamente. No se ha podido notificar al titular");
+							}
+						}
 					});//*/
 				}else{
 					MensajeModal("¡ATENCIÓN!","La solicitud no puede ponerse en '"+estatus+"' por un analista.");
@@ -170,6 +184,8 @@
 				
 			}else if(estatus=='CANCELADO POR TITULAR'){
 				MensajeModal("¡ATENCIÓN!","El estatus 'CANCELADO POR TITULAR' solo puede ser seleccionado por un titular.");
+			}else if(estatus=='TURNADO A SPR'){
+				MensajeModal("¡ATENCIÓN!","El estatus 'TURNADO A SPR' no puede ser seleccionado.");
 			}else{
 				MensajeModal("¡ATENCIÓN!","No ha seleccionado un estatus.");
 			}
