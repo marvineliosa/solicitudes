@@ -66,7 +66,7 @@
 @section('script')
 	<script type="text/javascript">
 		var gl_solicitudes = <?php echo json_encode($solicitudes) ?>;
-    	console.log(gl_solicitudes);
+    	//console.log(gl_solicitudes);
     	function modalConfig(id_sol){
     		var estatus_sol = gl_solicitudes[id_sol]['ESTATUS_SOLICITUD'];
     		//if(estatus)

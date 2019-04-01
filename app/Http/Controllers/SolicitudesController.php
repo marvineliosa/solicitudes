@@ -2359,6 +2359,16 @@
             }
         }
 
+        public function VistaCompletadasRector(){
+            $categoria = \Session::get('categoria')[0];
+            if(in_array($categoria, ['TRABAJADOR_SPR','SECRETARIO_PARTICULAR'])){
+                $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('COMPLETADO POR RECTOR');
+                return view('listado_completadas_rector') ->with ("solicitudes",$solicitudes);
+            }else{
+                return view('errors.505');
+            }
+        }
+
         public function VistaRevisadasSPR(){
             $categoria = \Session::get('categoria')[0];
             if(in_array($categoria, ['TRABAJADOR_SPR','SECRETARIO_PARTICULAR'])){
@@ -2440,8 +2450,10 @@
 
             $datos_cga = DB::table('SOLICITUDES_DATOS_CGA')
                 ->where('DATOS_CGA_ESTATUS',$estatus)
+                ->orderBy('created_at', 'asc')
                 ->get();
             $solicitud = array();
+            //dd($datos_cga);
             foreach ($datos_cga as $datos) {
                 $solicitud[$datos->FK_SOLICITUD_ID]=SolicitudesController::ObtenerSolicitudId($datos->FK_SOLICITUD_ID);
             }
@@ -2598,6 +2610,7 @@
             if(in_array($categoria, ['TRABAJADOR_SPR','SECRETARIO_PARTICULAR'])){
                 $res_solicitudes = DB::table('SOLICITUDES_DATOS_CGA')
                                     ->whereNotIn('DATOS_CGA_ESTATUS',['RECIBIDO SPR'])
+                                    ->orderBy('created_at', 'asc')
                                     ->select('FK_SOLICITUD_ID')
                                     ->get();
                 $solicitudes = array();
@@ -2606,6 +2619,7 @@
                 $res_solicitudes = DB::table('SOLICITUDES_DATOS_CGA')
                                     ->whereNotIn('DATOS_CGA_ESTATUS',['RECIBIDO SPR','VALIDACIÓN DE INFORMACIÓN'])
                                     ->select('FK_SOLICITUD_ID')
+                                    ->orderBy('created_at', 'asc')
                                     ->get();
                 $solicitudes = array();
             }

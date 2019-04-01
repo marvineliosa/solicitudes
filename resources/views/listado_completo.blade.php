@@ -90,9 +90,9 @@
 @section('script')
 	<script type="text/javascript">
 		var gl_solicitudes = <?php echo json_encode($solicitudes) ?>;
-    	console.log(gl_solicitudes);
+    	//console.log(gl_solicitudes);
 		var gl_analistas = <?php echo json_encode($analistas) ?>;
-    	console.log(gl_analistas);
+    	//console.log(gl_analistas);
 
 
     	function AsignarAnalista(){
@@ -123,9 +123,9 @@
     		var analista = gl_solicitudes[id_sol]['ANALISTA_SOLICITUD'];
 
     		//if(estatus)
-    		console.log(gl_analistas.length);
+    		//console.log(gl_analistas.length);
     		for(var i = 0; i < gl_analistas.length; i++){
-    			console.log(gl_analistas[i]['NOMBRE_ANALISTA']+"-"+analista);
+    			//console.log(gl_analistas[i]['NOMBRE_ANALISTA']+"-"+analista);
     			if(gl_analistas[i]['NOMBRE_ANALISTA'] == analista){
     				$("#SelectAnalistas").val(gl_analistas[i]['USUARIO_ANALISTA']);
     			}

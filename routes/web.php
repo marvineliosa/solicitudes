@@ -37,6 +37,7 @@ Route::get('/listado/revision_informacion', 'SolicitudesController@VistaListadoR
 Route::get('/listado/nuevas', 'SolicitudesController@VistaNuevasSPR');//validado
 Route::get('/listado/por_revisar', 'SolicitudesController@VistaPorRevisarSPR');//validado
 Route::get('/listado/revisadas', 'SolicitudesController@VistaRevisadasSPR');//validado
+Route::get('/listado/completadas', 'SolicitudesController@VistaCompletadasRector');//validado
 
 //listado nuevas en dependencia
 Route::get('/listado/dependencia', 'SolicitudesController@VistaListadoDependencia');//validado

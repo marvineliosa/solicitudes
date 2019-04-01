@@ -4,7 +4,7 @@
 <div class="col-lg-12">
 	<section class="panel">
 	  <header class="panel-heading">
-	    Listado Completo
+	    Listado de solicitudes en proceso
 	  </header>
 	  <div class="table-responsive">
 	    <table class="table" id="tabla_datos">
@@ -108,7 +108,7 @@
 @section('script')
 	<script type="text/javascript">
 		var gl_solicitudes = <?php echo json_encode($solicitudes) ?>;
-    	console.log(gl_solicitudes);
+    	//console.log(gl_solicitudes);
     	function modalConfig(id_sol){
     		var estatus_sol = gl_solicitudes[id_sol]['ESTATUS_SOLICITUD'];
     		//if(estatus)

@@ -36,6 +36,7 @@
                   <li><a class="" href="/listado/en_proceso">En Proceso (CGA)</a></li>
                   <li><a class="" href="/listado/por_revisar">Por Revisar (SPR)</a></li>
                   <li><a class="" href="/listado/revisadas">Por Autorizar (SPR)</a></li>
+                  <li><a class="" href="/listado/completadas">Completadas (SPR)</a></li>
                 @endif
                 @if(strcmp(\Session::get('categoria')[0],'SECRETARIO_PARTICULAR')==0)
                   <li><a class="" href="/listado/spr">Por Firmar (SPR)</a></li>

@@ -33,8 +33,8 @@
                 <option value="REVISIÓN">REVISIÓN</option>
                 <option value="FIRMAS">FIRMAS</option>
                 <option value="CANCELADO POR TITULAR">CANCELADO POR TITULAR</option>
-                <option value="TURNADO A SPR">TURNADO A SPR</option>
-                <option value="COMPLETADO POR SPR">COMPLETADO POR SPR</option>
+                <option value="TURNADO A SPR">POR REVISAR (SPR)</option>
+                <option value="COMPLETADO POR SPR">POR AUTORIZAR (RECTOR)</option>
                 <option value="COMPLETADO POR RECTOR">COMPLETADO POR RECTOR</option>
                 <option value="CANCELADO">CANCELADO</option>
                 <option value="OTRO">OTRO</option>

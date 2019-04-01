@@ -4,7 +4,7 @@
 <div class="col-lg-12">
 	<section class="panel">
 	  <header class="panel-heading">
-	    Listado de Cambios de Adscripción
+	    Listado de solicitudes nuevas
 	  </header>
 	  <div class="table-responsive">
 	  	<div id="div_tabla_datos">
@@ -78,7 +78,7 @@
 @section('script')
 	<script type="text/javascript">
 		var gl_solicitudes = <?php echo json_encode($solicitudes) ?>;
-    	console.log(gl_solicitudes);
+    	//console.log(gl_solicitudes);
 
     	function modalConfig(id_sol){
     		$("#num_oficio").val(id_sol);

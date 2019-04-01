@@ -4,7 +4,7 @@
 <div class="col-lg-12">
 	<section class="panel">
 	  <header class="panel-heading">
-	    Listado de Cambios de Adscripción
+	    Listado de solicitudes para entregar al rector
 	  </header>
 	  <div class="table-responsive">
 	  	<div id="div_tabla_datos">
@@ -42,22 +42,21 @@
 				</div>
 		      </td>
 		    </tr>
-		    <!--<tr>
-		      <th scope="row" width="50%">Validar cuadro</th>
+		    <tr>
+		      <th scope="row" width="50%">Marcar solicitud como completado por el rector</th>
 		      <td>
 		      	<div class="form-check form-check-inline">
-			      <select id="SelectValidar" class="form-control">
+			      <select id="SelectEntregado" class="form-control">
 			        <option value="SELECCIONAR">SELECCIONAR</option>
-			        <option value="VALIDAR">VALIDAR</option>
+			        <option value="COMPLETADO POR RECTOR">COMPLETADO POR RECTOR</option>
 			      </select>
 			      <br>
-			      <button type="button" class="btn btn-primary" onclick="ValidarSolicitud()">Guardar</button>
+			      <button type="button" class="btn btn-primary" onclick="CompletadoRector()">Guardar</button>
 				</div>
 		      </td>
-		    </tr>-->
+		    </tr>
 		  </tbody>
 		</table>
-		<a href="/cuadro/contratacion/SOL_1_2019" target="_blank">Ver cuadro</a>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -71,7 +70,7 @@
 @section('script')
 	<script type="text/javascript">
 		var gl_solicitudes = <?php echo json_encode($solicitudes) ?>;
-    	console.log(gl_solicitudes);
+    	//console.log(gl_solicitudes);
 
     	function modalConfig(id_sol){
     		$("#num_oficio").val(id_sol);
@@ -92,30 +91,32 @@
 				metodoAjax(url,dataForm,function(success){
 					//aquí se escribe todas las operaciones que se harían en el succes
 					//la variable success es el json que recibe del servidor el método AJAX
+					$("#ModalConfiguraciones").modal('hide');
 					recargarTablaAjax('/refrescar/revisadas');
 					MensajeModal("¡EXITO!","El estatus se ha turnado nuevamente a CGA.");
 				});//*/
     		}
     	}
 
-    	function ValidarSolicitud(){
+    	function CompletadoRector(){
     		var id_sol = $("#num_oficio").val();
-    		var estatus = $("#SelectEstatus").val();
-
-    		if(estatus != 'REVISION'){
+    		var estatus = $("#SelectEntregado").val();
+    		console.log(estatus);
+    		if(estatus!='SELECCIONAR'){
 	    		var success;
-				var url = "/solicitud/validar_solicitud";
+				var url = "/solicitud/cambiar_estado";
 				var dataForm = new FormData();
 				dataForm.append('id_sol',id_sol);
+				dataForm.append('estatus',estatus);
 				//lamando al metodo ajax
 				metodoAjax(url,dataForm,function(success){
 					//aquí se escribe todas las operaciones que se harían en el succes
 					//la variable success es el json que recibe del servidor el método AJAX
-					MensajeModal("¡EXITO!","La solicitud ha sido validada, se ha agregado un sello digital al cuadro.");
+					$("#ModalConfiguraciones").modal('hide');
+					recargarTablaAjax('/refrescar/revisadas');
+					MensajeModal("¡EXITO!","La solicitud se ha marcado como completada por el rector.");
 				});//*/
-
     		}
-
     	}
 
 

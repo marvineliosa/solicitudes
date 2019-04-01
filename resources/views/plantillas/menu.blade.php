@@ -220,7 +220,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h2 class="modal-title" id="TituloModalMovimientos" align="center">Fechas</h2>
+            <h2 class="modal-title" id="TituloModalMovimientos" align="center">Movimientos</h2>
             <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>-->
@@ -444,13 +444,15 @@
 
 
   crearDatatable();
-  function crearDatatable(){
-    $('#tabla_datos').DataTable({
+  function crearDatatable(dato_busqueda,numero_pagina){
+    var tabla = $('#tabla_datos').DataTable({
         //responsive: true,
         "searching": true,
         "paging":   true,
         "info":     true,
-        //"pageLength": false,
+        "ordering": false,
+        "pageLength": 10,
+        //'displayStart': numero_pagina,
         language: {
           emptyTable: "No hay datos para mostrar en la tabla",
           zeroRecords: "No hay datos para mostrar en la tabla",
@@ -468,6 +470,10 @@
           },
         }
       });//*/
+      if(dato_busqueda){
+        tabla.search( dato_busqueda ).draw();
+        $( ".paginate_button  [data-dt-idx='"+numero_pagina+"']" ).trigger("click");
+      }
   }
 
   //señor metodo maestro ajax
@@ -504,7 +510,12 @@
 
   //señor ajax de las recargas de tablas
   function recargarTablaAjax(url) {
-      
+      var dato_busqueda = (($('.dataTables_filter input').val())?$('.dataTables_filter input').val():' ');
+      var table = $('#tabla_datos').DataTable()
+      var pagina = (table.page.info());
+      pagina = parseInt(pagina.page) + 1;
+      //console.log("PAGINA: "+(pagina));
+      //console.log(dato_busqueda);
       var dataForm = new FormData();
       dataForm.append('id_sol','id_sol');
       $.ajax({
@@ -517,9 +528,10 @@
               $('.collapse').collapse('show');
               $('#div_tabla_datos').html(response);
               //console.log(response);
-              crearDatatable();
+              crearDatatable(dato_busqueda,pagina);
           },                               
-      }); 
+      });//*/
+      //tabla.search( dato_busqueda ).draw();
     }
 
   function MensajeModal(titulo,mensaje){
@@ -547,6 +559,7 @@
 
   function AbreModalInformacion(id_solicitud,tipo_solicitud){
     //console.log(tipo_solicitud);
+    tabla.search( '2/' ).draw();
     if(tipo_solicitud=='CONTRATACIÓN'){
       var titulo = 'Detalle de Contratación';
       var url = "/solicitud/obtener_datos_contratacion";
