@@ -4,7 +4,7 @@
       <th>Folio</th>
       <th>Candidato</th>
       <th>Dependencia</th>
-      <th>Fecha de turnado a CGA</th>
+      <th>Fecha de creación</th>
       <th>Solicitud</th>
       <!--<th>Estatus</th>-->
       <th>Acciones</th>
@@ -18,7 +18,7 @@
           <td>{{$solicitud->ID_SOLICITUD}}</td>
           <td>{{$solicitud->NOMBRE_SOLICITUD}}</td>
           <td>{{$solicitud->NOMBRE_DEPENDENCIA}}</td>
-          <td>{{$solicitud->FECHA_TURNADO_CGA}}</td>
+          <td>{{$solicitud->FECHA_CREACION}}</td>
           <td>{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}</td>
           <!--<td>{{$solicitud->ESTATUS_SOLICITUD}}</td>-->
           <td>
@@ -40,6 +40,9 @@
                 <a class="btn btn-success" href="#" onclick="ModalAceptarSolicitud('{{$solicitud->ID_SOLICITUD}}')" id="{{$solicitud->ID_SOLICITUD}}"><i class="icon_check"></i></a>
               </div>
               @endif
+            @endif
+            @if(strcmp($solicitud->ESTATUS_SOLICITUD,'CANCELADO POR TITULAR')==0)
+              CANCELADO POR TITULAR
             @endif
           </td>
         </tr>

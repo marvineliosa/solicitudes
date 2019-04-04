@@ -559,7 +559,7 @@
 
   function AbreModalInformacion(id_solicitud,tipo_solicitud){
     //console.log(tipo_solicitud);
-    tabla.search( '2/' ).draw();
+    //tabla.search( '2/' ).draw();
     if(tipo_solicitud=='CONTRATACIÓN'){
       var titulo = 'Detalle de Contratación';
       var url = "/solicitud/obtener_datos_contratacion";
@@ -597,12 +597,12 @@
       $("#CuerpoTablaInformacion").html('');
       for(var i = 0; i < success['cabeceras'].length; i++){
         //console.log(success['cabeceras'][i]);
-        if(success['cabeceras'][i]!='Escape'){
+        if(success['cabeceras'][i]!='Escape' && success['cabeceras'][i]!='Estatus'){
           $("#CuerpoTablaInformacion").append(
-            '<tr>'+
-              '<th scope="row">' + success['cabeceras'][i] + '</th>'+
-              '<td id="ModalCont-id_sol"  style="word-wrap: break-word;">'+ success['datos'][success['cabeceras'][i]] +'</td>'+
-            '<  /tr>'
+              '<tr>'+
+                '<th scope="row">' + success['cabeceras'][i] + '</th>'+
+                '<td id="ModalCont-id_sol"  style="word-wrap: break-word;">'+ success['datos'][success['cabeceras'][i]] +'</td>'+
+              '<  /tr>'
           );
         }
       }

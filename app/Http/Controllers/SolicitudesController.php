@@ -1662,6 +1662,7 @@
                 ->get();
             //dd($fechas[0]);
             $solicitud[0]->FECHA_CREACION = date("d/m/Y", strtotime($fechas[0]->FECHAS_CREACION_SOLICITUD));
+            $solicitud[0]->FECHA_CREACION_SF = $fechas[0]->FECHAS_CREACION_SOLICITUD;
             $solicitud[0]->FECHAS_INFORMACION_COMPLETA = (($fechas[0]->FECHAS_INFORMACION_COMPLETA)?date("d/m/Y", strtotime($fechas[0]->FECHAS_INFORMACION_COMPLETA)):'');
 
             $solicitud[0]->FECHA_TURNADO_CGA = (($fechas[0]->FECHAS_TURNADO_CGA)?date("d/m/Y", strtotime($fechas[0]->FECHAS_TURNADO_CGA)):'');
@@ -2564,6 +2565,8 @@
 
         public function ObtenerSolicitudesDependencia($id_dependencia){
             $solicitudes = array();
+            $fecha_arranque = '2019-01-01';
+            $fecha_arranque = '2019-04-05';
             //dd($id_dependencia);
             $rel_solicitudes = DB::table('REL_DEPENCENCIA_SOLICITUD')
                                 ->where('FK_DEPENDENCIA',$id_dependencia)
@@ -2571,7 +2574,14 @@
             //dd($rel_solicitudes);
             foreach ($rel_solicitudes as $solicitud) {
                 $tmp_solicitud = SolicitudesController::ObtenerSolicitudId($solicitud->FK_SOLICITUD_ID);
-                $solicitudes[$solicitud->FK_SOLICITUD_ID] = $tmp_solicitud;
+                //dd($tmp_solicitud);
+                if(strtotime($tmp_solicitud->FECHA_CREACION_SF) >= strtotime($fecha_arranque)){
+                    $solicitudes[$solicitud->FK_SOLICITUD_ID] = $tmp_solicitud;
+                }else{
+                    if(in_array($tmp_solicitud->ESTATUS_SOLICITUD, ['FIRMAS','CANCELADO POR TITULAR','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR'])){
+                        $solicitudes[$solicitud->FK_SOLICITUD_ID] = $tmp_solicitud;
+                    }
+                }
                 //dd($tmp_solicitud);
             }
             //dd($solicitudes);
