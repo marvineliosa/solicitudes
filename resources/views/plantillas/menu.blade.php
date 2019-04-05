@@ -36,6 +36,15 @@
         Author: BootstrapMade
         Author URL: https://bootstrapmade.com
       ======================================================= -->
+
+      <style type="text/css">
+        div.tooltip-inner {
+            max-width: 350px;
+        }
+        textarea {
+          resize: none;
+        }
+      </style>
   </head>
 
   <body>
@@ -601,7 +610,7 @@
           $("#CuerpoTablaInformacion").append(
               '<tr>'+
                 '<th scope="row">' + success['cabeceras'][i] + '</th>'+
-                '<td id="ModalCont-id_sol"  style="word-wrap: break-word;">'+ success['datos'][success['cabeceras'][i]] +'</td>'+
+                '<td id="ModalCont-id_sol"  style="word-wrap: break-word;">'+ ((success['datos'][success['cabeceras'][i]])?success['datos'][success['cabeceras'][i]]:'') +'</td>'+
               '<  /tr>'
           );
         }
@@ -856,6 +865,13 @@
       $("#ModalMovimientos").modal();
     });//*/
   }
+
+  /*$(function () {
+    $('[data-toggle="popover"]').popover()
+  })//*/
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
 
 
 </script>

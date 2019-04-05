@@ -60,7 +60,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Candidato propuesto*</label>
+            <label class="col-sm-2 control-label">Candidato propuesto (Tal como aparece en INE)*</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Nombre del candidato" id="Sustitucion-CandidatoPropuesto">
             </div>
@@ -129,7 +129,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-3 control-label">Curriculum Actualizado*</label>
+            <label class="col-sm-3 control-label">Curriculum Actualizado (Debe tener el comprobante del último grado de estudios)*</label>
             <div class="col-sm-9">
               <input type="file" class="form-control-file" accept="application/pdf" id="archivo-curriculum" onchange="VerificarTamanio(this)">
             </div>

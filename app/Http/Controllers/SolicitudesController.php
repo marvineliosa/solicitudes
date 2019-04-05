@@ -2075,11 +2075,42 @@
         public function NotificarFirmasTitular($id_solicitud){
             $asunto = 'Cambio de estatus';
             $titulo = 'Cambio de estatus';
-            $mensaje = 'Buen día, le notificamos que el estatus de la solicitud '.$id_solicitud.' ha cambiado a FIRMAS, ya está disponible la propuesta de la Coordinación General Administrativa';
+            $mensaje = 'Buen día, le notificamos que el estatus de la solicitud '.$id_solicitud.' ha cambiado a FIRMAS, ya está disponible la opinión de la Coordinación General Administrativa';
             $usuario = SolicitudesController::ObtenerTitularDeSolicitud($id_solicitud);
             //dd($usuario);
             $mail = MailsController::MandarMensajeGenerico($asunto,$titulo,$mensaje,$usuario);
             return $usuario;
+        }
+
+        public function CancelacionNormalTitular(Request $request){
+            $update = DB::table('SOLICITUDES_DATOS_CGA')
+                ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                ->update(['DATOS_CGA_ESTATUS' => 'CANCELADO']);
+            //dd($request['motivo']);
+            $responsable = \Session::get('responsable')[0];
+            $movimiento ='Titular '.$responsable.' ha cancelado la solicitud, el motivo de la cancelación es: '.$request['motivo'];
+            //dd($movimiento);
+            SolicitudesController::InsertaMovimientoGeneral($responsable,$movimiento,$request['id_sol']);
+            $analista = DB::table('REL_SOLICITUDES_ANALISTA')
+                ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                ->get();
+            if(count($analista)>0){
+                //dd($analista[0]->FK_USUARIO);
+                $usuario = $analista[0]->FK_USUARIO;
+                $asunto = 'Cancelación de solicitud';
+                $titulo = 'Cancelación de solicitud';
+                $mensaje = 'Buen día, le notificamos que la solicitud '.$request['id_sol'].' ha sido cancelada por el titular de la dependencia, si desea saber más detalles, por favor utilice la función de movimientos.';
+                //dd($usuario);
+                $mail = MailsController::MandarMensajeGenerico($asunto,$titulo,$mensaje,$usuario);
+            }
+
+
+            $data = array(
+                "update"=>$update
+            );
+
+            echo json_encode($data);//*/
+
         }
 
         public function CambiarEstadoCGA(Request $request){
@@ -2566,7 +2597,7 @@
         public function ObtenerSolicitudesDependencia($id_dependencia){
             $solicitudes = array();
             $fecha_arranque = '2019-01-01';
-            $fecha_arranque = '2019-04-05';
+            $fecha_arranque = '2019-04-04';
             //dd($id_dependencia);
             $rel_solicitudes = DB::table('REL_DEPENCENCIA_SOLICITUD')
                                 ->where('FK_DEPENDENCIA',$id_dependencia)

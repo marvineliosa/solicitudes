@@ -90,7 +90,7 @@
   </div>
 </div>
 
-<!-- MODAL DE ACEPTAR SOLICITUD -->
+<!-- MODAL DE CANCELAR SOLICITUD POR NO ACEPTAR PROPUESTA -->
 <div class="modal fade" id="ModalCancelarSolicitud" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -106,6 +106,29 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" onclick="CancelarSolicitud()">Canelar Solicitud</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE CANCELACION NORMAL DE SOLICITUD -->
+<div class="modal fade" id="ModalCancelacionNormal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="exampleModalLabel" align="center">¡ATENCIÓN!</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h3 align="center" id="mensaje_cancelar_solicitud_normal"></h3>
+        <h4 align="center" id="">Por favor especifique el motivo de la cancelación</h4>
+        <textarea class="form-control ckeditor" name="editor1" rows="3" id="MotivoCancelacion"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" onclick="CancelacionNormalSolicitud()">Canelar Solicitud</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
       </div>
     </div>
@@ -152,6 +175,39 @@
 		var gl_solicitudes = <?php echo json_encode($solicitudes) ?>;
     	//console.log(gl_solicitudes);
 
+    	function CancelacionNormalSolicitud(){
+    		var id_sol = $("#hide_solicitud").val();
+    		var motivo = $('#MotivoCancelacion').val();
+    		//console.log(id_sol);
+    		var success;
+			var url = "/solicitud/cancelacion_normal";
+			var dataForm = new FormData();
+			dataForm.append('id_sol',id_sol);
+			dataForm.append('motivo',motivo);
+			//lamando al metodo ajax
+			//console.log(motivo);
+			if(motivo == ''){
+				MensajeModal('¡ATENCIÓN!','Favor de especificar el motivo de la cancelación');
+			}else{
+				metodoAjax(url,dataForm,function(success){
+					//aquí se escribe todas las operaciones que se harían en el succes
+					//la variable success es el json que recibe del servidor el método AJAX
+					//console.log(gl_solicitudes);
+					recargarTablaAjax('/refrescar/dependencia');
+					$("#ModalCancelacionNormal").modal('hide');
+					MensajeModal("¡EXITO!","La solicitud ha sido cancelada satisfactoriamente.");
+				});//*/
+			}
+    	}
+
+    	function ModalCancelacionNormal(id_solicitud){
+    		var motivo = $('#MotivoCancelacion').val('');
+    		$("#mensaje_cancelar_solicitud_normal").text('¿Desea cancelar la solicitud '+id_solicitud+'?')
+    		$("#hide_solicitud").val(id_solicitud);
+    		$("#ModalCancelacionNormal").modal();
+
+    	}
+
 		function VerDatosCuadro(id_solicitud,tipo_solicitud){
 			//$("#div_cuadro").hide();
     		url = '/solicitud/obtener_propuesta';
@@ -177,7 +233,7 @@
 						);
 					}
 				}
-				$("#TituloModalPropuesta").text('Propuesta de la Coordinación General Administrativa');
+				$("#TituloModalPropuesta").text('Opinión de la Coordinación General Administrativa');
 				$("#ModalDetallePropuesta").modal();
 			});//
 		}//*/

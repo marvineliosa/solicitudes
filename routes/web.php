@@ -124,6 +124,7 @@ Route::post('/solicitud/asignar_analista', 'SolicitudesController@AsignarAnalist
 Route::post('/solicitud/validacion_titular', 'SolicitudesController@ValidarSolicitudDependencia');
 Route::post('/solicitud/cancelacion_titular', 'SolicitudesController@CambiarEstadoCGA');
 Route::post('/solicitud/obtener_propuesta', 'SolicitudesController@ObtenerPropuesta');
+Route::post('/solicitud/cancelacion_normal', 'SolicitudesController@CancelacionNormalTitular');
 
 //obtencion de datos para los modales de informacion
 Route::post('/solicitud/obtener_datos_contratacion', 'SolicitudesController@ObtenerContratacion');
