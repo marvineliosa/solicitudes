@@ -152,6 +152,8 @@ Route::post('/salir', 'LoginController@cerrarSesion');
 Route::post('/dependencias/editar','DependenciasController@EditarDependencia');
 Route::post('/dependencias/trae_dependencia','DependenciasController@TraerDatosDependencia');
 Route::post('/dependencias/obtener_nombre','DependenciasController@RegresarNombreDependencia');
+Route::get('/dependencias/aceptacion_terminos','SolicitudesController@VistaAceptacionTerminosTitular');
+Route::post('/dependencias/aceptar_terminos','SolicitudesController@AceptarTerminos');
 
 Route::get('/usuarios','SolicitudesController@VistaUsuarios');
 Route::post('/usuarios/eliminar','LoginController@EliminarUsuario');

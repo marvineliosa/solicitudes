@@ -220,6 +220,38 @@
 
         }
 
+        public function VistaAceptacionTerminosTitular(){
+            $categoria = \Session::get('categoria')[0];
+            $usuario = \Session::get('usuario')[0];
+            if(in_array($categoria, ['TITULAR'])){
+                $existe = DB::table('REL_TITULAR_AVISO')->where('FK_USUARIO', $usuario)->get();
+                if($existe[0]->FL_AVISO == 0){
+                    return view('aceptacion_terminos_titular');
+                }else{
+                    return redirect('/listado/dependencia');
+                }
+            }else{
+                return view('errors.505');
+            }
+        }
+
+        public function AceptarTerminos(Request $request){
+            date_default_timezone_set('America/Mexico_City');
+            //dd('EPALE');
+            $usuario = \Session::get('usuario')[0];
+            $update = DB::table('REL_TITULAR_AVISO')
+                ->where('FK_USUARIO', $usuario)
+                ->update([
+                            'FL_AVISO'=> 1,
+                            'FECHA_ACEPTACION' => date('Y-m-d H:i:s')
+                        ]);
+            $data = array(
+                "update"=>$update
+            );
+
+            echo json_encode($data);//*/
+        }
+
         public function VistaGenerarReporte(){
             date_default_timezone_set('America/Mexico_City');
             /*$hoy = date('Y-m-d');
@@ -2673,6 +2705,7 @@
         }
 
         public function MarcarInformacionCorrecta(Request $request){
+            //dd($request['estatus']);
             date_default_timezone_set('America/Mexico_City');
             //dd($request['id_sol']);
             
@@ -2716,12 +2749,17 @@
                     'FECHAS_LIMITE_FINALIZAR' =>  $fechas['tiempo_AprovacionSpr']
                 ]);
 
+            //Aquí cambiamos el estatus de la solicitud
             $update = DB::table('SOLICITUDES_DATOS_CGA')
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])
-                ->update(['DATOS_CGA_ESTATUS' => 'RECIBIDO']);
+                ->update(['DATOS_CGA_ESTATUS' => $request['estatus']]);
 
             $responsable = \Session::get('responsable')[0];
-            $movimiento = $responsable.' ha validado la información como CORRECTA y el estatus de la solicitud ha cambiado a RECIBIDO';
+            if(strcmp($request['estatus'], 'RECIBIDO')==0){
+                $movimiento = $responsable.' ha marcado la información como CORRECTA y el estatus de la solicitud ha cambiado a RECIBIDO';
+            }else{
+                $movimiento = $responsable.' ha marcado la información como INCORRECTA y el estatus de la solicitud ha cambiado a CANCELADO';
+            }
             SolicitudesController::InsertaMovimientoCGA($responsable,$movimiento,$request['id_sol']);
             $data = array(
                 "update"=>$update

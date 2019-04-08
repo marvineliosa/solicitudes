@@ -119,6 +119,24 @@
             echo json_encode($data);//*/
         }
 
+        public function VerificaAceptacionCondiciones($usuario){
+            $existe = DB::table('REL_TITULAR_AVISO')->where('FK_USUARIO', $usuario)->get();
+            $fl_aviso = 0;
+            if(count($existe)==0){
+                //dd('CREANDO NUEVO');
+                DB::table('REL_TITULAR_AVISO')
+                    ->insert([
+                                'FK_USUARIO' => $usuario,
+                                'FL_AVISO' => $fl_aviso
+                            ]);//
+            }else{
+                //dd('YA EXISTE');
+                $fl_aviso = $existe[0]->FL_AVISO;
+            }
+            //dd($fl_aviso);
+            return $fl_aviso;
+        }
+
         public function ValidarUsuario(Request $request){
             //dd("epale");
             \Session::forget('usuario');
@@ -133,6 +151,7 @@
             $id_dependencia = null;
             $fl_horario = false;
             $existe = DB::table('SOLICITUDES_LOGIN')->where(['LOGIN_USUARIO'=> $usr, 'LOGIN_CONTRASENIA' => $contrasena])->get();
+            $fl_aviso = 0;
             //dd($existe);
             if(count($existe)>0){
                 //$n_usuario = DB::table('DP_USUARIOS')->where('USUARIOS_USUARIO', $usr)->get();
@@ -141,8 +160,8 @@
                     //dd('TITULAR');
                     $rel_dependencia = DB::table('REL_DEPENCENCIA_TITULAR')->where(['FK_USUARIO'=> $existe[0]->LOGIN_USUARIO])->get();
                     $id_dependencia = $rel_dependencia[0]->FK_DEPENDENCIA;
-
                     $fl_horario = SolicitudesController::VerificarHorario();
+                    $fl_aviso = LoginController::VerificaAceptacionCondiciones($usr);
                 }
 
                 
@@ -173,6 +192,7 @@
                 "categoria"=>\Session::get('categoria')[0],
                 "id_dependencia"=>\Session::get('id_dependencia')[0],
                 "responsable"=>\Session::get('responsable')[0],
+                "fl_aviso" => $fl_aviso,
                 "exito" => $fl
               );
             //dd($data);

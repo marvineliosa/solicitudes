@@ -128,7 +128,13 @@
           }else if(json['categoria']=='COORDINADOR_CGA'){
             location.href='/listado/coordinacion';
           }else if(json['categoria']=='TITULAR'){
-            location.href='/listado/dependencia';
+            if(json['fl_aviso']==0){
+              console.log('NO HA ACEPTADO LOS TERMINOS');
+              location.href='/dependencias/aceptacion_terminos';
+            }else{
+              location.href='/listado/dependencia';
+            }
+            //location.href='/listado/dependencia';
           }else if(json['categoria']=='SECRETARIO_PARTICULAR'){
             location.href='/listado/spr';
           }else if(json['categoria']=='ANALISTA_CGA'){

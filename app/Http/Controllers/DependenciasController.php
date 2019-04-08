@@ -58,6 +58,11 @@
                                         'FK_DEPENDENCIA' => $request['id_dependencia'],
                                         'FECHA_RELACION' => date('Y-m-d H:i:s'),
                                     ]);//*/
+                        DB::table('REL_TITULAR_AVISO')
+                            ->insert([
+                                        'FK_USUARIO' => $request['usuario'],
+                                        'FL_AVISO' => 0
+                                    ]);//*/
                     }
                 }else{
                     $mensaje = "La dependencia ya está enlazada al usuario: ".$existeRelacion[0]->FK_USUARIO;
