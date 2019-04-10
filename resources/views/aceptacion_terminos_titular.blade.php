@@ -50,49 +50,38 @@
   <body>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <div align="center">
-      <h1>Términos y Condiciones</h1>
-      <!--<div class="panel panel-default" style="width: 90%; height: 80%;">-->
-        <div class="panel panel-default" style="width: 90%; height: 450px; overflow-y: scroll;">
+      <h1>CARTA RESPONSIVA SOBRE EL USO ADECUADO DEL SISTEMA</h1>
+      <div class="panel panel-default" style="width: 90%; height: 80%;">
+        <!--<div class="panel panel-default" style="width: 90%; height: 450px; overflow-y: scroll;">-->
         <div class="panel-body">
           <div class="wrap">
-            <main style="text-align: left;">
-              Términos y Condiciones
-              What is Lorem Ipsum?
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+            <main style="text-align: justify;">
+              La presente carta tiene como objetivo la definición de las reglas de operación de la cuenta y contraseña del sistema de solicitudes {{$datos['texto1']}} <br>
 
-              Why do we use it?
-              It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+              <!--<br>
+              El cumplimiento de estas reglas es responsabilidad de las personas que tienen acceso a una cuenta dentro del sistema, asignada por la Coordinación General Administrativa Tel. 01 (222) 2 29 55 00 Ext. 5885 y 5897<br>-->
+              <br>
+              <!--1. El correo electrónico que se proporcione, para entrar al sistema, deberá usarse exclusivamente para asuntos relacionados con la institución. <br>
+              2. Las cuentas y claves del sistema son personales. Por lo cual, los titulares de las cuentas son responsables directos de que se haga buen uso de las mismas. <br>-->
+              1. La cuenta y clave de acceso es para uso exclusivo del director/a académico o titular de la dependencia administrativa, por lo que su custodia y correcta utilización son su responsabilidad. Queda prohibido permitir su utilización a personas no autorizadas tales como coordinadores/as administrativos u otros.<br>
+              2. Queda prohibido la delegación de la cuenta a coordinadores/as administrativos u otros por parte del titular de la dependencia administrativa ya que la cuenta y contraseña es personal e intransferible.<br>
+              3. Esta cuenta es un medio de seguimiento a las solicitudes realizadas, por lo que el titular está obligado a consultarla y realizar revisiones periódicas al buzón con la finalidad de asegurar la buena recepción de mensajes.<br>
+              <br>
+              <b>He leído cada una de las reglas que rigen al sistema y las acepto de conformidad.</b> <br>
+              <br>
+              <b>Nombre del usuario: </b>{{ $datos['responsable'] }} <br>
+              <b>Dependencia: </b>{{ $datos['dependencia'] }} <br>
+              <b>Cuenta de correo electrónico: </b>{{ $datos['usuario'] }} <br>
+              <b>Cuenta del sistema: </b>{{ $datos['usuario'] }} <br>
+              <b>Fecha: </b>{{ $datos['fecha'] }} <br>
 
-
-              Where does it come from?
-              Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-
-              The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
-
-              Where can I get some?
-              There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
-
-              What is Lorem Ipsum?
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-
-              Why do we use it?
-              It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
-
-
-              Where does it come from?
-              Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-
-              The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
-
-              Where can I get some?
-              There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
             </main>
            
            </div>
          </div>
       </div>
       <div class="col-md-9"></div>
-    <button type="button" class="btn btn-primary" onclick="AceptarTerminos()">Aceptar Terminos</button>
+    <button type="button" class="btn btn-primary" onclick="AceptarTerminos()">ACEPTO REGLAS DE USO</button>
 
     </div>
 
@@ -108,32 +97,32 @@
     </div>
   </body>
   <!-- Modal mensaje -->
-    <div class="modal fade" id="ModalMensaje" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h2 class="modal-title" id="TituloModalMensaje" align="center"></h2>
-            <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>-->
-          </div>
-          <div class="modal-body">
-            <h3  id="CuerpoModalMensaje" align="center"> </h3>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-          </div>
+  <div class="modal fade" id="ModalMensaje" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="TituloModalMensaje" align="center"></h2>
+          <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>-->
+        </div>
+        <div class="modal-body">
+          <h3  id="CuerpoModalMensaje" align="center"> </h3>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
         </div>
       </div>
     </div>
-    <!-- Modal Carga-->
-      <div class="modal fade" id="modalCarga" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div align="center">
-            <img src="{{ asset('img/carga3.gif') }}" class="img-rounded" alt="Cinque Terre">
-          </div>
+  </div>
+  <!-- Modal Carga-->
+    <div class="modal fade" id="modalCarga" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div align="center">
+          <img src="{{ asset('img/carga3.gif') }}" class="img-rounded" alt="Cinque Terre">
         </div>
       </div>
+    </div>
 </html>
 
 <script type="text/javascript">
@@ -161,8 +150,9 @@
         }
       },
       error : function(xhr, status) {
-        $("#textoModalMensaje").text('Existió un problema con la operación');
-        $("#modalMensaje").modal();
+        $("#TituloModalMensaje").text('¡ERROR!');
+        $("#CuerpoModalMensaje").text('Existió un problema con la operación');
+        $("#ModalMensaje").modal();
       },
       complete : function(xhr, status){
          $("#modalCarga").modal('hide');

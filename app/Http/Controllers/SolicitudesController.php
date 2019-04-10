@@ -221,12 +221,28 @@
         }
 
         public function VistaAceptacionTerminosTitular(){
+            date_default_timezone_set('America/Mexico_City');
             $categoria = \Session::get('categoria')[0];
             $usuario = \Session::get('usuario')[0];
             if(in_array($categoria, ['TITULAR'])){
                 $existe = DB::table('REL_TITULAR_AVISO')->where('FK_USUARIO', $usuario)->get();
+                $rel_titular = DB::table('REL_DEPENCENCIA_TITULAR')
+                    ->where('FK_USUARIO',$usuario)
+                    ->get();
+                $dependencia = DependenciasController::ObtenerNombreDependencia($rel_titular[0]->FK_DEPENDENCIA);
+                $fl_sistema = SolicitudesController::DatosGenerales();
+                //dd($dependencia[0]);
                 if($existe[0]->FL_AVISO == 0){
-                    return view('aceptacion_terminos_titular');
+                    $datos = array(
+                        'texto1' => (($fl_sistema['institucional'])?'de la Benemérita Universidad Autónoma de Puebla.':'.'),
+                        'responsable' => \Session::get('responsable')[0], 
+                        'dependencia' => $dependencia[0]->NOMBRE_DEPENDENCIA,
+                        'usuario' => \Session::get('usuario')[0], 
+                        'fecha' => date('d/m/Y')
+                    );
+                    //dd($datos);
+
+                    return view('aceptacion_terminos_titular')->with (["datos"=>$datos]);
                 }else{
                     return redirect('/listado/dependencia');
                 }
