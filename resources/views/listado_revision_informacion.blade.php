@@ -131,7 +131,7 @@
 				$("#ModalVerificacionEstatus").modal('hide');
 				$("#ModalConfiguraciones").modal('hide');
 				recargarTablaAjax('/refrescar/revision_informacion');
-				if(estatus == 'INFORMACIÓN CORRECTA'){
+				if(estatus == 'RECIBIDO'){
 					MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente, la solicitud se ha marcado como RECIBIDA.");
 				}else{
 					MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente, la solicitud se ha marcado como CANCELADA.");

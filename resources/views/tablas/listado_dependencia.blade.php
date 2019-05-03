@@ -49,6 +49,12 @@
             @if(strcmp($solicitud->ESTATUS_SOLICITUD,'CANCELADO POR TITULAR')==0)
               CANCELADO POR TITULAR
             @endif
+            @if(strcmp($solicitud->ESTATUS_SOLICITUD,'CANCELADO')==0)
+              CANCELADO
+            @endif
+            @if(in_array($solicitud->ESTATUS_SOLICITUD,['INFORMACIÓN CORRECTA','RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN']))
+              EN PROCESO
+            @endif
           </td>
         </tr>
       <!-- {{$i++}} -->

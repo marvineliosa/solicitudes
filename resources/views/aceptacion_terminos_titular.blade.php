@@ -80,7 +80,10 @@
            </div>
          </div>
       </div>
-      <div class="col-md-9"></div>
+      <div class="col-md-8"></div>
+
+    <button type="button" class="btn btn-secondary" onclick="Salir()">Salir</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;
     <button type="button" class="btn btn-primary" onclick="AceptarTerminos()">ACEPTO REGLAS DE USO</button>
 
     </div>
@@ -126,6 +129,10 @@
 </html>
 
 <script type="text/javascript">
+  function Salir(){
+    location.href='/salir';
+  }
+
   function AceptarTerminos(){
     var dataForm = new FormData();
     dataForm.append('usuario','usuario');

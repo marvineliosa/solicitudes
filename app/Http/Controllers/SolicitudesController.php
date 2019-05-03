@@ -2649,6 +2649,7 @@
             //dd($id_dependencia);
             $rel_solicitudes = DB::table('REL_DEPENCENCIA_SOLICITUD')
                                 ->where('FK_DEPENDENCIA',$id_dependencia)
+                                ->orderBy('FK_SOLICITUD_ID', 'desc')
                                 ->get();
             //dd($rel_solicitudes);
             foreach ($rel_solicitudes as $solicitud) {
@@ -2724,47 +2725,49 @@
             //dd($request['estatus']);
             date_default_timezone_set('America/Mexico_City');
             //dd($request['id_sol']);
+            //if(strcmp($request['estatus'], 'RECIBIDO')==0){
+                $res_solicitudes = DB::table('SOLICITUDES_SOLICITUD')
+                                    ->where('SOLICITUD_ID', $request['id_sol'])
+                                    ->select('SOLICITUD_URGENCIA')
+                                    ->get();
+                //dd($res_solicitudes[0]->SOLICITUD_URGENCIA);
+                if(strcmp($res_solicitudes[0]->SOLICITUD_URGENCIA,'PRIORIDAD 2')==0){
+                    $fechas = array(
+                            //'tiempo_revision_informacion' => SolicitudesController::CalculaFecha(1),
+                            'tiempo_GenerarCita' => SolicitudesController::CalculaFecha(3),
+                            'tiempo_levantamiento' => SolicitudesController::CalculaFecha(5),
+                            'tiempo_analisis' => SolicitudesController::CalculaFecha(7),
+                            'tiempo_revision_cuadro' => SolicitudesController::CalculaFecha(9),
+                            'tiempo_firmas' => SolicitudesController::CalculaFecha(11),
+                            'tiempo_AprovacionSpr' => SolicitudesController::CalculaFecha(14)
+                        );
+                }else{
+                    $fechas = array(
+                            //'tiempo_revision_informacion' => SolicitudesController::CalculaFecha(1),
+                            'tiempo_GenerarCita' => SolicitudesController::CalculaFecha(1),
+                            'tiempo_levantamiento' => SolicitudesController::CalculaFecha(2),
+                            'tiempo_analisis' => SolicitudesController::CalculaFecha(3),
+                            'tiempo_revision_cuadro' => SolicitudesController::CalculaFecha(4),
+                            'tiempo_firmas' => SolicitudesController::CalculaFecha(5),
+                            'tiempo_AprovacionSpr' => SolicitudesController::CalculaFecha(6)
+                        );
+                }
             
-            $res_solicitudes = DB::table('SOLICITUDES_SOLICITUD')
-                                ->where('SOLICITUD_ID', $request['id_sol'])
-                                ->select('SOLICITUD_URGENCIA')
-                                ->get();
-            //dd($res_solicitudes[0]->SOLICITUD_URGENCIA);
-            if(strcmp($res_solicitudes[0]->SOLICITUD_URGENCIA,'PRIORIDAD 2')==0){
-                $fechas = array(
-                        //'tiempo_revision_informacion' => SolicitudesController::CalculaFecha(1),
-                        'tiempo_GenerarCita' => SolicitudesController::CalculaFecha(3),
-                        'tiempo_levantamiento' => SolicitudesController::CalculaFecha(5),
-                        'tiempo_analisis' => SolicitudesController::CalculaFecha(7),
-                        'tiempo_revision_cuadro' => SolicitudesController::CalculaFecha(9),
-                        'tiempo_firmas' => SolicitudesController::CalculaFecha(11),
-                        'tiempo_AprovacionSpr' => SolicitudesController::CalculaFecha(14)
-                    );
-            }else{
-                $fechas = array(
-                        //'tiempo_revision_informacion' => SolicitudesController::CalculaFecha(1),
-                        'tiempo_GenerarCita' => SolicitudesController::CalculaFecha(1),
-                        'tiempo_levantamiento' => SolicitudesController::CalculaFecha(2),
-                        'tiempo_analisis' => SolicitudesController::CalculaFecha(3),
-                        'tiempo_revision_cuadro' => SolicitudesController::CalculaFecha(4),
-                        'tiempo_firmas' => SolicitudesController::CalculaFecha(5),
-                        'tiempo_AprovacionSpr' => SolicitudesController::CalculaFecha(6)
-                    );
-            }
-            //dd($fechas);
+                //dd($fechas);
 
-            $updateFecha = DB::table('SOLICITUDES_FECHAS')
-                ->where('FK_SOLICITUD_ID', $request['id_sol'])
-                ->update([
-                    'FECHAS_INFORMACION_COMPLETA' =>  date('Y-m-d H:i:s'),
-                    'FECHAS_LIMITE_AGENDAR_CITA' =>  $fechas['tiempo_GenerarCita'],
-                    'FECHAS_LIMITE_LEVANTAMIENTO' =>  $fechas['tiempo_levantamiento'],
-                    'FECHAS_LIMITE_ANALISIS' =>  $fechas['tiempo_analisis'],
-                    'FECHAS_LIMITE_REVISION' =>  $fechas['tiempo_revision_cuadro'],
-                    'FECHAS_LIMITE_FIRMAS' =>  $fechas['tiempo_firmas'],
-                    'FECHAS_LIMITE_FINALIZAR' =>  $fechas['tiempo_AprovacionSpr']
-                ]);
-
+                $updateFecha = DB::table('SOLICITUDES_FECHAS')
+                    ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                    ->update([
+                        'FECHAS_INFORMACION_COMPLETA' =>  date('Y-m-d H:i:s'),
+                        'FECHAS_LIMITE_AGENDAR_CITA' =>  $fechas['tiempo_GenerarCita'],
+                        'FECHAS_LIMITE_LEVANTAMIENTO' =>  $fechas['tiempo_levantamiento'],
+                        'FECHAS_LIMITE_ANALISIS' =>  $fechas['tiempo_analisis'],
+                        'FECHAS_LIMITE_REVISION' =>  $fechas['tiempo_revision_cuadro'],
+                        'FECHAS_LIMITE_FIRMAS' =>  $fechas['tiempo_firmas'],
+                        'FECHAS_LIMITE_FINALIZAR' =>  $fechas['tiempo_AprovacionSpr']
+                    ]);
+            //}
+            //dd($request['estatus']);
             //Aquí cambiamos el estatus de la solicitud
             $update = DB::table('SOLICITUDES_DATOS_CGA')
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])
@@ -2773,8 +2776,10 @@
             $responsable = \Session::get('responsable')[0];
             if(strcmp($request['estatus'], 'RECIBIDO')==0){
                 $movimiento = $responsable.' ha marcado la información como CORRECTA y el estatus de la solicitud ha cambiado a RECIBIDO';
+                SolicitudesController::NotificarInformacionCorrecta($request['id_sol']);
             }else{
                 $movimiento = $responsable.' ha marcado la información como INCORRECTA y el estatus de la solicitud ha cambiado a CANCELADO';
+                SolicitudesController::NotificarInformacionIncorrecta($request['id_sol']);
             }
             SolicitudesController::InsertaMovimientoCGA($responsable,$movimiento,$request['id_sol']);
             $data = array(
@@ -2782,6 +2787,26 @@
             );
 
             echo json_encode($data);//*/
+        }
+
+        public function NotificarInformacionIncorrecta($id_solicitud){
+            $asunto = 'Cambio de estatus';
+            $titulo = 'Cambio de estatus';
+            $mensaje = 'Buen día, le notificamos que la solicitud '.$id_solicitud.' ha sido marcada con el estatus de INFORMACIÓN INCORRECTA. Para obtener más información por favor comuníquese a la extensión 5897.';
+            $usuario = SolicitudesController::ObtenerTitularDeSolicitud($id_solicitud);
+            //dd($usuario);
+            $mail = MailsController::MandarMensajeGenerico($asunto,$titulo,$mensaje,$usuario);
+            return $usuario;
+        }
+
+        public function NotificarInformacionCorrecta($id_solicitud){
+            $asunto = 'Cambio de estatus';
+            $titulo = 'Cambio de estatus';
+            $mensaje = 'Buen día, le notificamos que la solicitud '.$id_solicitud.' ha sido marcada con el estatus de INFORMACIÓN CORRECTA, se procederá a su análisis';
+            $usuario = SolicitudesController::ObtenerTitularDeSolicitud($id_solicitud);
+            //dd($usuario);
+            $mail = MailsController::MandarMensajeGenerico($asunto,$titulo,$mensaje,$usuario);
+            return $usuario;
         }
 
         public function TurnarSolicitudCGA(Request $request){
@@ -3435,7 +3460,7 @@
             $datos = array(
                             'institucional' => true,
                             'horar_inicio' => "09:00",
-                            'horar_fin' => "20:00",
+                            'horar_fin' => "17:00",
                         );
             return $datos;
         }
