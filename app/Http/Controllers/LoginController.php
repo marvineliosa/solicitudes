@@ -110,6 +110,7 @@
 
             $delete2 = DB::table('REL_DEPENCENCIA_TITULAR')->where('FK_USUARIO', $request['usuario'])->delete();
             $delete2 = DB::table('REL_SOLICITUDES_ANALISTA')->where('FK_USUARIO', $request['usuario'])->delete();
+            $delete2 = DB::table('REL_TITULAR_AVISO')->where('FK_USUARIO', $request['usuario'])->delete();
             $delete = DB::table('SOLICITUDES_LOGIN')->where('LOGIN_USUARIO', $request['usuario'])->delete();
             $data = array(
                 "delete" => $delete,

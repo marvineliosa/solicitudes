@@ -42,7 +42,7 @@
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">NOMBRE</th>
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">FUNCIONES</th> 
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">CATEGORÍA/PUESTO SOLICITADO</th>
-		    <th style="font-size: 10px;border:1px solid black;" class="bloque">SALARIO NETO SOLICITADO</th>
+		    <th style="font-size: 10px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL SOLICITADO</th>
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">DIFERENCIA QUINCENAL</th>
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">% DIFERENCIA</th>
 		  </tr>

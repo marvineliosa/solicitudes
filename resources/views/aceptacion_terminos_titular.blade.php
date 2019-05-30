@@ -63,9 +63,9 @@
               <br>
               <!--1. El correo electrónico que se proporcione, para entrar al sistema, deberá usarse exclusivamente para asuntos relacionados con la institución. <br>
               2. Las cuentas y claves del sistema son personales. Por lo cual, los titulares de las cuentas son responsables directos de que se haga buen uso de las mismas. <br>-->
-              1. La cuenta y clave de acceso es para uso exclusivo del director/a académico o titular de la dependencia administrativa, por lo que su custodia y correcta utilización son su responsabilidad. Queda prohibido permitir su utilización a personas no autorizadas tales como coordinadores/as administrativos u otros.<br>
-              2. Queda prohibido la delegación de la cuenta a coordinadores/as administrativos u otros por parte del titular de la dependencia administrativa ya que la cuenta y contraseña es personal e intransferible.<br>
-              3. Esta cuenta es un medio de seguimiento a las solicitudes realizadas, por lo que el titular está obligado a consultarla y realizar revisiones periódicas al buzón con la finalidad de asegurar la buena recepción de mensajes.<br>
+              1. La cuenta y clave de acceso son para uso exclusivo del director/a académico/a o titular de la dependencia administrativa, por lo que su custodia y correcta utilización son su responsabilidad. Queda prohibido permitir su utilización a personas no autorizadas tales como coordinadores/as administrativos/as u otros. Por lo cual, cualquier mal uso que se haga de la cuenta y clave de acceso, es responsabilidad del director/a académico/a o titular de la dependencia administrativa.<br>
+              2. Queda prohibido la delegación de la cuenta a coordinadores/as administrativos/as u otros por parte del director/a académico/a o titular de la dependencia administrativa ya que la cuenta y contraseña son personales e intransferibles.<br>
+              3. Esta cuenta es un medio de seguimiento a las solicitudes realizadas, por lo que el titular está obligado a consultarla y realizar revisiones periódicas con la finalidad de asegurar la correcta recepción de mensajes.<br>
               <br>
               <b>He leído cada una de las reglas que rigen al sistema y las acepto de conformidad.</b> <br>
               <br>

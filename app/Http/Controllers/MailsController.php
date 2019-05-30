@@ -68,6 +68,7 @@
             //return "Mail enviado correctamente.";
         }
 
+        //envio de contraseñas a los usuarios del sistema
         public static function FuncionEnviarContrasena($usuario){
             $datos_sistema = SolicitudesController::DatosGenerales();
             $tipo_sistema = '';
@@ -77,7 +78,8 @@
                 $url = '148.228.11.182';
             }else{
                 $tipo_sistema = 'de prestación de servicios';
-                $url = '148.228.11.181';
+                //$url = '148.228.11.181';
+                $url = '172.23.1.181';
             }
             //dd($usuario);
             $pass = DB::table('SOLICITUDES_LOGIN')
@@ -104,7 +106,7 @@
             });
             return true;
         }
-
+        //envio de ocntraseñas a los usuarios de las dependencias
         public static function FuncionEnviarContrasenaDependencia($usuario){
         //public static function FuncionEnviarContrasenaDependencia(){
             //dd('epale');
@@ -117,7 +119,8 @@
                 $url = '148.228.11.182';
             }else{
                 $tipo_sistema = 'de prestación de servicios';
-                $url = '148.228.11.181';
+                //$url = '148.228.11.181';
+                $url = '172.23.1.181';
             }
 
             //dd($usuario);

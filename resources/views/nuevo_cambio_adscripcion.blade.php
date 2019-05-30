@@ -67,7 +67,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Salario actual*</label>
+            <label class="col-sm-2 control-label">Salario quincenal actual*</label>
             <div class="col-sm-6">
               <input type="number" class="form-control" placeholder="Puesto del Candidato" id="CambioAdscripcion-SalarioActual" step=".01">
             </div>
@@ -92,7 +92,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Salario neto solicitado*</label>
+            <label class="col-sm-2 control-label">Salario neto quincenal solicitado*</label>
             <div class="col-sm-6">
               <input type="number" class="form-control" placeholder="Puesto del Candidato" id="CambioAdscripcion-SalarioSolicitado" step=".01">
             </div>

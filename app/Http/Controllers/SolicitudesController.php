@@ -512,8 +512,9 @@
                     'FIRMA COORDINADOR GENERAL ADMINISTRATIVO',
                     'FIRMA TITULAR',
                     'FIRMA SECRETARIO PARTICULAR',
-                    'TURNADO SPR PARA APROVACIÓN'
+                    'TURNADO SPR PARA APROBACIÓN'
                 );
+            //dd($fechas);
             $datos_tabla = array(
                     'CREACIÓN' => (($fechas[0]->FECHAS_CREACION_SOLICITUD)?date("d/m/Y", strtotime($fechas[0]->FECHAS_CREACION_SOLICITUD)):null),
                     'EXPIRACIÓN' => (($fechas[0]->FECHAS_EXPIRACION)?date("d/m/Y", strtotime($fechas[0]->FECHAS_EXPIRACION)):null),
@@ -527,10 +528,10 @@
                     'LIMITE FINALIZAR' => (($fechas[0]->FECHAS_LIMITE_FINALIZAR)?date("d/m/Y", strtotime($fechas[0]->FECHAS_LIMITE_FINALIZAR)):null),
                     'PUESTO REVISION' => (($fechas[0]->FECHAS_PUESTO_REVISION)?date("d/m/Y", strtotime($fechas[0]->FECHAS_PUESTO_REVISION)):null),
                     'PUESTO FIRMAS' => (($fechas[0]->FECHAS_PUESTO_FIRMAS)?date("d/m/Y", strtotime($fechas[0]->FECHAS_PUESTO_FIRMAS)):null),
-                    'FIRMA COORDINADOR GENERAL' => (($fechas[0]->FECHAS_FIRMA_CGA)?date("d/m/Y", strtotime($fechas[0]->FECHAS_FIRMA_CGA)):null),
+                    'FIRMA COORDINADOR GENERAL ADMINISTRATIVO' => (($fechas[0]->FECHAS_FIRMA_CGA)?date("d/m/Y", strtotime($fechas[0]->FECHAS_FIRMA_CGA)):null),
                     'FIRMA TITULAR' => (($fechas[0]->FECHAS_FIRMA_TITULAR)?date("d/m/Y", strtotime($fechas[0]->FECHAS_FIRMA_TITULAR)):null),
                     'FIRMA SECRETARIO PARTICULAR' => (($fechas[0]->FECHAS_FIRMA_SPR)?date("d/m/Y", strtotime($fechas[0]->FECHAS_FIRMA_SPR)):null),
-                    'TURNADO SPR PARA APROVACIÓN' => (($fechas[0]->FECHAS_TURNADO_SPR)?date("d/m/Y", strtotime($fechas[0]->FECHAS_TURNADO_SPR)):null)
+                    'TURNADO SPR PARA APROBACIÓN' => (($fechas[0]->FECHAS_TURNADO_SPR)?date("d/m/Y", strtotime($fechas[0]->FECHAS_TURNADO_SPR)):null)
                 );
 
             //dd($datos_tabla);
@@ -582,7 +583,7 @@
                 'Actividades',
                 'Categoría solicitada',
                 'Puesto solicitado',
-                'Salario solicitado',
+                'Salario neto quincenal solicitado',
                 'Categoría propuesta',
                 'Salario neto quincenal propuesto',
                 'Diferencia quincenal (Propuesta)',
@@ -599,7 +600,7 @@
                 'Actividades' => $solicitud->ACTIVIDADES_SOLICITUD,
                 'Categoría solicitada' => $solicitud->CATEGORIA_SOLICITUD,
                 'Puesto solicitado' => $solicitud->PUESTO_SOLICITUD,
-                'Salario solicitado' => '$ '. $solicitud->SALARIO_FORMATO,
+                'Salario neto quincenal solicitado' => '$ '. $solicitud->SALARIO_FORMATO,
 
                 'Categoría propuesta' => $solicitud->CATEGORIA_PROPUESTA,
                 'Salario neto quincenal propuesto' => '$ '. $solicitud->SALARIO_PROPUESTO,
@@ -635,7 +636,7 @@
                 'Actividades',
                 'Categoría solicitada',
                 'Puesto solicitado',
-                'Salario solicitado',
+                'Salario neto quincenal solicitado',
 
                 'Diferencia quincenal solicitada',
                 '% de diferencia solicitada',
@@ -658,7 +659,7 @@
                 'Actividades' => $extra->NUEVAS_ACTIVIDADES,
                 'Categoría solicitada' => $extra->NUEVA_CATEGORIA,
                 'Puesto solicitado' => $extra->PUESTO_NUEVO,
-                'Salario solicitado' => '$ '. $extra->NUEVO_SALARIO,
+                'Salario neto quincenal solicitado' => '$ '. $extra->NUEVO_SALARIO,
 
                 'Diferencia quincenal solicitada' => $diferencias->dif_quincenal_1,
                 '% de diferencia solicitada' => $diferencias->porc_diferencia_1,
@@ -701,7 +702,7 @@
                 'Actividades',
                 'Categoría solicitada',
                 'Puesto solicitado',
-                'Salario solicitado',
+                'Salario neto quincenal solicitado',
 
                 'Diferencia quincenal solicitada',
                 '% de diferencia solicitada',
@@ -722,7 +723,7 @@
                 'Actividades' => $extra->NUEVAS_ACTIVIDADES,
                 'Categoría solicitada' => $extra->NUEVA_CATEGORIA,
                 'Puesto solicitado' => $extra->PUESTO_NUEVO,
-                'Salario solicitado' => '$ '. $extra->NUEVO_SALARIO,
+                'Salario neto quincenal solicitado' => '$ '. $extra->NUEVO_SALARIO,
 
                 'Diferencia quincenal solicitada' => $diferencias->dif_quincenal_1,
                 '% de diferencia solicitada' => $diferencias->porc_diferencia_1,
@@ -867,7 +868,7 @@
                 'Dependencia destino',
                 'Categoría solicitada',  
                 'Puesto solicitado',  
-                'Salario solicitado',  
+                'Salario neto quincenal solicitado',  
                 'Actividades solicitadas',
 
                 'Categoría actual',  
@@ -888,7 +889,7 @@
                 'Dependencia destino' => $cambio_adscripcion->NUEVA_DEPENDENCIA,
                 'Categoría solicitada' => $cambio_adscripcion->NUEVA_CATEGORIA,  
                 'Puesto solicitado' => $cambio_adscripcion->PUESTO_NUEVO,  
-                'Salario solicitado' => number_format($cambio_adscripcion->NUEVO_SALARIO,2),  
+                'Salario neto quincenal solicitado' => '$ '.number_format($cambio_adscripcion->NUEVO_SALARIO,2),  
                 'Actividades solicitadas' => $cambio_adscripcion->NUEVAS_ACTIVIDADES,
 
                 'Categoría actual' => $solicitud->CATEGORIA_SOLICITUD,  
@@ -920,7 +921,7 @@
                 'Categoría solicitada',
                 'Puesto solicitado',
                 'Nuevas actividades',
-                'Salario solicitado',
+                'Salario neto quincenal solicitado',
                 'Categoría actual',
                 'Puesto actual',
                 'Salario actual',
@@ -938,7 +939,7 @@
                 'Categoría solicitada' => $promocion->NUEVA_CATEGORIA,
                 'Puesto solicitado' => $promocion->PUESTO_NUEVO,
                 'Nuevas actividades' => $promocion->NUEVAS_ACTIVIDADES,
-                'Salario solicitado' => number_format($promocion->NUEVO_SALARIO,2),
+                'Salario neto quincenal solicitado' => '$ '.number_format($promocion->NUEVO_SALARIO,2),
                 'Categoría actual' => $solicitud->CATEGORIA_SOLICITUD,
                 'Puesto actual' => $solicitud->PUESTO_SOLICITUD,
                 'Salario actual' => $solicitud->SALARIO_FORMATO,
@@ -968,7 +969,7 @@
                 'Fecha de información completa', 
                 'Categoría solicitada',
                 'Puesto solicitado',
-                'Salario solicitado',
+                'Salario neto quincenal solicitado',
                 'Actividades',
                 'Nombre de quien causa baja',
                 'Categoría de quien causa baja',
@@ -987,9 +988,9 @@
                 'Fecha de información completa' => $solicitud->FECHAS_INFORMACION_COMPLETA, 
                 'Categoría solicitada' => $sustitucion->NUEVA_CATEGORIA,//
                 'Puesto solicitado' => $sustitucion->PUESTO_NUEVO,//
-                'Salario solicitado' => number_format($sustitucion->NUEVO_SALARIO,2),//
+                'Salario neto quincenal solicitado' => '$ '.number_format($sustitucion->NUEVO_SALARIO,2),//
                 'Actividades' => $sustitucion->NUEVAS_ACTIVIDADES,
-                'Nombre de quien causa baja' => $solicitud->NOMBRE_SOLICITUD,
+                'Nombre de quien causa baja' => $solicitud->EN_SUSTITUCION_DE,
                 'Categoría de quien causa baja' => $solicitud->CATEGORIA_SOLICITUD,
                 'Puesto de quien causa baja' => $solicitud->PUESTO_SOLICITUD,
                 'Actividades de quien causa baja' => $solicitud->ACTIVIDADES_SOLICITUD, 
@@ -1002,7 +1003,7 @@
                 "cabeceras"=>$cabeceras,
                 "datos"=>$datos_tabla
             );
-
+            //dd($data);
             echo json_encode($data);//*/
         }
 
@@ -1019,7 +1020,7 @@
                 'Fecha de información completa',  
                 'Categoría solicitada',  
                 'Puesto solicitado',  
-                'Salario solicitado',  
+                'Salario neto quincenal solicitado',  
                 'Actividades',
                 'Justificación',
                 'Escape'
@@ -1033,7 +1034,7 @@
                 'Fecha de información completa' => $solicitud->FECHAS_INFORMACION_COMPLETA,  
                 'Categoría solicitada' => $solicitud->CATEGORIA_SOLICITUD,  
                 'Puesto solicitado' => $solicitud->PUESTO_SOLICITUD,
-                'Salario solicitado' => $solicitud->SALARIO_FORMATO, 
+                'Salario neto quincenal solicitado' => '$ '.$solicitud->SALARIO_FORMATO, 
                 'Actividades' => $solicitud->ACTIVIDADES_SOLICITUD,
                 'Justificación' => $solicitud->JUSTIFICACION_SOLICITUD,
                 'Escape' => $solicitud->ID_ESCAPE
@@ -1172,6 +1173,7 @@
         }
 
         public function PDFSustitucion($id_solicitud){
+            //dd('EPALE');
             $categoria = \Session::get('categoria')[0];
             $id_solicitud = str_replace('_','/',$id_solicitud);
 
@@ -1180,13 +1182,15 @@
                     ->where('SOLICITUD_ID',$id_solicitud)
                     ->where('SOLICITUD_TIPO_SOLICITUD','CONTRATACIÓN POR SUSTITUCIÓN')
                     ->get();
+                    //dd('epale');
                 if(count($val)>0){
+                    //dd('epale');
                     $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
                     $sustitucion = SolicitudesController::ObtenerDatosSustitucion($id_solicitud);
                     //dd($sustitucion);
                     $extra = $sustitucion;
                     $diferencias = SolicitudesController::ObtenerDiferencias($solicitud,$extra);
-
+                    //dd($diferencias);
                     $pdf = \PDF::loadView('pdf.cuadro_sustitucion',['solicitud'=>$solicitud,'sustitucion'=>$sustitucion,'diferencias'=>$diferencias])->setPaper('letter', 'landscape');
                     //return $pdf->download($descripcion['DATOS']->NOM_DESC.'.pdf');
                     return $pdf->stream($id_solicitud.'.pdf', array("Attachment" => 0));
@@ -1204,9 +1208,12 @@
                         
                         //$solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
                         $sustitucion = SolicitudesController::ObtenerDatosSustitucion($id_solicitud);
+                        $extra = $sustitucion;
+                        $diferencias = SolicitudesController::ObtenerDiferencias($solicitud,$extra);
                         //dd($sustitucion);
 
-                        $pdf = \PDF::loadView('pdf.cuadro_sustitucion',['solicitud'=>$solicitud,'sustitucion'=>$sustitucion])->setPaper('letter', 'landscape');
+                        //$pdf = \PDF::loadView('pdf.cuadro_sustitucion',['solicitud'=>$solicitud,'sustitucion'=>$sustitucion])->setPaper('letter', 'landscape');
+                        $pdf = \PDF::loadView('pdf.cuadro_sustitucion',['solicitud'=>$solicitud,'sustitucion'=>$sustitucion,'diferencias'=>$diferencias])->setPaper('letter', 'landscape');
                         //return $pdf->download($descripcion['DATOS']->NOM_DESC.'.pdf');
                         return $pdf->stream($id_solicitud.'.pdf', array("Attachment" => 0));
                         
@@ -2645,13 +2652,16 @@
         public function ObtenerSolicitudesDependencia($id_dependencia){
             $solicitudes = array();
             $fecha_arranque = '2019-01-01';
-            $fecha_arranque = '2019-04-04';
+            $fecha_arranque = '2019-05-17';
             //dd($id_dependencia);
             $rel_solicitudes = DB::table('REL_DEPENCENCIA_SOLICITUD')
                                 ->where('FK_DEPENDENCIA',$id_dependencia)
-                                ->orderBy('FK_SOLICITUD_ID', 'desc')
+                                //->latest()
+                                ->select('FK_SOLICITUD_ID')
+                                //->orderBy('FK_SOLICITUD_ID', 'asc')
                                 ->get();
             //dd($rel_solicitudes);
+            //$var = 100/0;                
             foreach ($rel_solicitudes as $solicitud) {
                 $tmp_solicitud = SolicitudesController::ObtenerSolicitudId($solicitud->FK_SOLICITUD_ID);
                 //dd($tmp_solicitud);
@@ -2664,6 +2674,7 @@
                 }
                 //dd($tmp_solicitud);
             }
+            $solicitudes = array_reverse($solicitudes);
             //dd($solicitudes);
             return $solicitudes;
         }
@@ -2841,14 +2852,39 @@
 
         public function ObtenerConsecutivo(){
             $sol = '';
-            $ultima_solicitud = DB::table('SOLICITUDES_SOLICITUD')->latest()->get();
+            //$ultima_solicitud = DB::table('SOLICITUDES_SOLICITUD')->latest()->get();
+            $ultima_solicitud = DB::table('SOLICITUDES_SOLICITUD')
+                ->latest()
+                ->select('SOLICITUD_ID')
+                ->get();
+
+            //dd($ultima_solicitud);
             if(count($ultima_solicitud)==0){//es la primera solicitud de la base de datos
                 //dd('Primera Solicitud');
                 $año = date('Y');
                 $sol = 'SOL/1/'.$año;
                 //dd($sol);
             }else{
+                /*//Verificamos si coinciden las horas
+                $igual = true;
+                $hoy = date('Y-m-d H:i:s');
+                //$hoy = '2019-05-21 15:55:15';
+                $num = 1;
+                while ($igual) {
+                    if(strcmp($ultima_solicitud[0]->created_at, $hoy)==0){
+                        //dd('coincide la hora');
+                        //sleep(1);
+                        usleep( 10 * 1000 );
+                        $hoy = date('Y-m-d H:i:s');
+                        $num = $num + 1;
+                    }else{
+                        $igual = false;
+                    }
+                }//*/
+                //fin verificar horas
+                //dd($num);
                 $separa = explode("/", $ultima_solicitud[0]->SOLICITUD_ID);
+
                 //dd($separa);
                 if(strcmp(date('Y'),$separa[2])==0){//en caso de que el año sea el mismo
                     $consecutivo = ((int)$separa[1])+1;
@@ -2857,7 +2893,8 @@
                 }
                 $sol = 'SOL/'.$consecutivo.'/'.date('Y');
             }
-             return $sol;   
+            //dd($sol);
+            return $sol;   
         }
 
         public function esFestivo($time) {

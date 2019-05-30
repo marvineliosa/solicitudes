@@ -105,7 +105,7 @@
         <h3 align="center" id="mensaje_cancelar_solicitud"></h3>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" onclick="CancelarSolicitud()">Canelar Solicitud</button>
+        <button type="button" class="btn btn-danger" onclick="CancelarSolicitud()">Cancelar Solicitud</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
       </div>
     </div>
@@ -128,7 +128,7 @@
         <textarea class="form-control ckeditor" name="editor1" rows="3" id="MotivoCancelacion"></textarea>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" onclick="CancelacionNormalSolicitud()">Canelar Solicitud</button>
+        <button type="button" class="btn btn-danger" onclick="CancelacionNormalSolicitud()">Cancelar Solicitud</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
       </div>
     </div>

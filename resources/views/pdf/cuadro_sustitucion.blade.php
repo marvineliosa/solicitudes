@@ -42,10 +42,10 @@
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">NOMBRE</th>
 		    <th style="width: 100%; font-size: 10px;border:1px solid black;" class="bloque">FUNCIONES</th> 
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">CATEGORÍA / PUESTO SOLICITADO</th>
-		    <th style="font-size: 10px;border:1px solid black;" class="bloque">SALARIO NETO SOLICITADO</th>
+		    <th style="font-size: 10px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL SOLICITADO</th>
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">DIFERENCIA QUINCENAL</th>
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">% DIFERENCIA</th>
-		    <th style="width: 70%; font-size: 8px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENALDE QUIEN SE SUSTITUYE</th>
+		    <th style="width: 70%; font-size: 8px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL DE QUIEN SE SUSTITUYE</th>
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">EN SUSTITUCIÓN DE</th>
 		  </tr>
 		  <tr>
@@ -131,7 +131,7 @@
 </html>
 <script type="text/javascript">
     var gl_solicitud = <?php echo json_encode($solicitud) ?>;
-    //console.log(gl_solicitud);
+    console.log(gl_solicitud);
     var gl_sustitucion = <?php echo json_encode($sustitucion) ?>;
     console.log(gl_sustitucion);
 </script>

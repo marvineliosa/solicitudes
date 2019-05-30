@@ -54,7 +54,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Salario neto anterior*</label>
+            <label class="col-sm-2 control-label">Salario neto quincenal anterior*</label>
             <div class="col-sm-6">
               <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" value="0.00" step=".01" id="Sustitucion-SalarioAnterior">
             </div>
@@ -84,7 +84,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Salario neto solicitado*</label>
+            <label class="col-sm-2 control-label">Salario neto quincenal solicitado*</label>
             <div class="col-sm-6">
               <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" value="0.00" step=".01" id="Sustitucion-SalarioSolicitado">
             </div>
