@@ -54,9 +54,13 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Salario neto quincenal actual*</label>
+            @if($institucional)
+              <label class="col-sm-2 control-label">Salario bruto quincenal actual*</label>
+            @else
+              <label class="col-sm-2 control-label">Salario neto quincenal actual*</label>
+            @endif
             <div class="col-sm-6">
-              <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" id="Promocion-SalarioActual" step=".01">
+              <input type="number" class="form-control" placeholder="Salario actual del candidato" id="Promocion-SalarioActual" step=".01">
             </div>
           </div>
           <div class="form-group">
@@ -78,7 +82,11 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Salario neto quincenal solicitado*</label>
+            @if($institucional)
+              <label class="col-sm-2 control-label">Salario bruto quincenal solicitado*</label>
+            @else
+              <label class="col-sm-2 control-label">Salario neto quincenal solicitado*</label>
+            @endif
             <div class="col-sm-6">
               <input type="number" class="form-control" placeholder="Salario solicitado para el candidato" id="Promocion-SalarioSolicitado" step=".01">
             </div>

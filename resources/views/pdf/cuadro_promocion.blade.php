@@ -40,18 +40,26 @@
 		<table style="width:100%;" class="table table-bordered">
 		  <tr>
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">NOMBRE</th>
-		    <th style="font-size: 10px;border:1px solid black;" class="bloque">CATEGORIA ACTUAL</th> 
-		    <th style="font-size: 10px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL ACTUAL</th> 
+		    <th style="font-size: 10px;border:1px solid black;" class="bloque">CATEGORIA ACTUAL</th>
+		    @if($solicitud->INSTITUCIONAL)
+		    	<th style="font-size: 10px;border:1px solid black;" class="bloque">SALARIO BRUTO QUINCENAL ACTUAL</th>
+		    @else 
+		    	<th style="font-size: 10px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL ACTUAL</th>
+		    @endif
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">FUNCIONES</th> 
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">CATEGORÍA/PUESTO SOLICITADO</th>
-		    <th style="font-size: 10px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL SOLICITADO</th>
+		    @if($solicitud->INSTITUCIONAL)
+		    	<th style="font-size: 10px;border:1px solid black;" class="bloque">SALARIO BRUTO QUINCENAL SOLICITADO</th>
+		    @else
+		    	<th style="font-size: 10px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL SOLICITADO</th>
+		    @endif
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">DIFERENCIA QUINCENAL</th>
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">% DIFERENCIA</th>
 		  </tr>
 		  <tr>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$solicitud->NOMBRE_SOLICITUD}}</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="justify">{{$solicitud->PUESTO_SOLICITUD}}</td>
-		    <td style="font-size: 9px;border:1px solid black;" align="justify">{{'$ '.$solicitud->SALARIO_FORMATO}}</td>
+		    <td style="font-size: 9px;border:1px solid black;" align="center">{{'$ '.$solicitud->SALARIO_FORMATO}}</td>
 		    <td style="font-size: 8px;border:1px solid black;" align="justify">{{$promocion->NUEVAS_ACTIVIDADES}}</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$promocion->PUESTO_NUEVO}}</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{'$ '.number_format($promocion->NUEVO_SALARIO,2)}}</td>
@@ -66,8 +74,12 @@
 		<table style="width:100%" class="table" align="center">
 		  <tr>
 		    <th style="font-size: 8px;border:1px solid black; visibility: hidden" class="bloque"></th>
-		    <th style="font-size: 8px;border:1px solid black;" class="bloque">CATEGORÍAS INMEDIATAS</th> 
-		    <th style="font-size: 8px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL</th>
+		    <th style="font-size: 8px;border:1px solid black;" class="bloque">CATEGORÍAS INMEDIATAS</th>
+		    @if($solicitud->INSTITUCIONAL)
+		    	<th style="font-size: 8px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL</th>
+		    @else
+		    	<th style="font-size: 8px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL</th>
+		   	@endif
 		    <th style="font-size: 8px;border:1px solid black;" class="bloque">DIFERENCIA QUINCENAL</th>
 		    <th style="font-size: 8px;border:1px solid black;" class="bloque">% DE DIFERENCIA</th>
 		    @if($solicitud->COMPENSACION_SOLICITUD)

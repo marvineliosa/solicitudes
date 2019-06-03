@@ -40,7 +40,11 @@
 			<table style="width:100%;" class="table table-bordered">
 			  <tr>
 			    <th style="font-size: 10px;border:1px solid black; background-color: rgb(255, 230, 153);" class="bloque">CATEGORÍA QUE TENÍA EN LA SEDE {{$solicitud->NOMBRE_DEPENDENCIA}}</th>
-			    <th style="font-size: 10px;border:1px solid black; background-color: rgb(255, 230, 153);" class="bloque">SALARIO QNAL. NETO EN LA SEDE {{$solicitud->NOMBRE_DEPENDENCIA}}</th> 
+			    @if($solicitud->INSTITUCIONAL)
+			    	<th style="font-size: 10px;border:1px solid black; background-color: rgb(255, 230, 153);" class="bloque">SALARIO QNAL. BRUTO EN LA SEDE {{$solicitud->NOMBRE_DEPENDENCIA}}</th>
+			    @else
+			    	<th style="font-size: 10px;border:1px solid black; background-color: rgb(255, 230, 153);" class="bloque">SALARIO QNAL. NETO EN LA SEDE {{$solicitud->NOMBRE_DEPENDENCIA}}</th>
+			    @endif
 			    <th style="font-size: 10px;border:1px solid black; background-color: rgb(255, 230, 153);" class="bloque">PUESTO EN LA SEDE {{$solicitud->NOMBRE_DEPENDENCIA}}</th> 
 			    <th style="font-size: 10px;border:1px solid black; background-color: rgb(255, 230, 153);" class="bloque">FUNCIONES DESEMPEÑADAS EN LA SEDE {{$solicitud->NOMBRE_DEPENDENCIA}}</th> 
 			    <th style="font-size: 10px;border:1px solid black; background-color: rgb(255, 230, 153);" class="bloque">MOTIVO DE SOLICITUD DEL CAMBIO</th>
@@ -57,7 +61,11 @@
 			<table style="width:100%;" class="table table-bordered">
 			  <tr>
 			    <th style="font-size: 10px;border:1px solid black; background-color: rgb(255, 230, 153);" class="bloque">CATEGORÍA PROPUESTA</th>
-			    <th style="font-size: 10px;border:1px solid black; background-color: rgb(255, 230, 153);" class="bloque">SALARIO QNAL. NETO PROPUESTO</th> 
+			    @if($solicitud->INSTITUCIONAL)
+			    	<th style="font-size: 10px;border:1px solid black; background-color: rgb(255, 230, 153);" class="bloque">SALARIO QNAL. BRUTO PROPUESTO</th> 
+			    @else
+			    	<th style="font-size: 10px;border:1px solid black; background-color: rgb(255, 230, 153);" class="bloque">SALARIO QNAL. NETO PROPUESTO</th> 
+			    @endif
 			    <th style="font-size: 10px;border:1px solid black; background-color: rgb(255, 230, 153);" class="bloque">PUESTO EN LA SEDE {{$adscripcion->NUEVA_DEPENDENCIA}}</th> 
 			    <th style="font-size: 10px;border:1px solid black; background-color: rgb(255, 230, 153);" class="bloque">FUNCIONES DESEMPEÑADAS EN LA SEDE {{$adscripcion->NUEVA_DEPENDENCIA}}</th> 
 			  </tr>
@@ -81,14 +89,8 @@
 			<table style="width:100%" class="table" border="0">
 			  <tr>
 			  	<td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
-			  		<img src="data:image/png;base64, {{ base64_encode(QrCode::format('png')->size(100)->generate($solicitud->FIRMA_CGA)) }} ">
+			  		<img src="data:image/png;base64, {{ base64_encode(QrCode::format('png')->size(150)->generate($solicitud->FIRMA_CGA)) }} ">
 			  	</td>
-			    <td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
-			  		<img src="data:image/png;base64, {{ base64_encode(QrCode::format('png')->size(100)->generate($solicitud->FIRMA_TITULAR)) }} ">
-			    </td>
-			    <td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
-			  		<img src="data:image/png;base64, {{ base64_encode(QrCode::format('png')->size(100)->generate($solicitud->FIRMA_SPR)) }} ">
-			    </td>
 			  </tr>
 			</table>
 		</div>

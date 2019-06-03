@@ -51,28 +51,74 @@
             echo json_encode($data);//*/
         }
 
+        public function ExisteCoordinador(){
+            $existe_coordinador = DB::table('SOLICITUDES_LOGIN')
+                ->where('LOGIN_CATEGORIA','COORDINADOR_CGA')
+                ->get();
+            if(count($existe_coordinador)>0){
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+        public function ExisteAdministrador(){
+            $existe_coordinador = DB::table('SOLICITUDES_LOGIN')
+                ->where('LOGIN_CATEGORIA','ADMINISTRADOR_CGA')
+                ->get();
+            if(count($existe_coordinador)>0){
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+        public function ExisteSecretario(){
+            $existe_coordinador = DB::table('SOLICITUDES_LOGIN')
+                ->where('LOGIN_CATEGORIA','SECRETARIO_PARTICULAR')
+                ->get();
+            if(count($existe_coordinador)>0){
+                return true;
+            }else{
+                return false;
+            }
+        }
+
         public function CrearUsuarioGeneral(Request $request){
             date_default_timezone_set('America/Mexico_City');
-            //dd($request);
-            $existe_usuario = DB::table('SOLICITUDES_LOGIN')
-                ->where('LOGIN_USUARIO',$request['usuario'])
-                ->get();
-            $mensaje = '';
-            if(count($existe_usuario)==0){
-                $contrasena = LoginController::randomPassword();
-                $insert = DB::table('SOLICITUDES_LOGIN')
-                    ->insert([
-                                'LOGIN_USUARIO' => $request['usuario'],
-                                'LOGIN_CONTRASENIA' => $contrasena,
-                                'LOGIN_CATEGORIA' => $request['tipo_usuario'],
-                                'LOGIN_RESPONSABLE' => $request['responsable'],
-                                'created_at' => date('Y-m-d H:i:s')
-                            ]);
-                $mensaje = 'El usuario ha sido registrado satirfacotiamente, se ha enviado la contraseña a '.$request['usuario'];
-                $exito_mail = MailsController::FuncionEnviarContrasena($request['usuario']);
+            //dd($request->tipo_usuario);
+            if((strcmp($request->tipo_usuario, 'COORDINADOR_CGA')==0) && LoginController::ExisteCoordinador()){
+                //dd('coordinador');
+                $mensaje = 'Ya se encuentra registrado un usuario Coordinador General Administrativo en el sistema. Para registrar otro, borre el que existe.';
+            }else if((strcmp($request->tipo_usuario, 'SECRETARIO_PARTICULAR')==0) && LoginController::ExisteSecretario()){
+                //dd('Secretario');
+                $mensaje = 'Ya se encuentra registrado un usuario Secretario Particular de Rectoría en el sistema. Para registrar otro, borre el que existe.';
+            }else if((strcmp($request->tipo_usuario, 'ADMINISTRADOR_CGA')==0) && LoginController::ExisteAdministrador()){
+                //dd('Secretario');
+                $mensaje = 'Ya se encuentra registrado un usuario Administrador en el sistema. Para registrar otro, borre el que existe.';
             }else{
-                $mensaje = 'El usuario ya se encuentra registrado, para cualquier cambio favor de eliminarlo e intentarlo nuevamente';
+                //dd('nuevo');
+                $existe_usuario = DB::table('SOLICITUDES_LOGIN')
+                    ->where('LOGIN_USUARIO',$request['usuario'])
+                    ->get();
+                $mensaje = '';
+                if(count($existe_usuario)==0){
+                    $contrasena = LoginController::randomPassword();
+                    $insert = DB::table('SOLICITUDES_LOGIN')
+                        ->insert([
+                                    'LOGIN_USUARIO' => $request['usuario'],
+                                    'LOGIN_CONTRASENIA' => $contrasena,
+                                    'LOGIN_CATEGORIA' => $request['tipo_usuario'],
+                                    'LOGIN_RESPONSABLE' => $request['responsable'],
+                                    'created_at' => date('Y-m-d H:i:s')
+                                ]);
+                    $mensaje = 'El usuario ha sido registrado satirfacotiamente, se ha enviado la contraseña a '.$request['usuario'];
+                    $exito_mail = MailsController::FuncionEnviarContrasena($request['usuario']);
+                }else{
+                    $mensaje = 'El usuario ya se encuentra registrado, para cualquier cambio favor de eliminarlo e intentarlo nuevamente';
+                } 
             }
+            
             $data = array(
                 "mensaje" => $mensaje
               );
@@ -145,12 +191,15 @@
             \Session::forget('id_dependencia');
             \Session::forget('responsable');
             \Session::forget('horario');
+            \Session::forget('sistema_inst');
             $usr = $request['usuario'];
             $contrasena = $request['pass'];
             $fl = false;
             $usuario = "";
             $id_dependencia = null;
             $fl_horario = false;
+            $sistema = SolicitudesController::DatosGenerales();
+            //dd($sistema);
             $existe = DB::table('SOLICITUDES_LOGIN')->where(['LOGIN_USUARIO'=> $usr, 'LOGIN_CONTRASENIA' => $contrasena])->get();
             $fl_aviso = 0;
             //dd($existe);
@@ -174,6 +223,7 @@
                     \Session::forget('id_dependencia');
                     \Session::forget('responsable');
                     \Session::forget('horario');
+                    \Session::forget('sistema_inst');
                     //\Session::forget('nombre');
                 }
                 $datos = SolicitudesController::DatosGenerales();
@@ -183,6 +233,7 @@
                 \Session::push('id_dependencia',$id_dependencia);
                 \Session::push('responsable',$existe[0]->LOGIN_RESPONSABLE);
                 \Session::push('horario',$fl_horario);
+                \Session::push('sistema_inst',$sistema['institucional']);
                 //\Session::push('institucional',$datos['institucional']);
                 //dd(\Session::get('responsable')[0]);
                 //\Session::push('nombre',$n_usuario[0]->USUARIOS_NOMBRE_RESPONSABLE);

@@ -30,7 +30,7 @@
 <body style="height:420px; overflow:auto;">
 	<div id="div-dependencia" align="center" class=""><h5>{{$solicitud->NOMBRE_INTERNO_DEPENDENCIA}}</h5></div>
 	@if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN')==0||strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN POR SUSTITUCIÓN')==0)
-		<div id="div-subtitulo" align="center" class="" style="font-size: 10px;">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}} EN NÓMINA {{$solicitud->NOMINA_SOLICITUD}}</div>
+		<div id="div-subtitulo" align="center" class="" style="font-size: 10px;">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}} EN NÓMINA @if($solicitud->INSTITUCIONAL)INSTITUCIONAL @else OUTSORCING @endif</div>
 	@else
 		<div id="div-subtitulo" align="center" class="">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}</div>
 	@endif
@@ -42,7 +42,11 @@
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">NOMBRE</th>
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">FUNCIONES</th> 
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">CATEGORÍA/PUESTO SOLICITADO</th>
-		    <th style="font-size: 10px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL SOLICITADO</th>
+		    @if($solicitud->INSTITUCIONAL)
+		    	<th style="font-size: 10px;border:1px solid black;" class="bloque">SALARIO BRUTO QUINCENAL SOLICITADO</th>
+		    @else
+		    	<th style="font-size: 10px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL SOLICITADO</th>
+		    @endif
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">DIFERENCIA QUINCENAL</th>
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">% DIFERENCIA</th>
 		  </tr>
@@ -63,7 +67,11 @@
 			  <tr>
 			    <th style="font-size: 8px;border:1px solid black; visibility: hidden" class="bloque"></th>
 			    <th style="font-size: 8px;border:1px solid black;" class="bloque">CATEGORÍAS INMEDIATAS</th> 
-			    <th style="font-size: 8px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL</th>
+			    @if($solicitud->INSTITUCIONAL)
+			    	<th style="font-size: 8px;border:1px solid black;" class="bloque">SALARIO BRUTO QUINCENAL</th>
+			    @else
+			    	<th style="font-size: 8px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL</th>
+			    @endif
 			    <th style="font-size: 8px;border:1px solid black;" class="bloque">DIFERENCIA QUINCENAL</th>
 			    <th style="font-size: 8px;border:1px solid black;" class="bloque">% DE DIFERENCIA</th>
 			    @if($solicitud->COMPENSACION_SOLICITUD)

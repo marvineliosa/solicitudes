@@ -60,7 +60,7 @@
         </div>
 
         <!--logo start-->
-        <a href="#" class="logo">Solicitudes <!--<span class="lite">BUAP</span>--></a>
+        <a href="#" class="logo">Solicitudes @if(\Session::get('sistema_inst')[0]) <span class="lite">BUAP</span> @endif</a>
         <!--logo end-->
         
 

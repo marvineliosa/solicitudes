@@ -498,7 +498,7 @@
                 ->get();
             $cabeceras = array(
                     'CREACIÓN',
-                    'EXPIRACIÓN',
+                    //'EXPIRACIÓN',
                     'INFORMACION COMPLETA',
                     'TURNADO A CGA',
                     'LIMITE AGENDAR CITA',
@@ -517,7 +517,7 @@
             //dd($fechas);
             $datos_tabla = array(
                     'CREACIÓN' => (($fechas[0]->FECHAS_CREACION_SOLICITUD)?date("d/m/Y", strtotime($fechas[0]->FECHAS_CREACION_SOLICITUD)):null),
-                    'EXPIRACIÓN' => (($fechas[0]->FECHAS_EXPIRACION)?date("d/m/Y", strtotime($fechas[0]->FECHAS_EXPIRACION)):null),
+                    //'EXPIRACIÓN' => (($fechas[0]->FECHAS_EXPIRACION)?date("d/m/Y", strtotime($fechas[0]->FECHAS_EXPIRACION)):null),
                     'INFORMACION COMPLETA' => (($fechas[0]->FECHAS_INFORMACION_COMPLETA)?date("d/m/Y", strtotime($fechas[0]->FECHAS_INFORMACION_COMPLETA)):null),
                     'TURNADO A CGA' => (($fechas[0]->FECHAS_TURNADO_CGA)?date("d/m/Y", strtotime($fechas[0]->FECHAS_TURNADO_CGA)):null),
                     'LIMITE AGENDAR CITA' => (($fechas[0]->FECHAS_LIMITE_AGENDAR_CITA)?date("d/m/Y", strtotime($fechas[0]->FECHAS_LIMITE_AGENDAR_CITA)):null),
@@ -572,6 +572,7 @@
             //dd($id_solicitud);
             $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
             $extra = array();
+            $institucional = SolicitudesController::DatosGenerales();
             $diferencias = SolicitudesController::ObtenerDiferencias($solicitud,$extra);
             //dd($diferencias);
             $cabeceras = array(
@@ -583,9 +584,11 @@
                 'Actividades',
                 'Categoría solicitada',
                 'Puesto solicitado',
-                'Salario neto quincenal solicitado',
+                (($institucional['institucional'])?'Salario bruto quincenal solicitado':'Salario neto quincenal solicitado'),
+                //'Salario neto quincenal solicitado',
                 'Categoría propuesta',
-                'Salario neto quincenal propuesto',
+                //'Salario neto quincenal propuesto',
+                (($institucional['institucional'])?'Salario bruto quincenal propuesto':'Salario neto quincenal propuesto'),
                 'Diferencia quincenal (Propuesta)',
                 '% de diferencia (Propuesta)',
                 'Compensación neto quincenal',
@@ -600,10 +603,12 @@
                 'Actividades' => $solicitud->ACTIVIDADES_SOLICITUD,
                 'Categoría solicitada' => $solicitud->CATEGORIA_SOLICITUD,
                 'Puesto solicitado' => $solicitud->PUESTO_SOLICITUD,
-                'Salario neto quincenal solicitado' => '$ '. $solicitud->SALARIO_FORMATO,
+                (($institucional['institucional'])?'Salario bruto quincenal solicitado':'Salario neto quincenal solicitado') => '$ '. $solicitud->SALARIO_FORMATO,
+                //'Salario neto quincenal solicitado' => '$ '. $solicitud->SALARIO_FORMATO,
 
                 'Categoría propuesta' => $solicitud->CATEGORIA_PROPUESTA,
-                'Salario neto quincenal propuesto' => '$ '. $solicitud->SALARIO_PROPUESTO,
+                (($institucional['institucional'])?'Salario bruto quincenal propuesto':'Salario neto quincenal propuesto') => '$ '. $solicitud->SALARIO_PROPUESTO,
+                //'Salario neto quincenal propuesto' => '$ '. $solicitud->SALARIO_PROPUESTO,
 
                 'Diferencia quincenal (Propuesta)' => $diferencias->dif_quincenal_2,
                 '% de diferencia (Propuesta)' => $diferencias->porc_diferencia_2,
@@ -629,6 +634,7 @@
             $extra = SolicitudesController::ObtenerDatosSustitucion($id_solicitud);
             //dd($extra);
             $diferencias = SolicitudesController::ObtenerDiferencias($solicitud,$extra);
+            $institucional = SolicitudesController::DatosGenerales();
             //dd($extra);
             $cabeceras = array(
                 'Número de solicitud',
@@ -636,16 +642,19 @@
                 'Actividades',
                 'Categoría solicitada',
                 'Puesto solicitado',
-                'Salario neto quincenal solicitado',
+                (($institucional['institucional'])?'Salario bruto quincenal solicitado':'Salario neto quincenal solicitado'),
+                //'Salario neto quincenal solicitado',
 
                 'Diferencia quincenal solicitada',
                 '% de diferencia solicitada',
 
                 'Nombre de quien se sustituye',
-                'Salario quincenal de quien se sustituye',
+                //'Salario quincenal de quien se sustituye',
+                (($institucional['institucional'])?'Salario bruto quincenal de quien se sustituye':'Salario neto quincenal de quien se sustituye'),
 
                 'Categoría propuesta',
-                'Salario neto quincenal propuesto',
+                (($institucional['institucional'])?'Salario bruto quincenal propuesto':'Salario neto quincenal propuesto'),
+                //'Salario neto quincenal propuesto',
                 'Diferencia quincenal (propuesta)',
                 '% de diferencia (propuesta)',
                 'Compensación neto quincenal',
@@ -659,16 +668,19 @@
                 'Actividades' => $extra->NUEVAS_ACTIVIDADES,
                 'Categoría solicitada' => $extra->NUEVA_CATEGORIA,
                 'Puesto solicitado' => $extra->PUESTO_NUEVO,
-                'Salario neto quincenal solicitado' => '$ '. $extra->NUEVO_SALARIO,
+                (($institucional['institucional'])?'Salario bruto quincenal solicitado':'Salario neto quincenal solicitado') => '$ '. $extra->NUEVO_SALARIO,
+                //'Salario neto quincenal solicitado' => '$ '. $extra->NUEVO_SALARIO,
 
                 'Diferencia quincenal solicitada' => $diferencias->dif_quincenal_1,
                 '% de diferencia solicitada' => $diferencias->porc_diferencia_1,
 
                 'Nombre de quien se sustituye' => $solicitud->EN_SUSTITUCION_DE,
-                'Salario quincenal de quien se sustituye' => '$ '. $solicitud->SALARIO_FORMATO,
+                (($institucional['institucional'])?'Salario bruto quincenal de quien se sustituye':'Salario neto quincenal de quien se sustituye') => '$ '. $solicitud->SALARIO_FORMATO,
+                //'Salario quincenal de quien se sustituye' => '$ '. $solicitud->SALARIO_FORMATO,
 
                 'Categoría propuesta' => $solicitud->CATEGORIA_PROPUESTA,
-                'Salario neto quincenal propuesto' => '$ '. $solicitud->SALARIO_PROPUESTO,
+                (($institucional['institucional'])?'Salario bruto quincenal propuesto':'Salario neto quincenal propuesto') => '$ '. $solicitud->SALARIO_PROPUESTO,
+                //'Salario neto quincenal propuesto' => '$ '. $solicitud->SALARIO_PROPUESTO,
                 'Diferencia quincenal (propuesta)' => $diferencias->dif_quincenal_2,
                 '% de diferencia (propuesta)' => $diferencias->porc_diferencia_2,
                 'Compensación neto quincenal' => '$ '. number_format($solicitud->COMPENSACION_SOLICITUD,2),
@@ -856,6 +868,7 @@
         public function ObtenerCambioAdscripcion(Request $request){
             $solicitud = SolicitudesController::ObtenerSolicitudId($request['id_sol']);
             $cambio_adscripcion = SolicitudesController::ObtenerDatosCambioAdscripcion($request['id_sol']);
+            $institucional = SolicitudesController::DatosGenerales();
             //dd($cambio_adscripcion);
             $cabeceras = array(
                 'Número de solicitud', 
@@ -868,7 +881,8 @@
                 'Dependencia destino',
                 'Categoría solicitada',  
                 'Puesto solicitado',  
-                'Salario neto quincenal solicitado',  
+                //'Salario neto quincenal solicitado',
+                (($institucional['institucional'])?'Salario bruto quincenal solicitado':'Salario neto quincenal solicitado'),
                 'Actividades solicitadas',
 
                 'Categoría actual',  
@@ -889,7 +903,8 @@
                 'Dependencia destino' => $cambio_adscripcion->NUEVA_DEPENDENCIA,
                 'Categoría solicitada' => $cambio_adscripcion->NUEVA_CATEGORIA,  
                 'Puesto solicitado' => $cambio_adscripcion->PUESTO_NUEVO,  
-                'Salario neto quincenal solicitado' => '$ '.number_format($cambio_adscripcion->NUEVO_SALARIO,2),  
+                (($institucional['institucional'])?'Salario bruto quincenal solicitado':'Salario neto quincenal solicitado') => '$ '.number_format($cambio_adscripcion->NUEVO_SALARIO,2),  
+                //'Salario neto quincenal solicitado' => '$ '.number_format($cambio_adscripcion->NUEVO_SALARIO,2),  
                 'Actividades solicitadas' => $cambio_adscripcion->NUEVAS_ACTIVIDADES,
 
                 'Categoría actual' => $solicitud->CATEGORIA_SOLICITUD,  
@@ -910,6 +925,7 @@
         public function ObtenerPromocion(Request $request){
             $solicitud = SolicitudesController::ObtenerSolicitudId($request['id_sol']);
             $promocion = SolicitudesController::ObtenerDatosPromocion($request['id_sol']);
+            $institucional = SolicitudesController::DatosGenerales();
             //dd($promocion);
             $cabeceras = array(
                 'Número de solicitud',
@@ -921,7 +937,8 @@
                 'Categoría solicitada',
                 'Puesto solicitado',
                 'Nuevas actividades',
-                'Salario neto quincenal solicitado',
+                //'Salario neto quincenal solicitado',
+                (($institucional['institucional'])?'Salario bruto quincenal solicitado':'Salario neto quincenal solicitado'),
                 'Categoría actual',
                 'Puesto actual',
                 'Salario actual',
@@ -939,7 +956,8 @@
                 'Categoría solicitada' => $promocion->NUEVA_CATEGORIA,
                 'Puesto solicitado' => $promocion->PUESTO_NUEVO,
                 'Nuevas actividades' => $promocion->NUEVAS_ACTIVIDADES,
-                'Salario neto quincenal solicitado' => '$ '.number_format($promocion->NUEVO_SALARIO,2),
+                //'Salario neto quincenal solicitado' => '$ '.number_format($promocion->NUEVO_SALARIO,2),
+                (($institucional['institucional'])?'Salario bruto quincenal solicitado':'Salario neto quincenal solicitado') => '$ '.number_format($promocion->NUEVO_SALARIO,2),
                 'Categoría actual' => $solicitud->CATEGORIA_SOLICITUD,
                 'Puesto actual' => $solicitud->PUESTO_SOLICITUD,
                 'Salario actual' => $solicitud->SALARIO_FORMATO,
@@ -959,6 +977,7 @@
         public function ObtenerSustitucion(Request $request){
             $solicitud = SolicitudesController::ObtenerSolicitudId($request['id_sol']);
             $sustitucion = SolicitudesController::ObtenerDatosSustitucion($request['id_sol']);
+            $institucional = SolicitudesController::DatosGenerales();
             //dd($solicitud);
             $cabeceras = array(
                 'Número de solicitud',
@@ -969,7 +988,8 @@
                 'Fecha de información completa', 
                 'Categoría solicitada',
                 'Puesto solicitado',
-                'Salario neto quincenal solicitado',
+                (($institucional['institucional'])?'Salario bruto quincenal solicitado':'Salario neto quincenal solicitado'),
+                //'Salario neto quincenal solicitado',
                 'Actividades',
                 'Nombre de quien causa baja',
                 'Categoría de quien causa baja',
@@ -988,7 +1008,8 @@
                 'Fecha de información completa' => $solicitud->FECHAS_INFORMACION_COMPLETA, 
                 'Categoría solicitada' => $sustitucion->NUEVA_CATEGORIA,//
                 'Puesto solicitado' => $sustitucion->PUESTO_NUEVO,//
-                'Salario neto quincenal solicitado' => '$ '.number_format($sustitucion->NUEVO_SALARIO,2),//
+                //'Salario neto quincenal solicitado' => '$ '.number_format($sustitucion->NUEVO_SALARIO,2),//
+                (($institucional['institucional'])?'Salario bruto quincenal solicitado':'Salario neto quincenal solicitado') => '$ '.number_format($sustitucion->NUEVO_SALARIO,2),//
                 'Actividades' => $sustitucion->NUEVAS_ACTIVIDADES,
                 'Nombre de quien causa baja' => $solicitud->EN_SUSTITUCION_DE,
                 'Categoría de quien causa baja' => $solicitud->CATEGORIA_SOLICITUD,
@@ -1011,6 +1032,7 @@
             //$arreglos = SolicitudesController::ObtenerDatosSolicitudModal($request['id_sol']);
             //dd($solicitud);
             $solicitud = SolicitudesController::ObtenerSolicitudId($request['id_sol']);
+            $institucional = SolicitudesController::DatosGenerales();
             $cabeceras = array(
                 'Número de solicitud',
                 'Estatus',
@@ -1020,7 +1042,8 @@
                 'Fecha de información completa',  
                 'Categoría solicitada',  
                 'Puesto solicitado',  
-                'Salario neto quincenal solicitado',  
+                //'Salario neto quincenal solicitado',
+                (($institucional['institucional'])?'Salario bruto quincenal solicitado':'Salario neto quincenal solicitado'),
                 'Actividades',
                 'Justificación',
                 'Escape'
@@ -1034,7 +1057,8 @@
                 'Fecha de información completa' => $solicitud->FECHAS_INFORMACION_COMPLETA,  
                 'Categoría solicitada' => $solicitud->CATEGORIA_SOLICITUD,  
                 'Puesto solicitado' => $solicitud->PUESTO_SOLICITUD,
-                'Salario neto quincenal solicitado' => '$ '.$solicitud->SALARIO_FORMATO, 
+                //'Salario neto quincenal solicitado' => '$ '.$solicitud->SALARIO_FORMATO, 
+                (($institucional['institucional'])?'Salario bruto quincenal solicitado':'Salario neto quincenal solicitado') => '$ '.$solicitud->SALARIO_FORMATO, 
                 'Actividades' => $solicitud->ACTIVIDADES_SOLICITUD,
                 'Justificación' => $solicitud->JUSTIFICACION_SOLICITUD,
                 'Escape' => $solicitud->ID_ESCAPE
@@ -1772,7 +1796,8 @@
                 $solicitud[0]->FIRMA_TITULAR = null;
                 $solicitud[0]->FIRMA_SPR = null;
             }//*/
-
+            $solicitud[0]->INSTITUCIONAL = $institucional;
+            //dd($solicitud);
             return $solicitud[0];
         }
 
@@ -1944,7 +1969,8 @@
                     ->insert(
                                 [
                                     'FK_SOLICITUD_ID' => $request['id_sol'], 
-                                    'FIRMAS_TITULAR' => $usuario
+                                    'FIRMAS_TITULAR' => $usuario,
+                                    'created_at' => date('Y-m-d H:i:s')
                                 ]
                             );
             }else{
@@ -1996,7 +2022,8 @@
                     ->insert(
                                 [
                                     'FK_SOLICITUD_ID' => $request['id_sol'], 
-                                    'FIRMAS_CGA' => $usuario
+                                    'FIRMAS_CGA' => $usuario,
+                                    'created_at' => date('Y-m-d H:i:s')
                                 ]
                             );
             }else{
@@ -2053,7 +2080,8 @@
                     ->insert(
                                 [
                                     'FK_SOLICITUD_ID' => $request['id_sol'], 
-                                    'FIRMAS_SPR' => $usuario
+                                    'FIRMAS_SPR' => $usuario,
+                                    'created_at' => date('Y-m-d H:i:s')
                                 ]
                             );//*/
                 //if($existeFirma[0]->)
@@ -2137,6 +2165,36 @@
             return $usuario;
         }
 
+        public function NotificarFirmasCoordinador($id_solicitud){
+            $existe_coordinador = DB::table('SOLICITUDES_LOGIN')
+                ->where('LOGIN_CATEGORIA','COORDINADOR_CGA')
+                ->get();
+            $usuario = null;
+            if(count($existe_coordinador)>0){
+                $usuario = $existe_coordinador[0]->LOGIN_USUARIO;
+                $asunto = 'Cambio de estatus';
+                $titulo = 'Cambio de estatus';
+                $mensaje = 'Buen día, le notificamos que la solicitud '.$id_solicitud.' ha cambiado a FIRMAS y se encuentra disponible para ser validada';
+                $mail = MailsController::MandarMensajeGenerico($asunto,$titulo,$mensaje,$usuario);
+            }
+            return $usuario;
+        }//*/
+
+        public function NotificarFirmasSecretario($id_solicitud){
+            $existe_secretario = DB::table('SOLICITUDES_LOGIN')
+                ->where('LOGIN_CATEGORIA','SECRETARIO_PARTICULAR')
+                ->get();
+            $usuario = null;
+            if(count($existe_secretario)>0){
+                $usuario = $existe_secretario[0]->LOGIN_USUARIO;
+                $asunto = 'Cambio de estatus';
+                $titulo = 'Cambio de estatus';
+                $mensaje = 'Buen día, le notificamos que la solicitud '.$id_solicitud.' ha cambiado a FIRMAS y se encuentra disponible para ser validada';
+                $mail = MailsController::MandarMensajeGenerico($asunto,$titulo,$mensaje,$usuario);
+            }
+            return $usuario;
+        }//*/
+
         public function CancelacionNormalTitular(Request $request){
             $update = DB::table('SOLICITUDES_DATOS_CGA')
                 ->where('FK_SOLICITUD_ID', $request['id_sol'])
@@ -2192,11 +2250,13 @@
                 //SolicitudesController::EliminarFirmas($request['id_sol']);
             }//*/
             $fl_usr = null;
+            $fl_coor = null;
             if(strcmp($request['estatus'],'FIRMAS')==0){
                 $update_firmas = DB::table('SOLICITUDES_FECHAS')
                     ->where('FK_SOLICITUD_ID', $request['id_sol'])
                     ->update(['FECHAS_PUESTO_FIRMAS' => date('Y-m-d H:i:s')]);//*
                 $fl_usr = SolicitudesController::NotificarFirmasTitular($request['id_sol']);
+                $fl_coor = SolicitudesController::NotificarFirmasCoordinador($request['id_sol']);
                 //SolicitudesController::EliminarFirmas($request['id_sol']);
                 //enviar coorreo electrónico
             }//*/
@@ -2249,6 +2309,7 @@
             $data = array(
                 "update"=>$update,
                 "fl_usr"=>$fl_usr,
+                "fl_coor"=>$fl_coor,
                 "mail"=>$mail
             );
 
@@ -2324,7 +2385,8 @@
                     return view('errors.timeout');
                 }else{
                     $dependencias = DependenciasController::ObtenerSoloDependencias();
-                    return view('nuevo_contratacion')->with(["dependencias"=>$dependencias]);
+                    $institucional = SolicitudesController::DatosGenerales();
+                    return view('nuevo_contratacion')->with(["dependencias"=>$dependencias, "institucional"=>$institucional['institucional']]);
                 }
             }else{
                 return view('errors.505');
@@ -2339,7 +2401,8 @@
                     return view('errors.timeout');
                 }else{
                     $dependencias = DependenciasController::ObtenerSoloDependencias();
-                    return view('nuevo_sustitucion')->with(["dependencias"=>$dependencias]);
+                    $institucional = SolicitudesController::DatosGenerales();
+                    return view('nuevo_sustitucion')->with(["dependencias"=>$dependencias, "institucional"=>$institucional['institucional']]);
                 }
             }else{
                 return view('errors.505');
@@ -2354,7 +2417,8 @@
                     return view('errors.timeout');
                 }else{
                     $dependencias = DependenciasController::ObtenerSoloDependencias();
-                    return view('nuevo_promocion')->with(["dependencias"=>$dependencias]);
+                    $institucional = SolicitudesController::DatosGenerales();
+                    return view('nuevo_promocion')->with(["dependencias"=>$dependencias, "institucional"=>$institucional['institucional']]);
                 }
             }else{
                 return view('errors.505');
@@ -2492,7 +2556,8 @@
             $categoria = \Session::get('categoria')[0];
             if(in_array($categoria, ['SECRETARIO_PARTICULAR'])){
                 //$solicitudes = SolicitudesController::ObtenerSolicitudes();
-                $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('FIRMAS');
+
+                $solicitudes = SolicitudesController::ObtenerSolicitudesSecretarioParticular();
                 return view('listado_secretario_particular')->with("solicitudes",$solicitudes);
             }else{
                 return view('errors.505');
@@ -2516,6 +2581,7 @@
             $categoria = \Session::get('categoria')[0];
             if(in_array($categoria, ['COORDINADOR_CGA'])){
                 $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('FIRMAS');
+                //dd($solicitudes);
                 return view('listado_cga')->with("solicitudes",$solicitudes);
             }else{
                 return view('errors.505');
@@ -2532,12 +2598,38 @@
             }
         }
 
+        public function ObtenerSolicitudesSecretarioParticular(){
+            $tmp_solicitudes = DB::table('SOLICITUDES_FIRMAS')
+                ->whereNull('FIRMAS_SPR')
+                ->whereNotNull('FIRMAS_CGA')
+                ->whereNotNull('FIRMAS_TITULAR')
+                ->select('FK_SOLICITUD_ID')
+                ->get();
+            $id_solicitudes = array();
+            $solicitudes = array();
+            foreach ($tmp_solicitudes as $id) {
+                array_push($id_solicitudes, $id->FK_SOLICITUD_ID);
+            }
+            //dd($id_solicitudes);
+            $tmp2_solicitudes = DB::table('SOLICITUDES_SOLICITUD')
+                ->whereIn('SOLICITUD_ID', $id_solicitudes)
+                ->select('SOLICITUD_ID')
+                ->orderBy('created_at', 'desc')
+                ->get();
+            //dd($tmp2_solicitudes);
+            foreach ($tmp2_solicitudes as $datos) {
+                $solicitudes[$datos->SOLICITUD_ID]=SolicitudesController::ObtenerSolicitudId($datos->SOLICITUD_ID);
+            }
+            //dd($solicitudes);
+            return $solicitudes;
+        }
+
 
         public function ObtenerSolicitudesEstatus($estatus){
 
             $datos_cga = DB::table('SOLICITUDES_DATOS_CGA')
                 ->where('DATOS_CGA_ESTATUS',$estatus)
-                ->orderBy('created_at', 'asc')
+                ->orderBy('created_at', 'desc')
                 ->get();
             $solicitud = array();
             //dd($datos_cga);
@@ -2612,9 +2704,30 @@
             $rel_solicitudes = DB::table('REL_SOLICITUDES_ANALISTA')
                 ->where('FK_USUARIO',$analista)
                 ->get();
+            $id_sol = array();
+
+            foreach ($rel_solicitudes as $sol) {
+                array_push($id_sol, $sol->FK_SOLICITUD_ID);
+            }
+            //dd($id_sol);
+
+            $rel_solicitudes = DB::table('SOLICITUDES_SOLICITUD')
+                    ->select('SOLICITUD_ID')
+                    ->whereIn('SOLICITUD_ID',$id_sol)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            //dd($datos_cga);
+
+            /*$array_datos_cga = array();
+            foreach ($datos_cga as $dato) {
+                $array_datos_cga[] = $dato->FK_SOLICITUD_ID;
+            }//*/
+
+            //-----------------------------------------------------------
+            //dd($rel_solicitudes);
             foreach ($rel_solicitudes as $solicitud) {
             //dd($solicitud);
-                $solicitudes[$solicitud->FK_SOLICITUD_ID] = SolicitudesController::ObtenerSolicitudId($solicitud->FK_SOLICITUD_ID);
+                $solicitudes[$solicitud->SOLICITUD_ID] = SolicitudesController::ObtenerSolicitudId($solicitud->SOLICITUD_ID);
             }
             //dd($solicitudes);
             return $solicitudes;
@@ -2685,16 +2798,19 @@
                 $res_solicitudes = DB::table('SOLICITUDES_FIRMAS')
                                 ->whereNotNull('FIRMAS_SPR')
                                 ->select('FK_SOLICITUD_ID')
+                                ->orderBy('created_at', 'desc')
                                 ->get();
             }else if(strcmp($entidad, 'CGA')==0){
                 $res_solicitudes = DB::table('SOLICITUDES_FIRMAS')
                                 ->whereNotNull('FIRMAS_CGA')
                                 ->select('FK_SOLICITUD_ID')
+                                ->orderBy('created_at', 'desc')
                                 ->get();
             }else{
                 $res_solicitudes = DB::table('SOLICITUDES_FIRMAS')
                                 ->whereNotNull('FIRMAS_TITULAR')
                                 ->select('FK_SOLICITUD_ID')
+                                ->orderBy('created_at', 'desc')
                                 ->get();
             }
             $solicitudes = array();
@@ -2711,7 +2827,7 @@
             if(in_array($categoria, ['TRABAJADOR_SPR','SECRETARIO_PARTICULAR'])){
                 $res_solicitudes = DB::table('SOLICITUDES_DATOS_CGA')
                                     ->whereNotIn('DATOS_CGA_ESTATUS',['RECIBIDO SPR'])
-                                    ->orderBy('created_at', 'asc')
+                                    ->orderBy('created_at', 'desc')
                                     ->select('FK_SOLICITUD_ID')
                                     ->get();
                 $solicitudes = array();
@@ -2720,7 +2836,7 @@
                 $res_solicitudes = DB::table('SOLICITUDES_DATOS_CGA')
                                     ->whereNotIn('DATOS_CGA_ESTATUS',['RECIBIDO SPR','VALIDACIÓN DE INFORMACIÓN'])
                                     ->select('FK_SOLICITUD_ID')
-                                    ->orderBy('created_at', 'asc')
+                                    ->orderBy('created_at', 'desc')
                                     ->get();
                 $solicitudes = array();
             }
@@ -3459,7 +3575,8 @@
         public function RefrescarSPR(){
             //$solicitudes = SolicitudesController::ObtenerSolicitudes();
             //$solicitudes = SolicitudesController::ObtenerSolicitudesFirmadas('SPR');
-            $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('FIRMAS');
+            //$solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('FIRMAS');
+            $solicitudes = SolicitudesController::ObtenerSolicitudesSecretarioParticular();
             return View('tablas.listado_secretario_particular') ->with ("solicitudes",$solicitudes);
         }
 
