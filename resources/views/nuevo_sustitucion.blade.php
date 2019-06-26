@@ -173,6 +173,8 @@
     tipo_usuario = <?php echo json_encode(\Session::get('categoria')[0]) ?>;
     //console.log(tipo_usuario);
 
+      MensajeModal('¡ATENCIÓN!','Buen día, con el fin de unificar la presentación de la información, se agradecerá que la captura se realice utilizando mayúsculas y minúsculas.');
+
     function VerificarTamanio(archivo){
       arch = archivo.value;
       if(archivo.value!=''){

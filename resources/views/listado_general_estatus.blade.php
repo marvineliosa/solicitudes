@@ -4,7 +4,7 @@
 <div class="col-lg-12">
 	<section class="panel">
 	  <header class="panel-heading">
-	    Listado Completo
+	    
 	  </header>
 	  <div class="table-responsive">
 	  	<div id="div_tabla_datos">
@@ -74,7 +74,8 @@
 		      </td>
 		    </tr>
 		    @endif
-		    <tr>
+
+		    <!--<tr>
 		      <th scope="row" width="50%">Observaciones</th>
 		      <td>
 		      	<div class="form-check form-check-inline">
@@ -83,7 +84,7 @@
 			      <button type="button" class="btn btn-primary" onclick="CambiarEstado()">Guardar</button>
 				</div>
 		      </td>
-		    </tr>
+		    </tr>-->
 		  </tbody>
 		</table>
       </div>

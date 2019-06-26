@@ -1,10 +1,10 @@
 @extends('plantillas.menu')
-@section('titulo','Solicitudes')
+@section('titulo','Editar Cambio de Adscripción')
 @section('content')
 	<div class="col-lg-12">
 		<section class="panel">
 		  <header class="panel-heading">
-		    Llenado de información de Contrataciones
+		    Llenado de información de Cambios de Adscripción
 		  </header>
 		  <div class="panel-body">
         <form class="form-horizontal " method="get">
@@ -57,9 +57,13 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Salario actual</label>
+            @if($solicitud->INSTITUCIONAL)
+              <label class="col-sm-2 control-label">Salario bruto quincenal actual</label>
+            @else
+              <label class="col-sm-2 control-label">Salario neto quincenal actual</label>
+            @endif
             <div class="col-sm-6">
-              <input type="number" class="form-control" placeholder="Puesto del Candidato" value="{{$solicitud->SALARIO_SOLICITUD}}" step=".01" id="salario_actual">
+              <input type="number" class="form-control" placeholder="Salario actual" value="{{$solicitud->SALARIO_SOLICITUD}}" step=".01" id="salario_actual">
             </div>
           </div>
 
@@ -82,9 +86,24 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Salario neto solicitado</label>
+            @if($solicitud->INSTITUCIONAL)
+              <label class="col-sm-2 control-label">Salario bruto quincenal solicitado</label>
+            @else
+              <label class="col-sm-2 control-label">Salario neto quincenal solicitado</label>
+            @endif
             <div class="col-sm-6">
-              <input type="number" class="form-control" placeholder="Puesto del Candidato" step=".01" value="{{$datos_extra->NUEVO_SALARIO}}" id="salario_solicitado">
+              <input type="number" class="form-control" placeholder="Salario solicitado" step=".01" value="{{$datos_extra->NUEVO_SALARIO}}" id="salario_solicitado">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Fuente de Recursos*</label>
+            <div class="col-sm-6">
+              <select class="form-control m-bot15" id="SelectFuenteRecursos">
+                  <option value="NA">SELECCIONAR</option>
+                  <option value="ADMINISTRACIÓN CENTRAL" {{((strcmp($solicitud->FUENTE_RECURSOS_SOLICITUD,'ADMINISTRACIÓN CENTRAL')==0)?'selected':'')}}>ADMINISTRACIÓN CENTRAL</option>
+                  <option value="RECURSOS PROPIOS" {{((strcmp($solicitud->FUENTE_RECURSOS_SOLICITUD,'RECURSOS PROPIOS')==0)?'selected':'')}}>RECURSOS PROPIOS</option>
+              </select>
             </div>
           </div>
           
@@ -101,21 +120,25 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Puesto Propuesto</label>
+            <label class="col-sm-2 control-label">Puesto propuesto</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Puesto Propuesto" value="{{$solicitud->PUESTO_PROPUESTO}}" id="propuesta-puesto">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Categoría Propuesta</label>
+            <label class="col-sm-2 control-label">Categoría propuesta</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Categoría Propuesta" value="{{$solicitud->CATEGORIA_PROPUESTA}}" id="propuesta-categoria">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Salario Neto Propuesto</label>
+            @if($solicitud->INSTITUCIONAL)
+              <label class="col-sm-2 control-label">Salario bruto quincenal propuesto</label>
+            @else
+              <label class="col-sm-2 control-label">Salario neto quincenal propuesto</label>
+            @endif
             <div class="col-sm-6">
-              <input type="number" class="form-control" placeholder="Puesto del Candidato" value="{{$solicitud->SALARIO_PROPUESTO_SF}}" id="propuesta-salario" step=".01">
+              <input type="number" class="form-control" placeholder="Salario propuesto" value="{{$solicitud->SALARIO_PROPUESTO_SF}}" id="propuesta-salario" step=".01">
             </div>
           </div>
           <div class="form-group">
@@ -125,9 +148,13 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Salario Neto Superior Propuesto</label>
+            @if($solicitud->INSTITUCIONAL)
+            <label class="col-sm-2 control-label">Salario bruto quincenal superior propuesto</label>
+            @else
+            <label class="col-sm-2 control-label">Salario neto quincenal superior propuesto</label>
+            @endif
             <div class="col-sm-6">
-              <input type="number" class="form-control" placeholder="Puesto del Candidato" value="{{$solicitud->SALARIO_SUPERIOR}}" id="propuesta-salario_superior" step=".01">
+              <input type="number" class="form-control" placeholder="Salario superior propuesto" value="{{$solicitud->SALARIO_SUPERIOR}}" id="propuesta-salario_superior" step=".01">
             </div>
           </div>
           <div class="form-group">
@@ -137,9 +164,13 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Salario Neto Inferior Propuesto</label>
+            @if($solicitud->INSTITUCIONAL)
+            <label class="col-sm-2 control-label">Salario bruto quincenal inferior propuesto</label>
+            @else
+            <label class="col-sm-2 control-label">Salario neto quincenal inferior propuesto</label>
+            @endif
             <div class="col-sm-6">
-              <input type="number" class="form-control" placeholder="Slario Neto Inferior" value="{{$solicitud->SALARIO_INFERIOR}}" id="propuesta-salario_inferior" step=".01">
+              <input type="number" class="form-control" placeholder="Salario neto inferior" value="{{$solicitud->SALARIO_INFERIOR}}" id="propuesta-salario_inferior" step=".01">
             </div>
           </div>
           <div class="form-group">
@@ -213,6 +244,7 @@
       var categoria_actual = $("#categoria_actual").val();
       var puesto_actual = $("#puesto_actual").val();
       var salario_actual = $("#salario_actual").val();
+      var fuente_recursos = $("#SelectFuenteRecursos").val();
 
       var categoria_solicitada = $("#categoria_solicitada").val();
       var puesto_solicitado = $("#puesto_solicitado").val();
@@ -243,6 +275,7 @@
       dataForm.append('categoria_actual',categoria_actual);
       dataForm.append('puesto_actual',puesto_actual);
       dataForm.append('salario_actual',salario_actual);
+      dataForm.append('fuente_recursos',fuente_recursos);
 
       dataForm.append('categoria_solicitada',categoria_solicitada);
       dataForm.append('salario_solicitado',salario_solicitado);

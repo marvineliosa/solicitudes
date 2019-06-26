@@ -157,6 +157,8 @@
     //autollenado();
     tipo_usuario = <?php echo json_encode(\Session::get('categoria')[0]) ?>;
     //console.log(tipo_usuario);
+
+      MensajeModal('¡ATENCIÓN!','Buen día, con el fin de unificar la presentación de la información, se agradecerá que la captura se realice utilizando mayúsculas y minúsculas.');
     function autollenado(){
       $("#Promocion-Candidato").val('Marvin Eliosa Abaroa');
       $("#Promocion-CategoriaActual").val('Auxiliar Administrativo');

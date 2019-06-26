@@ -59,6 +59,7 @@
                      ->select('SOLICITUD_ID')
                      ->whereIn('SOLICITUD_ID',$array_datos_cga)
                      ->whereIn('SOLICITUD_TIPO_SOLICITUD',$array_tipo_solicitud)
+                    ->orderBy('created_at', 'desc')
                      ->get();//*/
             //$solicitudes = DB::table('SOLICITUDES_SOLICITUD')->get();
             //dd($solicitudes);
@@ -209,13 +210,13 @@
             $solicitud->SALARIO_PROPUESTO = $datos_cga[0]->DATOS_CGA_SALARIO_PROPUESTO;
             $solicitud->PROCEDE = $datos_cga[0]->DATOS_CGA_PROCEDENTE;
             //$solicitud->RESPUESTA_CGA = $datos_cga[0]->DATOS_CGA_RESPUESTA;
-            /*$solicitud->CATEGORIA_SUPERIOR = $datos_cga[0]->DATOS_CGA_CATEGORIA_SUPERIOR;
-            $solicitud->SALARIO_SUPERIOR = $datos_cga[0]->DATOS_CGA_SALARIO_SUPERIOR;
-            $solicitud->CATEGORIA_INFERIOR = $datos_cga[0]->DATOS_CGA_CATEGORIA_INFERIOR;
-            $solicitud->SALARIO_INFERIOR = $datos_cga[0]->DATOS_CGA_SALARIO_INFERIOR;//*/
+            $solicitud->CATEGORIA_SUPERIOR_PROPUESTA = $datos_cga[0]->DATOS_CGA_CATEGORIA_SUPERIOR;
+            $solicitud->SALARIO_SUPERIOR_PROPUESTO = $datos_cga[0]->DATOS_CGA_SALARIO_SUPERIOR;
+            $solicitud->CATEGORIA_INFERIOR_PROPUESTA = $datos_cga[0]->DATOS_CGA_CATEGORIA_INFERIOR;
+            $solicitud->SALARIO_INFERIOR_PROPUESTO = $datos_cga[0]->DATOS_CGA_SALARIO_INFERIOR;//*/
             $solicitud->AHORRO_SOLICITUD = $datos_cga[0]->DATOS_CGA_AHORRO;
             $solicitud->COMPENSACION_SOLICITUD = $datos_cga[0]->DATOS_CGA_COMPENSACION;
-
+            //dd($solicitud);
             return $solicitud;
 
         }
@@ -232,7 +233,9 @@
                 $dependencia = DependenciasController::ObtenerNombreDependencia($rel_titular[0]->FK_DEPENDENCIA);
                 $fl_sistema = SolicitudesController::DatosGenerales();
                 //dd($dependencia[0]);
-                if($existe[0]->FL_AVISO == 0){
+                if(true){
+                //descomentar esta linea para que los terminos se muestren solo una vez en la life
+                //if($existe[0]->FL_AVISO == 0){
                     $datos = array(
                         'texto1' => (($fl_sistema['institucional'])?'de la Benemérita Universidad Autónoma de Puebla.':'.'),
                         'responsable' => \Session::get('responsable')[0], 
@@ -389,20 +392,47 @@
 
         public function EliminarComentario(Request $request){
             //dd($request);
+            $comentario = SolicitudesController::ObtenerComentarioId($request['id_comentario']);
+            $responsable = \Session::get('responsable')[0];
+            $movimiento = 'Usuario '.$responsable.' ha eliminado el comentario: '.$comentario->OBSERVACION;
+            $id_solicitud = $request['id_solicitud'];
+            //dd($id_solicitud);
             if($request['tipo_comentario']==1){
                 //dd('comentario general');
                 DB::table('REL_OBSERVACIONES_GENERALES')->where('FK_OBSERVACION', $request['id_comentario'])->delete();
+                if($comentario){
+                    SolicitudesController::InsertaMovimientoGeneral($responsable,$movimiento,$id_solicitud);
+                }
             }else if($request['tipo_comentario']==2){
                 DB::table('REL_OBSERVACIONES_CGA')->where('FK_OBSERVACION', $request['id_comentario'])->delete();
+                if($comentario){
+                    SolicitudesController::InsertaMovimientoCGA($responsable,$movimiento,$id_solicitud);
+                }
             }else{
                 DB::table('REL_OBSERVACIONES_SPR')->where('FK_OBSERVACION', $request['id_comentario'])->delete();
+                if($comentario){
+                    SolicitudesController::InsertaMovimientoSPR($responsable,$movimiento,$id_solicitud);
+                }
             }
             $delete = DB::table('SOLICITUDES_OBSERVACIONES')->where('OBSERVACIONES_ID', $request['id_comentario'])->delete();
+
             $data = array(
                 "delete"=>$delete
             );
 
             echo json_encode($data);//*/
+        }
+
+        public function ObtenerComentarioId($id_comentario){
+            $comentario = DB::table('SOLICITUDES_OBSERVACIONES')
+                ->select(
+                            'OBSERVACIONES_ID as ID_OBSERVACION',
+                            'OBSERVACIONES_OBSERVACION as OBSERVACION',
+                            'created_at as FECHA_OBSERVACION'
+                        )
+                ->where('OBSERVACIONES_ID',$id_comentario)
+                ->get();
+            return ((count($comentario)>0)?$comentario[0]:null);
         }
 
         public function RegresarComentarios(Request $request){
@@ -591,7 +621,7 @@
                 (($institucional['institucional'])?'Salario bruto quincenal propuesto':'Salario neto quincenal propuesto'),
                 'Diferencia quincenal (Propuesta)',
                 '% de diferencia (Propuesta)',
-                'Compensación neto quincenal',
+                'Compensación quincenal',
                 'Compensación más salario quincenal',
                 'Fuente de recursos',
                 'Respuesta de la CGA'
@@ -612,7 +642,7 @@
 
                 'Diferencia quincenal (Propuesta)' => $diferencias->dif_quincenal_2,
                 '% de diferencia (Propuesta)' => $diferencias->porc_diferencia_2,
-                'Compensación neto quincenal' => '$ '. number_format($solicitud->COMPENSACION_SOLICITUD,2),
+                'Compensación quincenal' => '$ '. number_format($solicitud->COMPENSACION_SOLICITUD,2),
                 'Compensación más salario quincenal' => '$ '. $diferencias->compensacion_salario,
 
                 'Fuente de recursos' => $solicitud->FUENTE_RECURSOS_SOLICITUD,
@@ -657,7 +687,7 @@
                 //'Salario neto quincenal propuesto',
                 'Diferencia quincenal (propuesta)',
                 '% de diferencia (propuesta)',
-                'Compensación neto quincenal',
+                'Compensación quincenal',
                 'Compensación más salario quincenal',
                 'Fuente de recursos',
                 'Respuesta de la CGA'
@@ -683,7 +713,7 @@
                 //'Salario neto quincenal propuesto' => '$ '. $solicitud->SALARIO_PROPUESTO,
                 'Diferencia quincenal (propuesta)' => $diferencias->dif_quincenal_2,
                 '% de diferencia (propuesta)' => $diferencias->porc_diferencia_2,
-                'Compensación neto quincenal' => '$ '. number_format($solicitud->COMPENSACION_SOLICITUD,2),
+                'Compensación quincenal' => '$ '. number_format($solicitud->COMPENSACION_SOLICITUD,2),
                 'Compensación más salario quincenal' => '$ '. $diferencias->compensacion_salario,
 
                 'Fuente de recursos' => $solicitud->FUENTE_RECURSOS_SOLICITUD,
@@ -705,6 +735,7 @@
             $extra = SolicitudesController::ObtenerDatosPromocion($id_solicitud);
             //dd($solicitud);
             $diferencias = SolicitudesController::ObtenerDiferencias($solicitud,$extra);
+            $institucional = SolicitudesController::DatosGenerales();
             //dd($extra);
             $cabeceras = array(
                 'Número de solicitud',
@@ -714,16 +745,18 @@
                 'Actividades',
                 'Categoría solicitada',
                 'Puesto solicitado',
-                'Salario neto quincenal solicitado',
+                (($institucional['institucional'])?'Salario bruto quincenal solicitado':'Salario neto quincenal solicitado'),
+                //'Salario neto quincenal solicitado',
 
                 'Diferencia quincenal solicitada',
                 '% de diferencia solicitada',
 
                 'Categoría propuesta',
-                'Salario neto quincenal propuesto',
+                (($institucional['institucional'])?'Salario bruto quincenal propuesto':'Salario neto quincenal propuesto'),
+                //'Salario neto quincenal propuesto',
                 'Diferencia quincenal (propuesta)',
                 '% de diferencia (propuesta)',
-                'Compensación neto quincenal',
+                'Compensación quincenal',
                 'Compensación más salario quincenal',
                 'Respuesta de la CGA'
             );
@@ -735,16 +768,18 @@
                 'Actividades' => $extra->NUEVAS_ACTIVIDADES,
                 'Categoría solicitada' => $extra->NUEVA_CATEGORIA,
                 'Puesto solicitado' => $extra->PUESTO_NUEVO,
-                'Salario neto quincenal solicitado' => '$ '. $extra->NUEVO_SALARIO,
+                (($institucional['institucional'])?'Salario bruto quincenal solicitado':'Salario neto quincenal solicitado') => '$ '. $extra->NUEVO_SALARIO,
+                //'Salario neto quincenal solicitado' => '$ '. $extra->NUEVO_SALARIO,
 
                 'Diferencia quincenal solicitada' => $diferencias->dif_quincenal_1,
                 '% de diferencia solicitada' => $diferencias->porc_diferencia_1,
 
                 'Categoría propuesta' => $solicitud->CATEGORIA_PROPUESTA,
-                'Salario neto quincenal propuesto' => '$ '. $solicitud->SALARIO_PROPUESTO,
+                (($institucional['institucional'])?'Salario bruto quincenal propuesto':'Salario neto quincenal propuesto') => '$ '. $solicitud->SALARIO_PROPUESTO,
+                //'Salario neto quincenal propuesto' => '$ '. $solicitud->SALARIO_PROPUESTO,
                 'Diferencia quincenal (propuesta)' => $diferencias->dif_quincenal_2,
                 '% de diferencia (propuesta)' => $diferencias->porc_diferencia_2,
-                'Compensación neto quincenal' => '$ '. number_format($solicitud->COMPENSACION_SOLICITUD,2),
+                'Compensación quincenal' => '$ '. number_format($solicitud->COMPENSACION_SOLICITUD,2),
                 'Compensación más salario quincenal' => '$ '. $diferencias->compensacion_salario,
 
                 'Respuesta de la CGA' => $solicitud->RESPUESTA_CGA
@@ -763,6 +798,7 @@
         public function ObtenerPropuestaCambioAdscripcion($id_solicitud){
             $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
             $cambio_adscripcion = SolicitudesController::ObtenerDatosCambioAdscripcion($id_solicitud);
+            $institucional = SolicitudesController::DatosGenerales();
             //dd($cambio_adscripcion);
             $cabeceras = array(
                 'Número de solicitud',
@@ -771,11 +807,12 @@
                 'Dependencia actual',
                 'Categoría actual',  
                 'Puesto actual',  
-                'Salario actual',  
+                (($institucional['institucional'])?'Salario bruto quincenal actual':'Salario neto quincenal actual'), 
+                //'Salario actual', 
                 'Actividades actuales',
 
                 'Categoría propuesta',
-                'Salario neto quincenal propuesto',
+                (($institucional['institucional'])?'Salario bruto quincenal propuesto':'Salario neto quincenal propuesto'),
                 'Puesto en '.ucwords(strtolower($cambio_adscripcion->NUEVA_DEPENDENCIA)),
                 'Funciones desempeñadas en '.ucwords(strtolower($cambio_adscripcion->NUEVA_DEPENDENCIA)),
 
@@ -788,11 +825,11 @@
                 'Dependencia actual' => $solicitud->NOMBRE_DEPENDENCIA,
                 'Categoría actual' => $solicitud->CATEGORIA_SOLICITUD,  
                 'Puesto actual' => $solicitud->PUESTO_SOLICITUD,  
-                'Salario actual' => '$ '.$solicitud->SALARIO_FORMATO,  
+                (($institucional['institucional'])?'Salario bruto quincenal actual':'Salario neto quincenal actual') => '$ '.$solicitud->SALARIO_FORMATO,  
                 'Actividades actuales' => $solicitud->ACTIVIDADES_SOLICITUD,
 
                 'Categoría propuesta' => $solicitud->CATEGORIA_PROPUESTA,
-                'Salario neto quincenal propuesto' => '$ '. $solicitud->SALARIO_PROPUESTO,
+                (($institucional['institucional'])?'Salario bruto quincenal propuesto':'Salario neto quincenal propuesto') => '$ '. $solicitud->SALARIO_PROPUESTO,
                 'Puesto en '.ucwords(strtolower($cambio_adscripcion->NUEVA_DEPENDENCIA)) => $solicitud->PUESTO_PROPUESTO,
                 'Funciones desempeñadas en '.ucwords(strtolower($cambio_adscripcion->NUEVA_DEPENDENCIA)) => $cambio_adscripcion->NUEVAS_ACTIVIDADES,
 
@@ -1077,6 +1114,7 @@
             $IdSolicitud = $request['id_solicitud'];
             //dd($request);
 
+            $institucional = SolicitudesController::DatosGenerales();
             $existeRelacion = $users = DB::table('REL_SOLICITUDES_ANALISTA')
                 ->where('FK_SOLICITUD_ID', $IdSolicitud)
                 ->get();
@@ -1099,6 +1137,14 @@
             $responsable = \Session::get('responsable')[0];
             $movimiento = $responsable.' ha asignado la solicitud a '.$IdAnalista;
             SolicitudesController::InsertaMovimientoCGA($responsable,$movimiento,$IdSolicitud);
+
+            $asunto = 'Asignación de solicitud';
+            $titulo = 'Asignación de solicitud';
+            //dd($institucional['institucional']);
+            $mensaje = 'Buen día, le notificamos que se le ha asignado la solicitud '.$IdSolicitud.', favor de acceder al sistema '.(($institucional['institucional'])?'institucional':'de prestación de servicios').' para consultar detalles.';
+            //$usuario = SolicitudesController::ObtenerTitularDeSolicitud($IdSolicitud);
+            //dd($usuario);
+            $mail = MailsController::MandarMensajeGenerico($asunto,$titulo,$mensaje,$IdAnalista);
 
             $data = array(
                 "insert"=>$insert
@@ -1409,6 +1455,7 @@
                             'SOLICITUD_CATEGORIA' => $request['categoria_actual'],
                             'SOLICITUD_PUESTO' => $request['puesto_actual'],
                             'SOLICITUD_SALARIO' => $request['salario_actual'],
+                            'SOLICITUD_FUENTE_RECURSOS' => $request['fuente_recursos'],
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
 
@@ -1442,6 +1489,7 @@
                             'SOLICITUD_CATEGORIA' => $request['categoria_actual'],
                             'SOLICITUD_PUESTO' => $request['puesto_actual'],
                             'SOLICITUD_SALARIO' => $request['salario_actual'],
+                            'SOLICITUD_FUENTE_RECURSOS' => $request['fuente_recursos'],
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
 
@@ -1475,6 +1523,7 @@
                 ->update([
                             'SOLICITUD_NOMBRE' => $request['en_sustitucion_de'],
                             'SOLICITUD_SALARIO' => $request['salario_persona_anterior'],
+                            'SOLICITUD_FUENTE_RECURSOS' => $request['fuente_recursos'],
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
 
@@ -1502,6 +1551,7 @@
                             'SOLICITUD_PUESTO' => $request['puesto_solicitado'],
                             'SOLICITUD_ACTIVIDADES' => $request['actividades'],
                             'SOLICITUD_SALARIO' => $request['salario_solicitado'],
+                            'SOLICITUD_FUENTE_RECURSOS' => $request['fuente_recursos'],
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
 
@@ -2850,6 +2900,7 @@
 
         public function MarcarInformacionCorrecta(Request $request){
             //dd($request['estatus']);
+            //dd($request['motivo']);
             date_default_timezone_set('America/Mexico_City');
             //dd($request['id_sol']);
             //if(strcmp($request['estatus'], 'RECIBIDO')==0){
@@ -2905,10 +2956,13 @@
                 $movimiento = $responsable.' ha marcado la información como CORRECTA y el estatus de la solicitud ha cambiado a RECIBIDO';
                 SolicitudesController::NotificarInformacionCorrecta($request['id_sol']);
             }else{
-                $movimiento = $responsable.' ha marcado la información como INCORRECTA y el estatus de la solicitud ha cambiado a CANCELADO';
-                SolicitudesController::NotificarInformacionIncorrecta($request['id_sol']);
+                $movimiento = $responsable.' ha marcado la información como INCORRECTA y el estatus de la solicitud ha cambiado a CANCELADO. El motivo de la cancelación es: '.$request['motivo'];
+                SolicitudesController::InsertarMotivoInformacionIncorrecta($request['id_sol'],$request['motivo']);
+                SolicitudesController::NotificarInformacionIncorrecta($request['id_sol'],$request['motivo']);
             }
             SolicitudesController::InsertaMovimientoCGA($responsable,$movimiento,$request['id_sol']);
+
+            //dd('STOP');
             $data = array(
                 "update"=>$update
             );
@@ -2916,10 +2970,24 @@
             echo json_encode($data);//*/
         }
 
-        public function NotificarInformacionIncorrecta($id_solicitud){
+        public function InsertarMotivoInformacionIncorrecta($id_solicitud,$motivo){
+            DB::table('REL_SOLICITUDES_CANCELADAS')
+                ->where('FK_SOLICITUD_ID',$id_solicitud)
+                ->delete();
+            DB::table('REL_SOLICITUDES_CANCELADAS')
+                ->insert(
+                    [
+                        'FK_SOLICITUD_ID' => $id_solicitud,
+                        'REL_CANCELADAS_MOTIVO' => $motivo,
+                        'created_at' =>  date('Y-m-d H:i:s')
+                    ]
+                );
+        }
+
+        public function NotificarInformacionIncorrecta($id_solicitud,$motivo){
             $asunto = 'Cambio de estatus';
             $titulo = 'Cambio de estatus';
-            $mensaje = 'Buen día, le notificamos que la solicitud '.$id_solicitud.' ha sido marcada con el estatus de INFORMACIÓN INCORRECTA. Para obtener más información por favor comuníquese a la extensión 5897.';
+            $mensaje = 'Buen día, le notificamos que la solicitud '.$id_solicitud.' ha sido marcada con el estatus de CANCELADO y el motivo de la cancelación es: '.$motivo;
             $usuario = SolicitudesController::ObtenerTitularDeSolicitud($id_solicitud);
             //dd($usuario);
             $mail = MailsController::MandarMensajeGenerico($asunto,$titulo,$mensaje,$usuario);
@@ -3026,7 +3094,7 @@
                   5 => [1,5,10,15],
                   6 => [8],
                   7 => [8,9,10,11,12,15,16,17,18,19,22,23,24,25,26],
-                  9 => [15],
+                  9 => [16],
                   11 => [1,2,18],
                   12 => [14,18,19,20,23,24,25,26,27,30,31],
                 ),
@@ -3332,7 +3400,7 @@
             $nomina = $request['nomina'];
             $justificacion = $request['justificacion'];
             //$id_dependencia = \Session::get('id_dependencia')[0];
-            $fuente_recursos = 'NA';
+            $fuente_recursos = 'ADMINISTRACIÓN CENTRAL';
             
             $dependencia_spr = $request['dependencia_spr'];
             if(strcasecmp($dependencia_spr, "undefined")==0){
@@ -3612,7 +3680,7 @@
         public static function DatosGenerales(){
             //en este método se sabrá si el sistema está funcionando de modo institucional o prestación de servicios
             $datos = array(
-                            'institucional' => true,
+                            'institucional' => env('INSTITUCIONAL'),
                             'horar_inicio' => "09:00",
                             'horar_fin' => "17:00",
                         );

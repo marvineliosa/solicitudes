@@ -167,6 +167,8 @@
         </div>
       </div>
     </div>
+
+
 	  
 @endsection
 
@@ -174,6 +176,9 @@
 	<script type="text/javascript">
 		var gl_solicitudes = <?php echo json_encode($solicitudes) ?>;
     	//console.log(gl_solicitudes);
+
+    	MensajeModal('¡ATENCIÓN!','Se les comunica que el día de hoy, a partir de las 16:30 horas, se dará mantenimiento al Sistema de Solicitudes, por lo que su uso se reanudará mañana a las 9:00 horas. De antemano agradecemos su comprensión y apoyo.');
+    	$("#SaludoModalMensaje").text('Buen día')
 
     	function CancelacionNormalSolicitud(){
     		var id_sol = $("#hide_solicitud").val();

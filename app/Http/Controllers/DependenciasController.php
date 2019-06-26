@@ -29,6 +29,11 @@
                                     'DEPENDENCIA_NOMBRE' => $request['dependencia'],
                                     'DEPENDENCIA_TITULAR' => $request['titular']
                                 ]);
+            $update_responsable = DB::table('SOLICITUDES_LOGIN')
+                        ->where('LOGIN_USUARIO', $request['usuario'])
+                        ->update([
+                                    'LOGIN_RESPONSABLE' => $request['titular']
+                                ]);
             $existeUsuario = DB::table('SOLICITUDES_LOGIN')
                 ->where('LOGIN_USUARIO',$request['usuario'])
                 ->get();

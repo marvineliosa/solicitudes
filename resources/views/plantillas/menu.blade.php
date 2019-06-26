@@ -45,6 +45,7 @@
           resize: none;
         }
         
+        
       </style>
   </head>
 
@@ -349,6 +350,7 @@
             </button>-->
           </div>
           <div class="modal-body">
+            <h3  id="SaludoModalMensaje" align="center"> </h3>
             <h3  id="CuerpoModalMensaje" align="center"> </h3>
           </div>
           <div class="modal-footer">
@@ -545,6 +547,7 @@
     }
 
   function MensajeModal(titulo,mensaje){
+    $("#SaludoModalMensaje").text('');
     $("#TituloModalMensaje").text(titulo);
     $("#CuerpoModalMensaje").text(mensaje);
     $("#ModalMensaje").modal();
@@ -758,6 +761,7 @@
     var url = '/comentarios/eliminar';
     //var url = "/solicitud/obtener_datos_contratacion";
     var dataForm = new FormData();
+    dataForm.append('id_solicitud',id_solicitud);
     dataForm.append('id_comentario',id_comentario);
     dataForm.append('tipo_comentario',tipo_comentario);
     metodoAjax(url,dataForm,function(success){

@@ -138,6 +138,8 @@
   <script type="text/javascript">
     //autollenado();
 
+      MensajeModal('¡ATENCIÓN!','Buen día, con el fin de unificar la presentación de la información, se agradecerá que la captura se realice utilizando mayúsculas y minúsculas.');
+
     function Regresar(){
       location.href='/listado/dependencia';
     }

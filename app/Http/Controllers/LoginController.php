@@ -211,8 +211,10 @@
                     $rel_dependencia = DB::table('REL_DEPENCENCIA_TITULAR')->where(['FK_USUARIO'=> $existe[0]->LOGIN_USUARIO])->get();
                     $id_dependencia = $rel_dependencia[0]->FK_DEPENDENCIA;
                     $fl_horario = SolicitudesController::VerificarHorario();
-                    $fl_aviso = LoginController::VerificaAceptacionCondiciones($usr);
+                    //$fl_aviso = LoginController::VerificaAceptacionCondiciones($usr);
+                    $fl_aviso = 0;
                 }
+                //dd($fl_aviso);
 
                 
                 //$usuario = $existe[0]->LOGIN_USUARIO;

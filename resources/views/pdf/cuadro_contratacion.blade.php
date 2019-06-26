@@ -66,7 +66,7 @@
 			<table style="width:100%" class="table" align="center">
 			  <tr>
 			    <th style="font-size: 8px;border:1px solid black; visibility: hidden" class="bloque"></th>
-			    <th style="font-size: 8px;border:1px solid black;" class="bloque">CATEGORÍAS INMEDIATAS</th> 
+			    <th style="font-size: 8px;border:1px solid black;" class="bloque">CATEGORÍA INMEDIATA</th> 
 			    @if($solicitud->INSTITUCIONAL)
 			    	<th style="font-size: 8px;border:1px solid black;" class="bloque">SALARIO BRUTO QUINCENAL</th>
 			    @else

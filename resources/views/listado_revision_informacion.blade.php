@@ -4,7 +4,7 @@
 <div class="col-lg-12">
 	<section class="panel">
 	  <header class="panel-heading">
-	    Listado de Cambios de Adscripción
+	    Listado de Revisión de Información
 	  </header>
 	  <div class="table-responsive">
 	  	<div id="div_tabla_datos">
@@ -74,6 +74,9 @@
       </div>
       <div class="modal-body">
         <h3 align="center" id="mensaje_verificar_estatus"></h3>
+
+        <textarea class="form-control ckeditor" name="editor1" rows="3" placeholder="Explique el motivo de la cancelación." id="MotivoCancelacion" hidden="true"></textarea>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" onclick="CambiarEstado()">Aceptar</button>
@@ -104,8 +107,10 @@
     		if(estatus != 'VALIDACIÓN DE INFORMACIÓN'){
 	    		if(estatus == 'RECIBIDO'){
 	    			$("#mensaje_verificar_estatus").text('¿Desea marcar la solicitud como "INFORMACIÓN CORRECTA"?, la solicitud cambiará su estatus a RECIBIDO.');
+	    			$("#MotivoCancelacion").hide();
 	    		}else{
 	    			$("#mensaje_verificar_estatus").text('¿Desea marcar la solicitud como "CANCELADO POR INFORMACIÓN INCORRECTA"?, la solicitud cambiará su estatus a CANCELADO.');
+	    			$("#MotivoCancelacion").show();
 
 	    		}
 	    		$("#ModalVerificacionEstatus").modal();
@@ -115,15 +120,18 @@
     	function CambiarEstado(){
     		var id_sol = $("#num_oficio").val();
     		var estatus = $("#SelectEstatus").val();
-    		console.log(id_sol);
-    		console.log(estatus);
-    		console.log('----------------');
+    		var motivo = $("#MotivoCancelacion").val();
+    		//console.log(motivo);
+    		//console.log(id_sol);
+    		//console.log(estatus);
+    		//console.log('----------------');
 			///console.log('CAMBIANDO ESTADO');
     		var success;
 			var url = "/revision_informacion/actualiza_estado";
 			var dataForm = new FormData();
 			dataForm.append('id_sol',id_sol);
 			dataForm.append('estatus',estatus);
+			dataForm.append('motivo',motivo);
 			//lamando al metodo ajax
 			metodoAjax(url,dataForm,function(success){
 				//aquí se escribe todas las operaciones que se harían en el succes

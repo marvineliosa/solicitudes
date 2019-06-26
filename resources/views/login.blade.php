@@ -129,17 +129,18 @@
             location.href='/listado/coordinacion';
           }else if(json['categoria']=='TITULAR'){
             if(json['fl_aviso']==0){
-              console.log('NO HA ACEPTADO LOS TERMINOS');
+              console.log(json['fl_aviso']);
+              //console.log('NO HA ACEPTADO LOS TERMINOS');
               location.href='/dependencias/aceptacion_terminos';
             }else{
-              location.href='/listado/dependencia';
+              //location.href='/listado/dependencia';
             }
             //location.href='/listado/dependencia';
           }else if(json['categoria']=='SECRETARIO_PARTICULAR'){
             location.href='/listado/spr';
           }else if(json['categoria']=='ANALISTA_CGA'){
             location.href='/listado/analista';
-          }
+          }//*/
         }
       },
       error : function(xhr, status) {

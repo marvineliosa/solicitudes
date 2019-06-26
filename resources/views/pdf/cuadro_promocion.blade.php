@@ -58,7 +58,7 @@
 		  </tr>
 		  <tr>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$solicitud->NOMBRE_SOLICITUD}}</td>
-		    <td style="font-size: 10px;border:1px solid black;" align="justify">{{$solicitud->PUESTO_SOLICITUD}}</td>
+		    <td style="font-size: 10px;border:1px solid black;" align="justify">{{$solicitud->CATEGORIA_SOLICITUD}}</td>
 		    <td style="font-size: 9px;border:1px solid black;" align="center">{{'$ '.$solicitud->SALARIO_FORMATO}}</td>
 		    <td style="font-size: 8px;border:1px solid black;" align="justify">{{$promocion->NUEVAS_ACTIVIDADES}}</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$promocion->PUESTO_NUEVO}}</td>
@@ -74,11 +74,11 @@
 		<table style="width:100%" class="table" align="center">
 		  <tr>
 		    <th style="font-size: 8px;border:1px solid black; visibility: hidden" class="bloque"></th>
-		    <th style="font-size: 8px;border:1px solid black;" class="bloque">CATEGORÍAS INMEDIATAS</th>
+		    <th style="font-size: 8px;border:1px solid black;" class="bloque">CATEGORÍA PROPUESTA</th>
 		    @if($solicitud->INSTITUCIONAL)
-		    	<th style="font-size: 8px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL</th>
+		    	<th style="font-size: 8px;border:1px solid black;" class="bloque">SALARIO BRUTO QUINCENAL PROPUESTO</th>
 		    @else
-		    	<th style="font-size: 8px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL</th>
+		    	<th style="font-size: 8px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL PROPUESTO</th>
 		   	@endif
 		    <th style="font-size: 8px;border:1px solid black;" class="bloque">DIFERENCIA QUINCENAL</th>
 		    <th style="font-size: 8px;border:1px solid black;" class="bloque">% DE DIFERENCIA</th>
@@ -98,7 +98,7 @@
 		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">$ {{$diferencias->compensacion_salario}}</td>
 		    @endif
 		  </tr>
-		  @if(false)
+		  @if(true)
 		  <tr><!-- fuente de recursos -->
 		  	@if($solicitud->COMPENSACION_SOLICITUD)
 		    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="right" colspan="4">Fuente de Recursos:</td>

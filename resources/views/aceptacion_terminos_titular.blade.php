@@ -135,7 +135,8 @@
 
   function AceptarTerminos(){
     var dataForm = new FormData();
-    dataForm.append('usuario','usuario');
+    location.href='/listado/dependencia';
+    /*dataForm.append('usuario','usuario');
     var url = "/dependencias/aceptar_terminos";
     $.ajax({
       url :url,
