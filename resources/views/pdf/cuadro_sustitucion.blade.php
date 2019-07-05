@@ -30,7 +30,7 @@
 <body style="height:420px; overflow:auto;">
 	<div id="div-dependencia" align="center" class=""><h5>{{$solicitud->NOMBRE_INTERNO_DEPENDENCIA}}</h5></div>
 	@if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN')==0||strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN POR SUSTITUCIÓN')==0)
-		<div id="div-subtitulo" align="center" class="" style="font-size: 10px">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}} EN NÓMINA @if($solicitud->INSTITUCIONAL)INSTITUCIONAL @else OUTSORCING @endif</div>
+		<div id="div-subtitulo" align="center" class="" style="font-size: 10px">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}} EN NÓMINA @if($solicitud->INSTITUCIONAL)INSTITUCIONAL @else OUTSOURCING @endif</div>
 	@else
 		<div id="div-subtitulo" align="center" class="">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}</div>
 	@endif
@@ -60,10 +60,10 @@
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$sustitucion->NUEVO_CANDIDATO}}</td>
 		    <td style="font-size: 8px;border:1px solid black;" align="justify">{{$sustitucion->NUEVAS_ACTIVIDADES}}</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$sustitucion->NUEVA_CATEGORIA}}</td>
-		    <td style="font-size: 10px;border:1px solid black;" align="center">{{'$ '.number_format($sustitucion->NUEVO_SALARIO,2)}}</td>
+		    <td style="font-size: 10px;border:1px solid black;" align="center">{{'$'.number_format($sustitucion->NUEVO_SALARIO,2)}}</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$diferencias->dif_quincenal_1}}</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$diferencias->porc_diferencia_1}}</td>
-		    <td style="font-size: 10px;border:1px solid black;" align="center">{{'$ '.$solicitud->SALARIO_FORMATO}}</td>
+		    <td style="font-size: 10px;border:1px solid black;" align="center">{{'$'.$solicitud->SALARIO_FORMATO}}</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$solicitud->EN_SUSTITUCION_DE}}</td>
 		  </tr>
 		</table>

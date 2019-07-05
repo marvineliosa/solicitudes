@@ -29,11 +29,13 @@
 </head>
 <body style="height:420px; overflow:auto;">
 	<div id="div-dependencia" align="center" class=""><h5>{{$solicitud->NOMBRE_INTERNO_DEPENDENCIA}}</h5></div>
-	@if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN')==0||strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN POR SUSTITUCIÓN')==0)
-		<div id="div-subtitulo" align="center" class="">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}} EN NÓMINA {{$solicitud->NOMINA_SOLICITUD}}</div>
+
+	@if($solicitud->INSTITUCIONAL)
+		<div id="div-subtitulo" align="center" class="" style="font-size: 10px;">TRANSFORMACIÓN DE PLAZA</div>
 	@else
-		<div id="div-subtitulo" align="center" class="" style="font-size: 10px;">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}</div>
+		<div id="div-subtitulo" align="center" class="" style="font-size: 10px;">CAMBIO DE CATEGORÍA EN NÓMINA OUTSOURCING</div>
 	@endif
+
 	<div id="div-fecha" align="right" class="" style="font-size: 13px;">FECHA: {{$solicitud->HOY}}</div>
 	<div id="div-solicitud" align="right" class="" style="font-size: 13px;">SOLICITUD: {{$solicitud->ID_SOLICITUD}}</div>
 	<div id="div-tabla_datos" align="right" class="">
@@ -59,10 +61,10 @@
 		  <tr>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$solicitud->NOMBRE_SOLICITUD}}</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="justify">{{$solicitud->CATEGORIA_SOLICITUD}}</td>
-		    <td style="font-size: 9px;border:1px solid black;" align="center">{{'$ '.$solicitud->SALARIO_FORMATO}}</td>
+		    <td style="font-size: 9px;border:1px solid black;" align="center">{{'$'.$solicitud->SALARIO_FORMATO}}</td>
 		    <td style="font-size: 8px;border:1px solid black;" align="justify">{{$promocion->NUEVAS_ACTIVIDADES}}</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$promocion->PUESTO_NUEVO}}</td>
-		    <td style="font-size: 10px;border:1px solid black;" align="center">{{'$ '.number_format($promocion->NUEVO_SALARIO,2)}}</td>
+		    <td style="font-size: 10px;border:1px solid black;" align="center">{{'$'.number_format($promocion->NUEVO_SALARIO,2)}}</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$diferencias->dif_quincenal_1}}</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$diferencias->porc_diferencia_1}} </td>
 		  </tr>

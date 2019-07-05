@@ -899,6 +899,7 @@
                 'porc_diferencia_2' => $porc_diferencia_2,
                 'compensacion_salario' => $compensacion_salario
             );
+            //dd($diferencias);
             return (object)$diferencias;
         }
 
@@ -1774,6 +1775,13 @@
             }
 
             //dd($solicitud[0]);
+            if(strcmp($solicitud[0]->FUENTE_RECURSOS_SOLICITUD, 'ADMINISTRACIÓN CENTRAL')==0){
+                $solicitud[0]->FUENTE_RECURSOS_SOLICITUD = 'Administración Central';
+            }else{
+                $solicitud[0]->FUENTE_RECURSOS_SOLICITUD = 'Recursos Propios';
+            }
+            //$solicitud[0]->FUENTE_RECURSOS_SOLICITUD = ((strcmp($solicitud[0]->FUENTE_RECURSOS_SOLICITUD, 'ADMINISTRACIÓN CENTRAL')==0)?'Administración Central':'Recursos Propios');
+            //dd($solicitud[0]->FUENTE_RECURSOS_SOLICITUD);
 
             if(strcmp($solicitud[0]->TIPO_SOLICITUD_SOLICITUD, 'CONTRATACIÓN POR SUSTITUCIÓN')==0){
                 $sustitucion = SolicitudesController::ObtenerDatosSustitucion($id_solicitud);
@@ -2738,6 +2746,7 @@
             $categoria = \Session::get('categoria')[0];
             if(in_array($categoria, ['ANALISTA_CGA'])){
                 $analista = \Session::get('usuario')[0];
+                
                 $solicitudes = SolicitudesController::ObtenerSolicitudesAnalista($analista);
                 //$analistas = 'SIN PERMISOS';
                 $analistas = array();

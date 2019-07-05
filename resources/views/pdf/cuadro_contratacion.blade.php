@@ -30,7 +30,7 @@
 <body style="height:420px; overflow:auto;">
 	<div id="div-dependencia" align="center" class=""><h5>{{$solicitud->NOMBRE_INTERNO_DEPENDENCIA}}</h5></div>
 	@if(strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN')==0||strcmp($solicitud->TIPO_SOLICITUD_SOLICITUD,'CONTRATACIÓN POR SUSTITUCIÓN')==0)
-		<div id="div-subtitulo" align="center" class="" style="font-size: 10px;">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}} EN NÓMINA @if($solicitud->INSTITUCIONAL)INSTITUCIONAL @else OUTSORCING @endif</div>
+		<div id="div-subtitulo" align="center" class="" style="font-size: 10px;">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}} EN NÓMINA @if($solicitud->INSTITUCIONAL)INSTITUCIONAL @else OUTSOURCING @endif</div>
 	@else
 		<div id="div-subtitulo" align="center" class="">{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}</div>
 	@endif
@@ -54,7 +54,7 @@
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$solicitud->NOMBRE_SOLICITUD}}</td>
 		    <td style="font-size: 8px;border:1px solid black;" align="justify">{{$solicitud->ACTIVIDADES_SOLICITUD}}</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">{{$solicitud->PUESTO_SOLICITUD}}</td>
-		    <td style="font-size: 10px;border:1px solid black;" align="center">{{'$ '.$solicitud->SALARIO_FORMATO}}</td>
+		    <td style="font-size: 10px;border:1px solid black;" align="center">{{'$'.$solicitud->SALARIO_FORMATO}}</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">$0.00</td>
 		    <td style="font-size: 10px;border:1px solid black;" align="center">0%</td>
 		  </tr>

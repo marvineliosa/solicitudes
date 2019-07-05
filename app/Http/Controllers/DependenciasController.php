@@ -162,6 +162,8 @@
                                 'DEPENDENCIA_CODIGO as CODIGO_DEPENDENCIA',
                                 'DEPENDENCIA_NOMBRE as NOMBRE_DEPENDENCIA'
                             )
+                    ->where([['DEPENDENCIA_CODIGO', '<>', 2103],['DEPENDENCIA_CODIGO', '<>', 2104]])
+                    ->orderBy('NOMBRE_DEPENDENCIA','asc')
                     ->get();
             }else{
                 $dependencias = DB::table('SOLICITUDES_DEPENDENCIA')
@@ -169,6 +171,7 @@
                                 'DEPENDENCIA_ID as ID_DEPENDENCIA',
                                 'DEPENDENCIA_CODIGO as NOMBRE_DEPENDENCIA'
                             )
+                    //->where([['DEPENDENCIA_CODIGO', '<>', 2103],['DEPENDENCIA_CODIGO', '<>', 2104]])
                     ->orderBy('DEPENDENCIA_CODIGO', 'asc')
                     ->get();
             }
@@ -202,3 +205,11 @@
         }
 
     }
+
+/*
+
+insert into SOLICITUDES_DEPENDENCIA (DEPENDENCIA_CODIGO,DEPENDENCIA_NOMBRE,created_at) values(2104,'DEPENDENCIA PRUEBA 2','2019-03-07 11:16:58');
+
+insert into SOLICITUDES_DEPENDENCIA (DEPENDENCIA_CODIGO,DEPENDENCIA_NOMBRE,created_at) values(504,'MUSEO UNIVERSITARIO','2019-07-04 11:16:58');
+
+*/

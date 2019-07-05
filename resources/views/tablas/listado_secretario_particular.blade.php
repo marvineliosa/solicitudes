@@ -12,6 +12,7 @@
   </thead>
   <tbody>
   	@foreach($solicitudes as $solicitud)
+      @if(in_array($solicitud->ESTATUS_SOLICITUD,['FIRMAS']))
         <tr class="{{ $solicitud->CLASE_TR}}">
           <td>{{$solicitud->ID_SOLICITUD}}</td>
           <td>{{$solicitud->NOMBRE_SOLICITUD}}</td>
@@ -30,6 +31,7 @@
               </div>
           </td>
         </tr>
+      @endif
     @endforeach
     
     <!--<tr class="success">

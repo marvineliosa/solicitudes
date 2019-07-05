@@ -30,7 +30,8 @@
             @if(strcmp($solicitud->ESTATUS_SOLICITUD,'FIRMAS')==0 || strcmp($solicitud->ESTATUS_SOLICITUD,'CANCELADO POR TITULAR')==0)
               <a class="btn btn-success" href="javascript:void(0)" onclick="VerDatosCuadro('{{$solicitud->ID_SOLICITUD}}','{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}')" style="background-color: YellowGreen;" data-toggle="tooltip" data-placement="top" title="Ver opinión de la Coordinación General Administrativa"><i class="icon_menu-square_alt2"></i></a>
             @else
-              @if(strcmp($solicitud->ESTATUS_SOLICITUD,'CANCELADO')!=0)
+              @if(in_array($solicitud->ESTATUS_SOLICITUD,[
+              'RECIBIDO SPR','VALIDACIÓN DE INFORMACIÓN','INFORMACIÓN CORRECTA','RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN']))
               <a class="btn btn-warning" href="javascript:void(0)" onclick="ModalCancelacionNormal('{{$solicitud->ID_SOLICITUD}}','{{$solicitud->TIPO_SOLICITUD_SOLICITUD}}')" data-toggle="tooltip" data-placement="top" title="Cancelar solicitud" style="background-color: rgb(255, 103, 13)"><i class="icon_close"></i></a>
               @endif
             @endif

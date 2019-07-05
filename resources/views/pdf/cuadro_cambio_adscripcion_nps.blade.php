@@ -67,7 +67,7 @@
 			    	<th style="font-size: 10px;border:1px solid black; background-color: rgb(255, 230, 153);" class="bloque">SALARIO QNAL. NETO PROPUESTO</th> 
 			    @endif
 			    <th style="font-size: 10px;border:1px solid black; background-color: rgb(255, 230, 153);" class="bloque">PUESTO EN LA SEDE {{$adscripcion->NUEVA_DEPENDENCIA}}</th> 
-			    <th style="font-size: 10px;border:1px solid black; background-color: rgb(255, 230, 153);" class="bloque">FUNCIONES DESEMPEÑADAS EN LA SEDE {{$adscripcion->NUEVA_DEPENDENCIA}}</th> 
+			    <th style="font-size: 10px;border:1px solid black; background-color: rgb(255, 230, 153);" class="bloque">FUNCIONES A DESEMPEÑAR EN LA SEDE {{$adscripcion->NUEVA_DEPENDENCIA}}</th> 
 			  </tr>
 			  <tr>
 			    <td style="font-size: 10px;border:1px solid black;" align="center">{{$solicitud->CATEGORIA_PROPUESTA}}</td>
