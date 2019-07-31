@@ -4,7 +4,7 @@
         <!-- sidebar menu start-->
         <ul class="sidebar-menu">
           <!-- LISTADOS CGA -->
-          @if(strcmp(\Session::get('categoria')[0],'TITULAR')!=0)
+          @if(strcmp(\Session::get('categoria')[0],'TITULAR')!=0 && strcmp(\Session::get('categoria')[0],'CONSULTOR')!=0)
             <li class="sub-menu">
               <a href="javascript:;" class="">
                 <i class="icon_table"></i>
@@ -50,6 +50,14 @@
             </li>
           @endif
 
+          @if(in_array(\Session::get('categoria')[0], ['ANALISTA_CGA','CONSULTOR']))
+            <li class="">
+              <a class="" href="/listado/consultor">
+                <i class="icon_search"></i>
+                <span>Consultar</span>
+              </a>
+            </li>
+          @endif
           <!-- ACCESOS DEPENDENCIA -->
           @if(strcmp(\Session::get('categoria')[0],'TITULAR')==0)
 

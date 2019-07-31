@@ -1600,6 +1600,11 @@
                 //dd($val);
                 if(count($val)>0){
                     $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+                    if(strcmp($solicitud->FUENTE_RECURSOS_SOLICITUD, 'Administración Central')==0){
+                        $solicitud->FUENTE_RECURSOS_SOLICITUD = 'ADMINISTRACIÓN CENTRAL';
+                    }else if(strcmp($solicitud->FUENTE_RECURSOS_SOLICITUD, 'Recursos Propios')==0){
+                        $solicitud->FUENTE_RECURSOS_SOLICITUD = 'RECURSOS PROPIOS';
+                    }
                     //dd($solicitud);
                     return view('edicion_contratacion')->with("solicitud",$solicitud);
                 }else{
@@ -1624,6 +1629,11 @@
                 if(count($val)>0){
 
                     $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+                    if(strcmp($solicitud->FUENTE_RECURSOS_SOLICITUD, 'Administración Central')==0){
+                        $solicitud->FUENTE_RECURSOS_SOLICITUD = 'ADMINISTRACIÓN CENTRAL';
+                    }else if(strcmp($solicitud->FUENTE_RECURSOS_SOLICITUD, 'Recursos Propios')==0){
+                        $solicitud->FUENTE_RECURSOS_SOLICITUD = 'RECURSOS PROPIOS';
+                    }
                     $datos_extra = SolicitudesController::ObtenerDatosSustitucion($id_solicitud);
                     //dd($datos_extra);
                     return view('edicion_contratacion_sustitucion') ->with (["solicitud"=>$solicitud,"datos_extra"=>$datos_extra]);
@@ -1647,6 +1657,11 @@
                 if(count($val)>0){
                     
                     $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+                    if(strcmp($solicitud->FUENTE_RECURSOS_SOLICITUD, 'Administración Central')==0){
+                        $solicitud->FUENTE_RECURSOS_SOLICITUD = 'ADMINISTRACIÓN CENTRAL';
+                    }else if(strcmp($solicitud->FUENTE_RECURSOS_SOLICITUD, 'Recursos Propios')==0){
+                        $solicitud->FUENTE_RECURSOS_SOLICITUD = 'RECURSOS PROPIOS';
+                    }
                     $datos_extra = SolicitudesController::ObtenerDatosPromocion($id_solicitud);
                     //dd($datos_extra);
                     return view('edicion_promocion') ->with (["solicitud"=>$solicitud,"datos_extra"=>$datos_extra]);
@@ -1670,6 +1685,11 @@
                 if(count($val)>0){
                     
                     $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
+                    if(strcmp($solicitud->FUENTE_RECURSOS_SOLICITUD, 'Administración Central')==0){
+                        $solicitud->FUENTE_RECURSOS_SOLICITUD = 'ADMINISTRACIÓN CENTRAL';
+                    }else if(strcmp($solicitud->FUENTE_RECURSOS_SOLICITUD, 'Recursos Propios')==0){
+                        $solicitud->FUENTE_RECURSOS_SOLICITUD = 'RECURSOS PROPIOS';
+                    }
                     $datos_extra = SolicitudesController::ObtenerDatosCambioAdscripcion($id_solicitud);
                     //dd($datos_extra);
                     return view('edicion_cambio_adscripcion') ->with (["solicitud"=>$solicitud,"datos_extra"=>$datos_extra]);//*/
@@ -2213,6 +2233,27 @@
             return $titular;
         }
 
+        public function NotificarOpinionDeclinada($id_solicitud){
+            //----------
+            //dd($id_solicitud);
+            $analista = null;
+            $analista = DB::table('REL_SOLICITUDES_ANALISTA')
+                ->where('FK_SOLICITUD_ID', $id_solicitud)
+                ->get();
+            if(count($analista)>0){
+                //dd($analista[0]->FK_USUARIO);
+                $usuario = $analista[0]->FK_USUARIO;
+                $asunto = 'Cancelación de solicitud';
+                $titulo = 'Cancelación de solicitud';
+                $mensaje = 'Buen día, le notificamos que la opinión de la solicitud '.$id_solicitud.' no ha sido aceptada por el titular y ha sido cancelada. Favor de notificar al administrador.';
+                //dd($usuario);
+                $mail = MailsController::MandarMensajeGenerico($asunto,$titulo,$mensaje,$usuario);
+                //dd($usuario);
+            }
+            //dd($analista);
+            return $analista;
+        }
+
         public function NotificarFirmasTitular($id_solicitud){
             $asunto = 'Cambio de estatus';
             $titulo = 'Cambio de estatus';
@@ -2248,6 +2289,21 @@
                 $asunto = 'Cambio de estatus';
                 $titulo = 'Cambio de estatus';
                 $mensaje = 'Buen día, le notificamos que la solicitud '.$id_solicitud.' ha cambiado a FIRMAS y se encuentra disponible para ser validada';
+                $mail = MailsController::MandarMensajeGenerico($asunto,$titulo,$mensaje,$usuario);
+            }
+            return $usuario;
+        }//*/
+
+        public function NotificarCancelacionSolicitud($id_solicitud){
+            $existe_analista = DB::table('SOLICITUDES_LOGIN')
+                ->where('LOGIN_CATEGORIA','SECRETARIO_PARTICULAR')
+                ->get();
+            $usuario = null;
+            if(count($existe_secretario)>0){
+                $usuario = $existe_secretario[0]->LOGIN_USUARIO;
+                $asunto = 'Cambio de estatus';
+                $titulo = 'Cambio de estatus';
+                $mensaje = 'Buen día, le notificamos que la solicitud '.$id_solicitud.' ha sido cancelada, para obtener más información favor de verificar el sistema';
                 $mail = MailsController::MandarMensajeGenerico($asunto,$titulo,$mensaje,$usuario);
             }
             return $usuario;
@@ -2349,6 +2405,7 @@
                     $responsable = \Session::get('responsable')[0];
                     $movimiento = 'Titular '.$responsable.' ha cambiado el estatus a '.$request['estatus'];
                     SolicitudesController::InsertaMovimientoCGA($responsable,$movimiento,$request['id_sol']);
+                    SolicitudesController::NotificarOpinionDeclinada($request['id_sol']);
                 }
 
                 if(strcmp($request['estatus'], 'COMPLETADO POR SPR')==0){
@@ -2821,6 +2878,21 @@
 
         }
 
+        public function VistaListadoConsultor(){
+            $categoria = \Session::get('categoria')[0];
+            if(in_array($categoria, ['CONSULTOR'])){
+                //$id_dependencia = \Session::get('id_dependencia')[0];
+                $solicitudes = SolicitudesController::ObtenerSolicitudes();
+                return view('listado_consultor')->with("solicitudes",$solicitudes);
+            }else if(in_array($categoria, ['ANALISTA_CGA'])){
+                //$id_dependencia = \Session::get('id_dependencia')[0];
+                $solicitudes = SolicitudesController::ObtenerSolicitudes();
+                return view('listado_consultor')->with("solicitudes",$solicitudes);
+            }else{
+                return view('errors.505');
+            }
+        }
+
         public function ObtenerSolicitudesDependencia($id_dependencia){
             $solicitudes = array();
             $fecha_arranque = '2019-01-01';
@@ -2886,6 +2958,15 @@
             if(in_array($categoria, ['TRABAJADOR_SPR','SECRETARIO_PARTICULAR'])){
                 $res_solicitudes = DB::table('SOLICITUDES_DATOS_CGA')
                                     ->whereNotIn('DATOS_CGA_ESTATUS',['RECIBIDO SPR'])
+                                    ->orderBy('created_at', 'desc')
+                                    ->select('FK_SOLICITUD_ID')
+                                    ->get();
+                $solicitudes = array();
+
+            }else if(in_array($categoria, ['CONSULTOR'])){
+                //dd('ENTRA');
+                $res_solicitudes = DB::table('SOLICITUDES_DATOS_CGA')
+                                    ->whereIn('DATOS_CGA_ESTATUS',['RECIBIDO SPR','COMPLETADO POR RECTOR'])
                                     ->orderBy('created_at', 'desc')
                                     ->select('FK_SOLICITUD_ID')
                                     ->get();

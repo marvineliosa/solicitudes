@@ -140,6 +140,8 @@
             location.href='/listado/spr';
           }else if(json['categoria']=='ANALISTA_CGA'){
             location.href='/listado/analista';
+          }else if(json['categoria']=='CONSULTOR'){
+            location.href='/listado/consultor';
           }//*/
         }
       },

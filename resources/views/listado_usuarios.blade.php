@@ -166,11 +166,12 @@
               <input type="hidden" class="form-control" placeholder="NOMBRE DEL USUARIO" id="usuario-general" value="">
               <select class="form-control m-bot15" id="select-usuarios">
                   <option value="SELECCIONAR">--SELECCIONAR USUARIO--</option>
-                    <option value="ANALISTA_CGA">ANALISTA</option>
-                    <option value="ADMINISTRADOR_CGA">ADMINISTRADOR DE CGA</option>
-                    <option value="COORDINADOR_CGA">COORDINADOR DE CGA</option>
-                    <option value="TRABAJADOR_SPR">TRABAJADOR DE SPR</option>
-                    <option value="SECRETARIO_PARTICULAR">SECRETARIO PARTICULAR DE RECTORÍA</option>
+                  <option value="ANALISTA_CGA">ANALISTA</option>
+                  <option value="ADMINISTRADOR_CGA">ADMINISTRADOR DE CGA</option>
+                  <option value="COORDINADOR_CGA">COORDINADOR DE CGA</option>
+                  <option value="TRABAJADOR_SPR">TRABAJADOR DE SPR</option>
+                  <option value="SECRETARIO_PARTICULAR">SECRETARIO PARTICULAR DE RECTORÍA</option>
+                  <option value="CONSULTOR">CONSULTOR</option>
               </select>
             </div>
           </div>

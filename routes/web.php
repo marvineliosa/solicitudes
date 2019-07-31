@@ -51,6 +51,10 @@ Route::get('/listado/analista', 'SolicitudesController@VistaListadoAnalista');//
 
 //listado CGA
 Route::get('/listado/coordinacion', 'SolicitudesController@VistaListadoCGA');//validado
+
+//listado CONSULTOR
+Route::get('/listado/consultor', 'SolicitudesController@VistaListadoConsultor');//
+
 //Listado por estatus
 /*Route::get('/listado/recibido', 'SolicitudesController@VistaRecibidos');
 Route::get('/listado/levantamiento', 'SolicitudesController@VistaLevantamiento');
