@@ -38,6 +38,7 @@
                 <option value="COMPLETADO POR RECTOR">COMPLETADO POR RECTOR</option>
                 <option value="CANCELADO">CANCELADO</option>
                 <option value="OTRO">OTRO</option>
+                <option value="LIMPIEZA Y VIGILANCIA">LIMPIEZA Y VIGILANCIA</option>
               </select>
             </div>
           </div>

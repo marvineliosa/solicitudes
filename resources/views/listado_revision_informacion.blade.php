@@ -43,6 +43,7 @@
 		      	<div class="form-check form-check-inline">
 			      <select id="SelectEstatus" class="form-control">
 			        <option value="VALIDACIÓN DE INFORMACIÓN" selected>VALIDACION DE INFORMACION</option>
+			        <option value="LIMPIEZA Y VIGILANCIA">LIMPIEZA Y VIGILANCIA</option>
 			        <option value="RECIBIDO">INFORMACIÓN CORRECTA</option>
 			        <option value="CANCELADO">CANCELAR POR INFORMACIÓN INCORRECTA</option>
 			      </select>
@@ -108,6 +109,9 @@
 	    		if(estatus == 'RECIBIDO'){
 	    			$("#mensaje_verificar_estatus").text('¿Desea marcar la solicitud como "INFORMACIÓN CORRECTA"?, la solicitud cambiará su estatus a RECIBIDO.');
 	    			$("#MotivoCancelacion").hide();
+	    		}else if(estatus == 'LIMPIEZA Y VIGILANCIA'){
+	    			$("#mensaje_verificar_estatus").text('¿Desea marcar la solicitud como "LIMPIEZA Y VIGILANCIA"?');
+	    			$("#MotivoCancelacion").hide();
 	    		}else{
 	    			$("#mensaje_verificar_estatus").text('¿Desea marcar la solicitud como "CANCELADO POR INFORMACIÓN INCORRECTA"?, la solicitud cambiará su estatus a CANCELADO.');
 	    			$("#MotivoCancelacion").show();
@@ -141,6 +145,8 @@
 				recargarTablaAjax('/refrescar/revision_informacion');
 				if(estatus == 'RECIBIDO'){
 					MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente, la solicitud se ha marcado como RECIBIDA.");
+				}else if(estatus == 'LIMPIEZA Y VIGILANCIA'){
+					MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente, la solicitud se ha marcado como LIMPIEZA Y VIGILANCIA.");
 				}else{
 					MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente, la solicitud se ha marcado como CANCELADA.");
 				}

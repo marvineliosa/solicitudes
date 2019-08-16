@@ -51,6 +51,7 @@
 			        <!--<option value="TURNADO A SPR">TURNAR A SPR</option>-->
 			        <option value="CANCELADO">CANCELADO</option>
 			        <option value="OTRO">OTRO</option>
+			        <option value="LIMPIEZA Y VIGILANCIA">LIMPIEZA Y VIGILANCIA</option>
 			      </select>
 			      <br>
 			      <button type="button" class="btn btn-primary" onclick="CambiarEstado()">Guardar</button>

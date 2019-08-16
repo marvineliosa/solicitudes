@@ -635,7 +635,7 @@
         $("#div_cuadro").show();
       }
       var array_spr = ['SECRETARIO_PARTICULAR','TRABAJADOR_SPR'];
-      var permitidos_spr = ['FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR'];
+      var permitidos_spr = ['CANCELADO POR TITULAR','FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR'];
       if(array_spr.includes(gl_categoria)){
         if(tipo_solicitud == 'CONTRATACIÓN' && permitidos_spr.includes(success['datos']['Estatus'])){
           $("#verCuadro").attr('href','/cuadro/contratacion/'+success['datos']['Escape']);

@@ -101,6 +101,7 @@
 					//aquí se escribe todas las operaciones que se harían en el succes
 					//la variable success es el json que recibe del servidor el método AJAX
 					MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente, la solicitud se ha turnado a CGA.");
+					$("#ModalConfiguraciones").modal('hide');
 					recargarTablaAjax('/refrescar/nuevas_spr');
 				});//*/
     		}

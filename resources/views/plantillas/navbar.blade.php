@@ -4,7 +4,7 @@
         <!-- sidebar menu start-->
         <ul class="sidebar-menu">
           <!-- LISTADOS CGA -->
-          @if(strcmp(\Session::get('categoria')[0],'TITULAR')!=0 && strcmp(\Session::get('categoria')[0],'CONSULTOR')!=0)
+          @if(strcmp(\Session::get('categoria')[0],'TITULAR')!=0)
             <li class="sub-menu">
               <a href="javascript:;" class="">
                 <i class="icon_table"></i>
@@ -26,17 +26,19 @@
                   <li><a class="" href="/listado/estatus/firmas">Firmas</a></li>
                   <li><a class="" href="/listado/estatus/turnado_spr">Turnado a SPR</a></li>
                   <li><a class="" href="/listado/estatus/completado_rector">Completado por Rector</a></li>
+                  <li><a class="" href="/listado/estatus/limpieza_vigilancia">Limpieza y Vigilancia</a></li>
                   <!--<li><a class="" href="/listado/contratacion">Contratación</a></li>
                   <li><a class="" href="/listado/contratacion_sustitucion">Sustitución</a></li>
                   <li><a class="" href="/listado/promocion">Promoción</a></li>
                   <li><a class="" href="/listado/cambio_adscripcion">Cambio de Adscripción</a></li>-->
                 @endif
-                @if(strcmp(\Session::get('categoria')[0],'TRABAJADOR_SPR')==0)
+                @if(strcmp(\Session::get('categoria')[0],'TRABAJADOR_SPR')==0 || strcmp(\Session::get('categoria')[0],'CONSULTOR')==0)
                   <li><a class="" href="/listado/nuevas">Nuevas (SPR)</a></li>
                   <li><a class="" href="/listado/en_proceso">En Proceso (CGA)</a></li>
                   <li><a class="" href="/listado/por_revisar">Por Revisar (SPR)</a></li>
                   <li><a class="" href="/listado/revisadas">Por Autorizar (SPR)</a></li>
                   <li><a class="" href="/listado/completadas">Completadas (SPR)</a></li>
+
                 @endif
                 @if(strcmp(\Session::get('categoria')[0],'SECRETARIO_PARTICULAR')==0)
                   <li><a class="" href="/listado/spr">Por Firmar (SPR)</a></li>
@@ -58,6 +60,16 @@
               </a>
             </li>
           @endif
+
+          @if(in_array(\Session::get('categoria')[0], ['TRABAJADOR_SPR']))
+            <li class="">
+              <a class="" href="/listado/spr">
+                <i class="icon_pushpin_alt"></i>
+                <span>Por Firmar (SPR)</span>
+              </a>
+            </li>
+          @endif
+
           <!-- ACCESOS DEPENDENCIA -->
           @if(strcmp(\Session::get('categoria')[0],'TITULAR')==0)
 

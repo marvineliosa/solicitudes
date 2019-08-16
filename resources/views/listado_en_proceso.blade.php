@@ -21,7 +21,7 @@
 	      </thead>
 	      <tbody>
 	      	@foreach($solicitudes as $solicitud)
-		        <tr class="{{ $solicitud->CLASE_TR}}">
+		        <tr>
 		          <td>{{$solicitud->ID_SOLICITUD}}</td>
 		          <td>{{$solicitud->NOMBRE_SOLICITUD}}</td>
 		          <td>{{$solicitud->NOMBRE_INTERNO_DEPENDENCIA}}</td>

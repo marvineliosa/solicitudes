@@ -1224,7 +1224,7 @@
                     ->get();
                 if(count($val)>0){
                     $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
-                    if(in_array($solicitud->ESTATUS_SOLICITUD, ['FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR'])){
+                    if(in_array($solicitud->ESTATUS_SOLICITUD, ['FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR','CANCELADO POR TITULAR'])){
                         //$solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
                         //dd($solicitud);
                         $extra = array();
@@ -1275,7 +1275,7 @@
                     ->get();
                 if(count($val)>0){
                     $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
-                    if(in_array($solicitud->ESTATUS_SOLICITUD, ['FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR'])){
+                    if(in_array($solicitud->ESTATUS_SOLICITUD, ['FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR','CANCELADO POR TITULAR'])){
                         
                         //$solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
                         $sustitucion = SolicitudesController::ObtenerDatosSustitucion($id_solicitud);
@@ -1326,7 +1326,7 @@
                     ->get();
                 if(count($val)>0){
                     $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
-                    if(in_array($solicitud->ESTATUS_SOLICITUD, ['FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR'])){
+                    if(in_array($solicitud->ESTATUS_SOLICITUD, ['FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR','CANCELADO POR TITULAR'])){
                         
                         $promocion = SolicitudesController::ObtenerDatosPromocion($id_solicitud);
                         //dd($sustitucion);
@@ -1390,7 +1390,7 @@
                     ->get();
                 if(count($val)>0){
                     $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
-                    if(in_array($solicitud->ESTATUS_SOLICITUD, ['FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR'])){
+                    if(in_array($solicitud->ESTATUS_SOLICITUD, ['FIRMAS','TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR','CANCELADO POR TITULAR'])){
                         
                         $adscripcion = SolicitudesController::ObtenerDatosCambioAdscripcion($id_solicitud);
                         //dd($sustitucion);
@@ -2607,7 +2607,7 @@
         public function VistaNuevasSPR(){
 
             $categoria = \Session::get('categoria')[0];
-            if(in_array($categoria, ['TRABAJADOR_SPR','SECRETARIO_PARTICULAR'])){
+            if(in_array($categoria, ['TRABAJADOR_SPR','SECRETARIO_PARTICULAR','CONSULTOR'])){
                 $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('RECIBIDO SPR');
                 return view('listado_nuevas') ->with ("solicitudes",$solicitudes);
             }else{
@@ -2617,7 +2617,7 @@
 
         public function VistaPorRevisarSPR(){
             $categoria = \Session::get('categoria')[0];
-            if(in_array($categoria, ['TRABAJADOR_SPR','SECRETARIO_PARTICULAR'])){
+            if(in_array($categoria, ['TRABAJADOR_SPR','SECRETARIO_PARTICULAR','CONSULTOR'])){
                 $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('TURNADO A SPR');
                 return view('listado_por_revisar') ->with ("solicitudes",$solicitudes);
             }else{
@@ -2627,7 +2627,7 @@
 
         public function VistaCompletadasRector(){
             $categoria = \Session::get('categoria')[0];
-            if(in_array($categoria, ['TRABAJADOR_SPR','SECRETARIO_PARTICULAR'])){
+            if(in_array($categoria, ['TRABAJADOR_SPR','SECRETARIO_PARTICULAR','CONSULTOR'])){
                 $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('COMPLETADO POR RECTOR');
                 return view('listado_completadas_rector') ->with ("solicitudes",$solicitudes);
             }else{
@@ -2637,7 +2637,7 @@
 
         public function VistaRevisadasSPR(){
             $categoria = \Session::get('categoria')[0];
-            if(in_array($categoria, ['TRABAJADOR_SPR','SECRETARIO_PARTICULAR'])){
+            if(in_array($categoria, ['TRABAJADOR_SPR','SECRETARIO_PARTICULAR','CONSULTOR'])){
                 $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus('COMPLETADO POR SPR');
                 return view('listado_revisadas') ->with ("solicitudes",$solicitudes);
             }else{
@@ -2669,7 +2669,7 @@
         
         public function VistaListadoSecretarioParticular(){
             $categoria = \Session::get('categoria')[0];
-            if(in_array($categoria, ['SECRETARIO_PARTICULAR'])){
+            if(in_array($categoria, ['SECRETARIO_PARTICULAR','TRABAJADOR_SPR'])){
                 //$solicitudes = SolicitudesController::ObtenerSolicitudes();
 
                 $solicitudes = SolicitudesController::ObtenerSolicitudesSecretarioParticular();
@@ -2705,7 +2705,7 @@
 
         public function VistaListadoEnProceso(){
             $categoria = \Session::get('categoria')[0];
-            if(in_array($categoria, ['TRABAJADOR_SPR'])){
+            if(in_array($categoria, ['TRABAJADOR_SPR','CONSULTOR'])){
                 $solicitudes = SolicitudesController::ObtenerSolicitudes();
                 return view('listado_en_proceso') ->with ("solicitudes",$solicitudes);
             }else{
@@ -2770,13 +2770,16 @@
             $categoria = \Session::get('categoria')[0];
             if(in_array($categoria, ['ANALISTA_CGA','ADMINISTRADOR_CGA','COORDINADOR_CGA'])){
 
+                //este apartado es unicamente si el estatus tiene guión bajo
                 if(strcasecmp($estatus, 'turnado_spr')==0){
                     $estatus = 'turnado a spr';
                 }else if(strcasecmp($estatus, 'completado_rector')==0){
                     $estatus = 'completado por rector';
+                }else if(strcasecmp($estatus, 'limpieza_vigilancia')==0){
+                    $estatus = 'limpieza y vigilancia';
                 }
                 //dd($estatus);
-                $permitidos = ['recibido','levantamiento','analisis','revision','firmas','turnado a spr','completado por rector'];
+                $permitidos = ['recibido','levantamiento','analisis','revision','firmas','turnado a spr','completado por rector','limpieza y vigilancia'];
                 if(in_array($estatus, $permitidos)){
                     $analista = \Session::get('usuario')[0];
                     $categoria = \Session::get('categoria')[0];
@@ -2784,6 +2787,9 @@
                         $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus(strtoupper($estatus));
                     }else{
                         $solicitudes = SolicitudesController::ObtenerSolicitudesEstatusAnalista($analista,strtoupper($estatus));
+                        if(in_array($estatus, ['limpieza y vigilancia'])){
+                            $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus(strtoupper($estatus));
+                        }//*/
 
                     }
                     $modulo = ucfirst($estatus);
@@ -2803,12 +2809,13 @@
             $categoria = \Session::get('categoria')[0];
             if(in_array($categoria, ['ANALISTA_CGA'])){
                 $analista = \Session::get('usuario')[0];
-                
+                $pendientes = SolicitudesController::ObtenerSolicitudesEstatus('VALIDACIÓN DE INFORMACIÓN');
+                $cont_pendientes = count($pendientes);
                 $solicitudes = SolicitudesController::ObtenerSolicitudesAnalista($analista);
                 //$analistas = 'SIN PERMISOS';
                 $analistas = array();
 
-                return view('listado_completo') ->with (["solicitudes"=>$solicitudes,"analistas"=>$analistas]);
+                return view('listado_completo') ->with (["solicitudes"=>$solicitudes,"analistas"=>$analistas,"pendientes"=>$cont_pendientes]);
             }else{
                 return view('errors.505');
             }
@@ -3045,6 +3052,8 @@
             if(strcmp($request['estatus'], 'RECIBIDO')==0){
                 $movimiento = $responsable.' ha marcado la información como CORRECTA y el estatus de la solicitud ha cambiado a RECIBIDO';
                 SolicitudesController::NotificarInformacionCorrecta($request['id_sol']);
+            }else if(strcmp($request['estatus'], 'LIMPIEZA Y VIGILANCIA') == 0){
+                $movimiento = $responsable.' ha marcado la información como CORRECTA y el estatus de la solicitud ha cambiado a LIMPIEZA Y VIGILANCIA';
             }else{
                 $movimiento = $responsable.' ha marcado la información como INCORRECTA y el estatus de la solicitud ha cambiado a CANCELADO. El motivo de la cancelación es: '.$request['motivo'];
                 SolicitudesController::InsertarMotivoInformacionIncorrecta($request['id_sol'],$request['motivo']);
@@ -3701,7 +3710,9 @@
                 $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus(strtoupper($modulo));
             }else{
                 $solicitudes = SolicitudesController::ObtenerSolicitudesEstatusAnalista($analista,$modulo);
-
+                if(in_array($estatus, ['LIMPIEZA Y VIGILANCIA'])){
+                    $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus(strtoupper($estatus));
+                }//*/
             }
             //dd($solicitudes);
             return View('tablas.listado_general_estatus') ->with ("solicitudes",$solicitudes);
