@@ -43,16 +43,16 @@
 		    <th style="width: 100%; font-size: 10px;border:1px solid black;" class="bloque">FUNCIONES</th> 
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">CATEGORÍA / PUESTO SOLICITADO</th>
 		    @if($solicitud->INSTITUCIONAL)
-		    	<th style="font-size: 10px;border:1px solid black;" class="bloque">SALARIO BRUTO QUINCENAL SOLICITADO</th>
+		    	<th style="font-size: 10px;border:1px solid black;" class="bloque">SALARIO BRUTO QNAL. SOLICITADO</th>
 		    @else
-		    	<th style="font-size: 10px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL SOLICITADO</th>
+		    	<th style="font-size: 10px;border:1px solid black;" class="bloque">SALARIO NETO QNAL. SOLICITADO</th>
 		    @endif
-		    <th style="font-size: 10px;border:1px solid black;" class="bloque">DIFERENCIA QUINCENAL</th>
+		    <th style="font-size: 10px;border:1px solid black;" class="bloque">DIFERENCIA QNAL.</th>
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">% DIFERENCIA</th>
 		    @if($solicitud->INSTITUCIONAL)
-		    	<th style="width: 70%; font-size: 8px;border:1px solid black;" class="bloque">SALARIO BRUTO QUINCENAL DE QUIEN SE SUSTITUYE</th>
+		    	<th style="width: 70%; font-size: 8px;border:1px solid black;" class="bloque">SALARIO BRUTO QNAL. DE QUIEN SE SUSTITUYE</th>
 		    @else
-		    	<th style="width: 70%; font-size: 8px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL DE QUIEN SE SUSTITUYE</th>
+		    	<th style="width: 70%; font-size: 8px;border:1px solid black;" class="bloque">SALARIO NETO QNAL. DE QUIEN SE SUSTITUYE</th>
 		    @endif
 		    <th style="font-size: 10px;border:1px solid black;" class="bloque">EN SUSTITUCIÓN DE</th>
 		  </tr>
@@ -134,6 +134,22 @@
 		    </td>
 		    <td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
 		  		<img src="data:image/png;base64, {{ base64_encode(QrCode::format('png')->size(100)->generate($solicitud->FIRMA_SPR)) }} ">
+		    </td>
+		  </tr>
+		</table>
+	</div>
+	@elseif(in_array($solicitud->ESTATUS_SOLICITUD, ['ANÁLISIS','REVISIÓN']))
+	<div id="div-tabla_sellos" align="right" class="">
+		<table style="width:100%" class="table" border="0">
+		  <tr>
+		  	<td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
+		  		<img src="data:image/png;base64, {{ base64_encode(QrCode::format('png')->size(100)->generate('SIN VALIDEZ')) }} ">
+		  	</td>
+		    <td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
+		  		<img src="data:image/png;base64, {{ base64_encode(QrCode::format('png')->size(100)->generate('SIN VALIDEZ')) }} ">
+		    </td>
+		    <td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
+		  		<img src="data:image/png;base64, {{ base64_encode(QrCode::format('png')->size(100)->generate('SIN VALIDEZ')) }} ">
 		    </td>
 		  </tr>
 		</table>

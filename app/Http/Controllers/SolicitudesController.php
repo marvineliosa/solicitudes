@@ -877,15 +877,15 @@
             }
 
             if($dif_quincenal_1<0){
-                $dif_quincenal_1 ='-$ '.number_format(($dif_quincenal_1*(-1)),2);
+                $dif_quincenal_1 ='-$'.number_format(($dif_quincenal_1*(-1)),2);
             }else{
-                $dif_quincenal_1 = '$ '.number_format($dif_quincenal_1,2);
+                $dif_quincenal_1 = '$'.number_format($dif_quincenal_1,2);
             }
 
             if($dif_quincenal_2<0){
-                $dif_quincenal_2 ='-$ '.number_format(($dif_quincenal_2*(-1)),2);
+                $dif_quincenal_2 ='-$'.number_format(($dif_quincenal_2*(-1)),2);
             }else{
-                $dif_quincenal_2 = '$ '.number_format($dif_quincenal_2,2);
+                $dif_quincenal_2 = '$'.number_format($dif_quincenal_2,2);
             }
 
             if($solicitud->COMPENSACION_SOLICITUD){
