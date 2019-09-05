@@ -1493,6 +1493,7 @@
                             'SOLICITUD_FUENTE_RECURSOS' => $request['fuente_recursos'],
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
+            SolicitudesController::ActualizarTituloCuadro($request['titulo_cuadro'],$request['id_sol']);
 
             $responsable = \Session::get('responsable')[0];
             $movimiento = $responsable.' ha modificado los datos de la solicitud '.$request['id_sol'];
@@ -1527,6 +1528,7 @@
                             'SOLICITUD_FUENTE_RECURSOS' => $request['fuente_recursos'],
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
+            SolicitudesController::ActualizarTituloCuadro($request['titulo_cuadro'],$request['id_sol']);
 
             $responsable = \Session::get('responsable')[0];
             $movimiento = $responsable.' ha modificado los datos de la solicitud '.$request['id_sol'];
@@ -1555,6 +1557,7 @@
                             'SOLICITUD_FUENTE_RECURSOS' => $request['fuente_recursos'],
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
+            SolicitudesController::ActualizarTituloCuadro($request['titulo_cuadro'],$request['id_sol']);
 
             $responsable = \Session::get('responsable')[0];
             $movimiento = $responsable.' ha modificado los datos de la solicitud '.$request['id_sol'];
@@ -1564,6 +1567,30 @@
                 "update"=>$update
             );
             echo json_encode($data);//*/
+        }
+
+        public function ActualizarTituloCuadro($titulo,$id_solicitud){
+            //dd($titulo);
+            $rel_titulo = DB::table('REL_TITULO_CUADRO')->where('FK_SOLICITUD_ID',$id_solicitud)->get();
+            if(count($rel_titulo)>0){
+                //dd($rel_titulo);
+                //dd('Actualizar');
+                DB::table('REL_TITULO_CUADRO')
+                    ->where('FK_SOLICITUD_ID',$id_solicitud)
+                    ->update(
+                        [
+                            'REL_TITULO' => $titulo
+                        ]
+                    );
+            }else{
+                //dd('Insertar');
+                DB::table('REL_TITULO_CUADRO')->insert(
+                    [
+                        'FK_SOLICITUD_ID' => $id_solicitud,
+                        'REL_TITULO' => $titulo
+                    ]
+                );
+            }
         }
 
         public function UpdateDatosCGA($request){
@@ -1875,8 +1902,21 @@
                 $solicitud[0]->FIRMA_SPR = null;
             }//*/
             $solicitud[0]->INSTITUCIONAL = $institucional;
+
+            $solicitud[0]->TITULO_CUADRO = SolicitudesController::ObtenerNombreTitulo($id_solicitud);
+            
             //dd($solicitud);
             return $solicitud[0];
+        }
+
+        public function ObtenerNombreTitulo($id_solicitud){
+            $titulo = null;
+            $rel_titulo = DB::table('REL_TITULO_CUADRO')->where('FK_SOLICITUD_ID',$id_solicitud)->get();
+            if(count($rel_titulo)>0){
+                $titulo = $rel_titulo[0]->REL_TITULO;
+            }
+            //dd($titulo);
+            return $titulo;
         }
 
         public function VerificaTiempo($estatus,$solicitud,$prioridad){
@@ -3782,10 +3822,11 @@
             //en este método se sabrá si el sistema está funcionando de modo institucional o prestación de servicios
             $datos = array(
                             'institucional' => env('INSTITUCIONAL'),
-                            'horar_inicio' => "09:00",
+                            'horar_inicio' => "03:00",
                             'horar_fin' => "17:00",
                         );
+            //dd($datos);
             return $datos;
         }
 
-    }
+    }   

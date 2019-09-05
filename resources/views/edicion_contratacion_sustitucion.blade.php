@@ -27,6 +27,12 @@
             </div>
           </div>
           <div class="form-group">
+            <label class="col-sm-2 control-label">Título del cuadro</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" placeholder="Título del cuadro (opcional)" value="{{$solicitud->TITULO_CUADRO}}" id="titulo_cuadro">
+            </div>
+          </div>
+          <div class="form-group">
             <label class="col-sm-2 control-label">Nombre de quien causa baja</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Nombre de la persona que causa baja" value="{{$solicitud->EN_SUSTITUCION_DE}}" id="en_sustitucion_de">
@@ -253,6 +259,7 @@
       var salario_solicitado = $("#salario_solicitado").val();
       var fuente_recursos = $("#SelectFuenteRecursos").val();
       //console.log(actividades);
+      var titulo_cuadro = $("#titulo_cuadro").val();
       var categoria = $("#propuesta-categoria").val();
       var puesto = $("#propuesta-puesto").val();
       var salario = $("#propuesta-salario").val();
@@ -273,6 +280,7 @@
       var dataForm = new FormData();
       dataForm.append('id_sol',id_solicitud);
       //dataForm.append('actividades',actividades);
+      dataForm.append('titulo_cuadro',titulo_cuadro);
       dataForm.append('en_sustitucion_de',en_sustitucion_de);
       dataForm.append('salario_persona_anterior',salario_persona_anterior);
       dataForm.append('candidato',candidato);

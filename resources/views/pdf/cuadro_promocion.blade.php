@@ -29,12 +29,15 @@
 </head>
 <body style="height:420px; overflow:auto;">
 	<div id="div-dependencia" align="center" class=""><h5>{{$solicitud->NOMBRE_INTERNO_DEPENDENCIA}}</h5></div>
-
-	@if($solicitud->INSTITUCIONAL)
-		<div id="div-subtitulo" align="center" class="" style="font-size: 10px;">TRANSFORMACIÓN DE PLAZA</div>
+	@if(!$solicitud->TITULO_CUADRO)
+		@if($solicitud->INSTITUCIONAL)
+			<div id="div-subtitulo" align="center" class="" style="font-size: 10px;">TRANSFORMACIÓN DE PLAZA</div>
+		@else
+			<div id="div-subtitulo" align="center" class="" style="font-size: 10px;">CAMBIO DE CATEGORÍA EN NÓMINA OUTSOURCING</div>
+		@endif
 	@else
-		<div id="div-subtitulo" align="center" class="" style="font-size: 10px;">CAMBIO DE CATEGORÍA EN NÓMINA OUTSOURCING</div>
-	@endif
+		<div id="div-subtitulo" align="center" class="" style="font-size: 10px;">{{strtoupper($solicitud->TITULO_CUADRO)}}</div>
+	@endif		
 
 	<div id="div-fecha" align="right" class="" style="font-size: 13px;">FECHA: {{$solicitud->HOY}}</div>
 	<div id="div-solicitud" align="right" class="" style="font-size: 13px;">SOLICITUD: {{$solicitud->ID_SOLICITUD}}</div>

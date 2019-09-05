@@ -27,6 +27,12 @@
             </div>
           </div>
           <div class="form-group">
+            <label class="col-sm-2 control-label">Título del cuadro</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" placeholder="Título del cuadro (opcional)" value="{{$solicitud->TITULO_CUADRO}}" id="titulo_cuadro">
+            </div>
+          </div>
+          <div class="form-group">
             <label class="col-sm-2 control-label">Candidato</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" placeholder="Nombre del Candidato" value="{{$solicitud->NOMBRE_SOLICITUD}}" id="nombre_candidato">
@@ -241,6 +247,7 @@
       var salario_solicitado = $("#salario_solicitado").val();
       var actividades = $("#Actividades_candidato").val();
       //console.log(actividades);
+      var titulo_cuadro = $("#titulo_cuadro").val();
       var categoria = $("#propuesta-categoria").val();
       var puesto = $("#propuesta-puesto").val();
       var salario = $("#propuesta-salario").val();
@@ -266,6 +273,7 @@
       dataForm.append('salario_actual',salario_actual);
       dataForm.append('fuente_recursos',fuente_recursos);
 
+      dataForm.append('titulo_cuadro',titulo_cuadro);
       dataForm.append('categoria_solicitada',categoria_solicitada);
       dataForm.append('salario_solicitado',salario_solicitado);
       dataForm.append('actividades',actividades);
