@@ -3823,7 +3823,7 @@
             $datos = array(
                             'institucional' => env('INSTITUCIONAL'),
                             'horar_inicio' => "03:00",
-                            'horar_fin' => "17:00",
+                            'horar_fin' => "19:00",
                         );
             //dd($datos);
             return $datos;

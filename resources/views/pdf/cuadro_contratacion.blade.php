@@ -76,7 +76,13 @@
 			    <th style="font-size: 8px;border:1px solid black;" class="bloque">% DE DIFERENCIA</th>
 			    @if($solicitud->COMPENSACION_SOLICITUD)
 			    <th style="font-size: 8px;border:1px solid black;" class="bloque">COMPENSACIÓN SALARIAL QUINCENAL</th>
-			    <th style="font-size: 8px;border:1px solid black;" class="bloque">COMPENSACIÓN MÁS SALARIO QUINCENAL</th>
+
+			    @if($solicitud->INSTITUCIONAL)
+			    	<th style="font-size: 8px;border:1px solid black;" class="bloque">SALARIO BRUTO QUINCENAL MÁS COMPENSACIÓN</th>
+			    @else
+			    	<th style="font-size: 8px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL MÁS COMPENSACIÓN</th>
+			    @endif
+
 			    @endif
 			  </tr>
 			  <tr>

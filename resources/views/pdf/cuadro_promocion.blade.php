@@ -39,8 +39,7 @@
 		<div id="div-subtitulo" align="center" class="" style="font-size: 10px;">{{strtoupper($solicitud->TITULO_CUADRO)}}</div>
 	@endif		
 
-	<div id="div-fecha" align="right" class="" style="font-size: 13px;">FECHA: {{$solicitud->HOY}}</div>
-	<div id="div-solicitud" align="right" class="" style="font-size: 13px;">SOLICITUD: {{$solicitud->ID_SOLICITUD}}</div>
+	<div id="div-fecha" align="right" class="" style="font-size: 10px;">FECHA: {{$solicitud->HOY}} SOLICITUD: {{$solicitud->ID_SOLICITUD}}</div>
 	<div id="div-tabla_datos" align="right" class="">
 		<table style="width:100%;" class="table table-bordered">
 		  <tr>
@@ -89,11 +88,17 @@
 		    <th style="font-size: 8px;border:1px solid black;" class="bloque">% DE DIFERENCIA</th>
 		    @if($solicitud->COMPENSACION_SOLICITUD)
 		    <th style="font-size: 8px;border:1px solid black;" class="bloque">COMPENSACIÓN SALARIAL QUINCENAL</th>
-		    <th style="font-size: 8px;border:1px solid black;" class="bloque">COMPENSACIÓN MÁS SALARIO QUINCENAL</th>
+
+		    @if($solicitud->INSTITUCIONAL)
+		    	<th style="font-size: 8px;border:1px solid black;" class="bloque">SALARIO BRUTO QUINCENAL MÁS COMPENSACIÓN</th>
+		    @else
+		    	<th style="font-size: 8px;border:1px solid black;" class="bloque">SALARIO NETO QUINCENAL MÁS COMPENSACIÓN</th>
+		    @endif
+
 		    @endif
 		  </tr>
 		  <tr>
-		    <td style="font-size: 8px;border:1px solid black;" align="center">PROPUESTA DE LA COORDINACIÓN GENERAL ADMINISTRATIVA</td>
+		    <td style="font-size: 8px;border:1px solid black;" align="center">PROPUESTA DE LA COORDINACIÓN GENERAL ADMINISTRATIVA (CGA)</td>
 		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{$solicitud->CATEGORIA_PROPUESTA}}</td>
 		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{'$ '.$solicitud->SALARIO_PROPUESTO}}</td>
 		    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center"><!--{{$dif_quincenal = $solicitud->SALARIO_PROPUESTO_SF - $solicitud->SALARIO_SOLICITUD}} -->{{$diferencias->dif_quincenal_2}}</td>
@@ -121,10 +126,7 @@
 	<div id="div-tabla_respuesta" align="right" class="">
 		<table style="width:100%" class="" border="0">
 		  <tr>
-		    <th style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" class="">NOTA:</th>
-		  </tr>
-		  <tr>
-		    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="justify">{{$solicitud->RESPUESTA_CGA}}</td>
+		    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="justify"><strong>NOTA: </strong>{{$solicitud->RESPUESTA_CGA}}</td>
 		  </tr>
 		</table>
 	</div>
