@@ -39,7 +39,7 @@
 		<div id="div-subtitulo" align="center" class="" style="font-size: 10px;">{{strtoupper($solicitud->TITULO_CUADRO)}}</div>
 	@endif		
 
-	<div id="div-fecha" align="right" class="" style="font-size: 10px;">FECHA: {{$solicitud->HOY}} SOLICITUD: {{$solicitud->ID_SOLICITUD}}</div>
+	<div id="div-fecha" align="right" class="" style="font-size: 10px;"><strong> FECHA:</strong> {{$solicitud->HOY}} <strong>SOLICITUD:</strong> {{$solicitud->ID_SOLICITUD}}</div>
 	<div id="div-tabla_datos" align="right" class="">
 		<table style="width:100%;" class="table table-bordered">
 		  <tr>
@@ -122,15 +122,8 @@
 		</table>
 	</div>
 	@endif
-
-	<div id="div-tabla_respuesta" align="right" class="">
-		<table style="width:100%" class="" border="0">
-		  <tr>
-		    <td style="font-size: 10px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="justify"><strong>NOTA: </strong>{{$solicitud->RESPUESTA_CGA}}</td>
-		  </tr>
-		</table>
-	</div>
-	<br>
+	<div style="font-size: 9px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="justify"><strong>NOTA: </strong>{{$solicitud->RESPUESTA_CGA}}</div>
+	
 	@if(in_array($solicitud->ESTATUS_SOLICITUD, ['TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR']))
 	<div id="div-tabla_sellos" align="right" class="">
 		<table style="width:100%" class="table" border="0">
@@ -148,7 +141,7 @@
 		</table>
 	</div>
 	@elseif(in_array($solicitud->ESTATUS_SOLICITUD, ['ANÁLISIS','REVISIÓN']))
-	<div id="div-tabla_sellos" align="right" class="">
+	
 		<table style="width:100%" class="table" border="0">
 		  <tr>
 		  	<td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
@@ -162,7 +155,7 @@
 		    </td>
 		  </tr>
 		</table>
-	</div>
+	
 	@endif
 </body>
 </html>

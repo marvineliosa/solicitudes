@@ -93,7 +93,7 @@
     	//console.log(gl_solicitudes);
 		var gl_analistas = <?php echo json_encode($analistas) ?>;
     	//console.log(gl_analistas);
-
+    	// MensajeModal('¡ATENCIÓN!','Se les comunica que el día de hoy, a partir de las 15:00 horas, se dará mantenimiento al Sistema de Solicitudes, por lo que su uso se reanudará mañana a las 9:00 horas. De antemano agradecemos su comprensión y apoyo.');
 
     	function AsignarAnalista(){
     		var analista = $("#SelectAnalistas").val();
