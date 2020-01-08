@@ -34,8 +34,17 @@
 	@else
 		<div id="div-subtitulo" align="center" class="" style="font-size: 10px;">{{strtoupper($solicitud->TITULO_CUADRO)}}</div>
 	@endif
-	<div id="div-fecha" align="right" class="" style="font-size: 13px;">FECHA: {{$solicitud->HOY}}</div>
-	<div id="div-solicitud" align="right" class="" style="font-size: 13px;">SOLICITUD: {{$solicitud->ID_SOLICITUD}}</div>
+	<div id="div-fecha" align="right" class="" style="font-size: 10px;">
+	<!-- <div id="div-fecha" align="right" class="" style="font-size: 13px;"> -->
+		@if($solicitud->FECHA_FIRMA_COORDINADOR)
+			<strong>FECHA: </strong>{{$solicitud->FECHA_FIRMA_COORDINADOR}}
+		@else
+			<div id="div-dependencia" align="center" class="">
+				<strong><h3>PROPUESTA SUJETA A LA AUTORIZACIÓN DE LA CGA</h3></strong>
+			</div>
+		@endif
+		<strong>SOLICITUD:</strong> {{$solicitud->ID_SOLICITUD}}
+	</div>
 	<div id="div-tabla_datos" align="right" class="">
 		<table style="width:100%;" class="table table-bordered">
 		  <tr>
@@ -86,7 +95,7 @@
 			    @endif
 			  </tr>
 			  <tr>
-			    <td style="font-size: 8px;border:1px solid black;" align="center">PROPUESTA DE LA COORDINACIÓN GENERAL ADMINISTRATIVA</td>
+			    <td style="font-size: 8px;border:1px solid black;" align="center">PROPUESTA DE LA COORDINACIÓN GENERAL ADMINISTRATIVA (CGA)</td>
 			    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{$solicitud->CATEGORIA_PROPUESTA}}</td>
 			    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{'$ '.$solicitud->SALARIO_PROPUESTO}}</td>
 			    <td style="font-size: 8px;border:1px solid black; background-color: rgb(255, 230, 153);" align="center">{{$diferencias->dif_quincenal_2}}</td>
@@ -120,7 +129,7 @@
 	</div>
 	<br>
 	@if(in_array($solicitud->ESTATUS_SOLICITUD, ['TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR']))
-	<div id="div-tabla_sellos" align="right" class="">
+	<!-- <div id="div-tabla_sellos" align="right" class=""> -->
 		<table style="width:100%" class="table" border="0">
 		  <tr>
 		  	<td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
@@ -134,9 +143,8 @@
 		    </td>
 		  </tr>
 		</table>
-	</div>
+	<!-- </div> -->
 	@elseif(in_array($solicitud->ESTATUS_SOLICITUD, ['ANÁLISIS','REVISIÓN']))
-	<div id="div-tabla_sellos" align="right" class="">
 		<table style="width:100%" class="table" border="0">
 		  <tr>
 		  	<td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
@@ -150,7 +158,6 @@
 		    </td>
 		  </tr>
 		</table>
-	</div>
 	@endif
 </body>
 </html>

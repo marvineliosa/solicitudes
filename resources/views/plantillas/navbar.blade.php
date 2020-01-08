@@ -71,33 +71,33 @@
           @endif
 
           <!-- ACCESOS DEPENDENCIA -->
-          @if(strcmp(\Session::get('categoria')[0],'TITULAR')==0)
+          @if(in_array(\Session::get('categoria')[0], ['TITULAR','COORDINADOR_CGA']))
 
-          <li class="">
-            <a class="" href="/listado/dependencia">
-              <i class=""></i>
-              <span>Solicitudes Realizadas</span>
-            </a>
-          </li>
-          @if(\Session::get('horario')[0])
-          <li class="sub-menu">
-            <a href="javascript:;" class="">
-              <!--<i class="icon_document_alt"></i>-->
-              <i class=""></i>
-              <span>Crear Solicitud</span>
-              <span class="menu-arrow arrow_carrot-right"></span>
-            </a>
-            <ul class="sub">
-              <!--<li><a class="" href="/listado/dependencia">Solicitudes Realizadas</a></li>-->
-              
-                <li><a class="" href="/solicitudes/contratacion">Contratación</a></li>
-                <li><a class="" href="/solicitudes/sustitucion">Sustitución</a></li>
-                <li><a class="" href="/solicitudes/promocion">Promoción</a></li>
-                <li><a class="" href="/solicitudes/cambio_adscripcion">Cambio de Adscripción</a></li>
-              
-            </ul>
-          </li>
-          @endif
+            <li class="">
+              <a class="" href="/listado/dependencia">
+                <i class=""></i>
+                <span>Solicitudes Realizadas</span>
+              </a>
+            </li>
+            @if(\Session::get('horario')[0])
+              <li class="sub-menu">
+                <a href="javascript:;" class="">
+                  <!--<i class="icon_document_alt"></i>-->
+                  <i class=""></i>
+                  <span>Crear Solicitud</span>
+                  <span class="menu-arrow arrow_carrot-right"></span>
+                </a>
+                <ul class="sub">
+                  <!--<li><a class="" href="/listado/dependencia">Solicitudes Realizadas</a></li>-->
+                  
+                    <li><a class="" href="/solicitudes/contratacion">Contratación</a></li>
+                    <li><a class="" href="/solicitudes/sustitucion">Sustitución</a></li>
+                    <li><a class="" href="/solicitudes/promocion">Promoción</a></li>
+                    <li><a class="" href="/solicitudes/cambio_adscripcion">Cambio de Adscripción</a></li>
+                  
+                </ul>
+              </li>
+            @endif
           @endif
 
           @if(strcmp(\Session::get('categoria')[0],'ADMINISTRADOR_CGA')==0)

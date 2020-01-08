@@ -185,7 +185,7 @@
         }
 
         public function ValidarUsuario(Request $request){
-            //dd("epale");
+            // dd("epale");
             \Session::forget('usuario');
             \Session::forget('categoria');
             \Session::forget('id_dependencia');
@@ -202,18 +202,27 @@
             //dd($sistema);
             $existe = DB::table('SOLICITUDES_LOGIN')->where(['LOGIN_USUARIO'=> $usr, 'LOGIN_CONTRASENIA' => $contrasena])->get();
             $fl_aviso = 0;
-            //dd($existe);
+            // dd($existe);
             if(count($existe)>0){
+                //dd($existe[0]->LOGIN_CATEGORIA);
                 //$n_usuario = DB::table('DP_USUARIOS')->where('USUARIOS_USUARIO', $usr)->get();
                 $fl = true;
-                if(strcmp($existe[0]->LOGIN_CATEGORIA, 'TITULAR')==0){
-                    //dd('TITULAR');
+                // if(strcmp($existe[0]->LOGIN_CATEGORIA, 'TITULAR')==0){
+                if(in_array($existe[0]->LOGIN_CATEGORIA, ['TITULAR'])){
+                    // dd('TITULAR');
+                    // dd($existe[0]->LOGIN_CATEGORIA);
                     $rel_dependencia = DB::table('REL_DEPENCENCIA_TITULAR')->where(['FK_USUARIO'=> $existe[0]->LOGIN_USUARIO])->get();
                     $id_dependencia = $rel_dependencia[0]->FK_DEPENDENCIA;
                     $fl_horario = SolicitudesController::VerificarHorario();
                     //$fl_aviso = LoginController::VerificaAceptacionCondiciones($usr);
                     $fl_aviso = 0;
+                }else if(in_array($existe[0]->LOGIN_CATEGORIA, ['COORDINADOR_CGA'])){
+                    $id_dependencia = 27;
+                    $fl_horario = true;
+                }else{
+                    
                 }
+
                 //dd($fl_aviso);
 
                 
@@ -240,7 +249,7 @@
                 //dd(\Session::get('responsable')[0]);
                 //\Session::push('nombre',$n_usuario[0]->USUARIOS_NOMBRE_RESPONSABLE);
             }
-            //dd($existe);
+            // dd($existe);
             $data = array(
                 "usuario"=>\Session::get('usuario')[0],
                 "categoria"=>\Session::get('categoria')[0],

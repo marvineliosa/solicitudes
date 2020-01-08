@@ -1207,7 +1207,7 @@
                     ->get();
                 if(count($val)>0){
                     $solicitud = SolicitudesController::ObtenerSolicitudId($id_solicitud);
-                    //dd($solicitud);
+                    // dd($solicitud);
                     $extra = array();
                     $diferencias = SolicitudesController::ObtenerDiferencias($solicitud,$extra);
                     //dd($diferencias);
@@ -1844,7 +1844,7 @@
             $fechas = DB::table('SOLICITUDES_FECHAS')
                 ->where('FK_SOLICITUD_ID',$id_solicitud)
                 ->get();
-            //dd($fechas[0]);
+            // dd($fechas[0]);
             $solicitud[0]->FECHA_CREACION = date("d/m/Y", strtotime($fechas[0]->FECHAS_CREACION_SOLICITUD));
             $solicitud[0]->FECHA_CREACION_SF = $fechas[0]->FECHAS_CREACION_SOLICITUD;
             $solicitud[0]->FECHAS_INFORMACION_COMPLETA = (($fechas[0]->FECHAS_INFORMACION_COMPLETA)?date("d/m/Y", strtotime($fechas[0]->FECHAS_INFORMACION_COMPLETA)):'');
@@ -1852,6 +1852,10 @@
             $solicitud[0]->FECHA_TURNADO_CGA = (($fechas[0]->FECHAS_TURNADO_CGA)?date("d/m/Y", strtotime($fechas[0]->FECHAS_TURNADO_CGA)):'');
 
             $solicitud[0]->FECHA_ENVIO = date("d/m/Y", strtotime($fechas[0]->FECHAS_TURNADO_SPR));
+            if($fechas[0]->FECHAS_FIRMA_CGA)
+                $solicitud[0]->FECHA_FIRMA_COORDINADOR = date("d/m/Y", strtotime($fechas[0]->FECHAS_FIRMA_CGA));
+            else
+                $solicitud[0]->FECHA_FIRMA_COORDINADOR = null;
 
             $datos_cga = DB::table('SOLICITUDES_DATOS_CGA')
                 ->where('FK_SOLICITUD_ID',$id_solicitud)
@@ -2300,6 +2304,15 @@
             $mensaje = 'Buen día, le notificamos que el estatus de la solicitud '.$id_solicitud.' ha cambiado a FIRMAS, ya está disponible la opinión de la Coordinación General Administrativa';
             $usuario = SolicitudesController::ObtenerTitularDeSolicitud($id_solicitud);
             //dd($usuario);
+            //si el usuario es coordinador, entonces la respuesta a la variable usuario se volverá null, por lo que traemos los datos del coordinador y le enviamos el mensaje que iría dirigido a un titular
+            if(strcmp(\Session::get('categoria')[0], 'COORDINADOR_CGA')){
+                $existe_coordinador = DB::table('SOLICITUDES_LOGIN')
+                ->where('LOGIN_CATEGORIA','COORDINADOR_CGA')
+                ->get();
+                if(count($existe_coordinador)>0){
+                    $usuario = $existe_coordinador[0]->LOGIN_USUARIO;
+                }
+            }
             $mail = MailsController::MandarMensajeGenerico($asunto,$titulo,$mensaje,$usuario);
             return $usuario;
         }
@@ -2535,7 +2548,7 @@
         public function VistaCrearContratacion(){
             $categoria = \Session::get('categoria')[0];
             $fl_horario = SolicitudesController::VerificarHorario();
-            if(in_array($categoria, ['TITULAR','TRABAJADOR_SPR'])){
+            if(in_array($categoria, ['TITULAR','TRABAJADOR_SPR','COORDINADOR_CGA'])){
                 if(!$fl_horario){
                     return view('errors.timeout');
                 }else{
@@ -2551,7 +2564,7 @@
         public function VistaCrearSustitucion(){
             $categoria = \Session::get('categoria')[0];
             $fl_horario = SolicitudesController::VerificarHorario();
-            if(in_array($categoria, ['TITULAR','TRABAJADOR_SPR'])){
+            if(in_array($categoria, ['TITULAR','TRABAJADOR_SPR','COORDINADOR_CGA'])){
                 if(!$fl_horario){
                     return view('errors.timeout');
                 }else{
@@ -2567,7 +2580,7 @@
         public function VistaCrearPromocion(){
             $categoria = \Session::get('categoria')[0];
             $fl_horario = SolicitudesController::VerificarHorario();
-            if(in_array($categoria, ['TITULAR','TRABAJADOR_SPR'])){
+            if(in_array($categoria, ['TITULAR','TRABAJADOR_SPR','COORDINADOR_CGA'])){
                 if(!$fl_horario){
                     return view('errors.timeout');
                 }else{
@@ -2586,7 +2599,7 @@
             $datos = SolicitudesController::DatosGenerales();
             $institucional = $datos['institucional'];
             //dd($institucional);
-            if(in_array($categoria, ['TITULAR','TRABAJADOR_SPR'])){
+            if(in_array($categoria, ['TITULAR','TRABAJADOR_SPR','COORDINADOR_CGA'])){
                 if(!$fl_horario){
                     return view('errors.timeout');
                 }else{
@@ -2698,7 +2711,8 @@
         
         public function VistaListadoDependencia(){
             $categoria = \Session::get('categoria')[0];
-            if(in_array($categoria, ['TITULAR'])){
+            // dd(\Session::get('id_dependencia')[0]);
+            if(in_array($categoria, ['TITULAR','COORDINADOR_CGA'])){
                 $id_dependencia = \Session::get('id_dependencia')[0];
                 $solicitudes = SolicitudesController::ObtenerSolicitudesDependencia($id_dependencia);
                 return view('listado_dependencia')->with("solicitudes",$solicitudes);

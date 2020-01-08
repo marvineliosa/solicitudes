@@ -186,7 +186,7 @@
     //console.log(institucional);
     tipo_usuario = <?php echo json_encode(\Session::get('categoria')[0]) ?>;
     //console.log(tipo_usuario);
-    //autollenado();
+    autollenado();
 
       MensajeModal('¡ATENCIÓN!','Buen día, con el fin de unificar la presentación de la información, se agradecerá que la captura se realice utilizando mayúsculas y minúsculas.');
 
@@ -329,7 +329,7 @@
 
     ObtenerNombreDependencia();
     function ObtenerNombreDependencia(){
-      if(tipo_usuario=='TITULAR'){
+      if(tipo_usuario=='TITULAR',tipo_usuario=='COORDINADOR_CGA'){
         var success;
         var url = "/dependencias/obtener_nombre";
         var dataForm = new FormData();

@@ -154,7 +154,7 @@
 @section('script')
   <script type="text/javascript">
     id_dependencia = <?php echo json_encode(\Session::get('id_dependencia')[0]) ?>;
-    //autollenado();
+    // autollenado();
     tipo_usuario = <?php echo json_encode(\Session::get('categoria')[0]) ?>;
     //console.log(tipo_usuario);
 
@@ -282,7 +282,7 @@
 
     ObtenerNombreDependencia();
     function ObtenerNombreDependencia(){
-      if(tipo_usuario=='TITULAR'){
+      if(tipo_usuario=='TITULAR',tipo_usuario=='COORDINADOR_CGA'){
         var success;
         var url = "/dependencias/obtener_nombre";
         var dataForm = new FormData();

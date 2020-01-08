@@ -249,7 +249,9 @@
 
     ObtenerNombreDependencia();
     function ObtenerNombreDependencia(){
-      if(tipo_usuario=='TITULAR'){
+      // console.log(tipo_usuario);
+      if(tipo_usuario=='TITULAR' || tipo_usuario == 'COORDINADOR_CGA'){
+        // console.log('entra');
         var success;
         var url = "/dependencias/obtener_nombre";
         var dataForm = new FormData();

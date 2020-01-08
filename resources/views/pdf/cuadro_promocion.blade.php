@@ -125,7 +125,7 @@
 	<div style="font-size: 9px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="justify"><strong>NOTA: </strong>{{$solicitud->RESPUESTA_CGA}}</div>
 	
 	@if(in_array($solicitud->ESTATUS_SOLICITUD, ['TURNADO A SPR','COMPLETADO POR SPR','COMPLETADO POR RECTOR']))
-	<div id="div-tabla_sellos" align="right" class="">
+	<!-- <div id="div-tabla_sellos" align="right" class=""> -->
 		<table style="width:100%" class="table" border="0">
 		  <tr>
 		  	<td style="width: 33%; font-size: 8px;border-top: 0px;border-right: 0px;border-bottom: 0px solid black;border-left: 0px;" align="center">
@@ -139,7 +139,7 @@
 		    </td>
 		  </tr>
 		</table>
-	</div>
+	<!-- </div> -->
 	@elseif(in_array($solicitud->ESTATUS_SOLICITUD, ['ANÁLISIS','REVISIÓN']))
 	
 		<table style="width:100%" class="table" border="0">
