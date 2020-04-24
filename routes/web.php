@@ -20,11 +20,11 @@ Route::get('/gd', function () {
 	dd(gd_info());
 });
 
-//SOLICITUDES DE CONTRATACION - ACCESO VALIDADO
-Route::get('/solicitudes/contratacion', 'SolicitudesController@VistaCrearContratacion');
-Route::get('/solicitudes/sustitucion', 'SolicitudesController@VistaCrearSustitucion');
-Route::get('/solicitudes/promocion', 'SolicitudesController@VistaCrearPromocion');
-Route::get('/solicitudes/cambio_adscripcion', 'SolicitudesController@VistaCrearCambioAdscripcion');
+// //SOLICITUDES DE CONTRATACION - ACCESO VALIDADO
+// Route::get('/solicitudes/contratacion', 'SolicitudesController@VistaCrearContratacion');
+// Route::get('/solicitudes/sustitucion', 'SolicitudesController@VistaCrearSustitucion');
+// Route::get('/solicitudes/promocion', 'SolicitudesController@VistaCrearPromocion');
+// Route::get('/solicitudes/cambio_adscripcion', 'SolicitudesController@VistaCrearCambioAdscripcion');
 
 //LISTADOS
 Route::get('/listado/completo', 'SolicitudesController@VistaListadoCompleto');//VALIDADO
@@ -136,6 +136,8 @@ Route::post('/solicitud/obtener_datos_sustitucion', 'SolicitudesController@Obten
 Route::post('/solicitud/obtener_datos_promocion', 'SolicitudesController@ObtenerPromocion');
 Route::post('/solicitud/obtener_datos_cambio_adscripcion', 'SolicitudesController@ObtenerCambioAdscripcion');
 Route::post('/solicitud/obtener_fechas', 'SolicitudesController@ObtenerFechasSolicitud');
+Route::post('/solicitud/obtener_checklist', 'SolicitudesController@ObtenerChecklist');
+Route::post('/solicitud/marcar_check', 'SolicitudesController@MarcarCheckSolicitud');
 
 
 

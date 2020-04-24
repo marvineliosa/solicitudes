@@ -79,7 +79,7 @@
                 <span>Solicitudes Realizadas</span>
               </a>
             </li>
-            @if(\Session::get('horario')[0])
+            @if(\Session::get('horario')[0] && false)
               <li class="sub-menu">
                 <a href="javascript:;" class="">
                   <!--<i class="icon_document_alt"></i>-->
@@ -88,13 +88,10 @@
                   <span class="menu-arrow arrow_carrot-right"></span>
                 </a>
                 <ul class="sub">
-                  <!--<li><a class="" href="/listado/dependencia">Solicitudes Realizadas</a></li>-->
-                  
                     <li><a class="" href="/solicitudes/contratacion">Contratación</a></li>
                     <li><a class="" href="/solicitudes/sustitucion">Sustitución</a></li>
                     <li><a class="" href="/solicitudes/promocion">Promoción</a></li>
                     <li><a class="" href="/solicitudes/cambio_adscripcion">Cambio de Adscripción</a></li>
-                  
                 </ul>
               </li>
             @endif

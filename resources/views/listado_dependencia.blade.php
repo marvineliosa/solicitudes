@@ -177,7 +177,8 @@
 		var gl_solicitudes = <?php echo json_encode($solicitudes) ?>;
     	//console.log(gl_solicitudes);
 
-    	// MensajeModal('¡ATENCIÓN!','Se les comunica que el día de hoy, a partir de las 15:00 horas, se dará mantenimiento al Sistema de Solicitudes, por lo que su uso se reanudará mañana a las 9:00 horas. De antemano agradecemos su comprensión y apoyo.');
+    	MensajeModal('ATENTO AVISO','Se informa a todos los usuarios del sistema que, derivado de la contingencia, se suspende el registro y atención de solicitudes, ya que la Coordinación General Administrativa considera que no es viable realizar levantamientos de información.');
+    	// MensajeModal('ATENTO AVISO','Se informa a todos los usuarios que por la contingencia actual, queda suspendido el registro de solicitudes y se reanudará cuando.');
     	//$("#SaludoModalMensaje").text('Buen día');
 
     	function CancelacionNormalSolicitud(){

@@ -1616,9 +1616,109 @@
             return $update;
         }
 
+        public function MarcarCheckSolicitud(Request $request){
+            $rel_check = '';
+
+            //verificamos si ya existia un check para ese valor en la solicitud
+            $existe = DB::table('REL_SOLICITUDES_CHECKLIST')
+                ->where([
+                            'FK_SOLICITUD_ID'=>$request['gl_solicitud'],
+                            'FK_CHECKLIST_ID'=>$request['id_check']
+                        ])
+                ->get();
+
+            //dependiendo de la categoria, se guardara la seleccion
+            // dd(\Session::get('categoria')[0]);
+            $categoria = \Session::get('categoria')[0];
+            if(strcmp($categoria, 'ADMINISTRADOR_CGA')==0){
+                $rel_check = 'REL_CHECK_ADMINISTRADOR';
+            }else{
+                $rel_check = 'REL_CHECK_ANALISTA';
+            }
+            // dd('epale');
+            //si existe la relacion, entonces actualizamos el valor del usuario
+            if(count($existe)>0){
+                DB::table('REL_SOLICITUDES_CHECKLIST')
+                  ->where([
+                            'FK_SOLICITUD_ID' => $request['gl_solicitud'],
+                            'FK_CHECKLIST_ID' => $request['id_check']
+                        ])
+                  ->update([$rel_check => $request['fl_check']]);
+                // dd('exsiste relacion');
+            //si no existe, solo hacemos update
+            }else{
+                DB::table('REL_SOLICITUDES_CHECKLIST')->insert(
+                    [
+                        'FK_SOLICITUD_ID' => $request['gl_solicitud'],
+                        'FK_CHECKLIST_ID' => $request['id_check'],
+                        $rel_check => $request['fl_check']
+                    ]
+                );
+                // dd('no existe relacion');
+            }
+
+            $data = array(
+                "update"=>'listo'
+            );
+            echo json_encode($data);//*/
+            // dd($existe);
+        }
+
+        public function ObtenerChecklist(Request $request){
+
+            // dd($request);
+            $id_solicitud = $request['gl_solicitud'];
+            $checklist = SolicitudesController::ObtenerChecklistSolicitud($id_solicitud);
+            // dd($checklist); 
+            $data = array(
+                "checklist"=>$checklist
+            );
+            echo json_encode($data);//*/
+
+        }
+
+        public function ObtenerListadoChecklist(){
+            $checklist = DB::table('SOLICITUDES_CHECKLIST')
+                ->select(
+                    'CHECKLIST_ID as ID_CHECKLIST',
+                    'CHECKLIST_CONCEPTO as CONCEPTO_CHECKLIST',
+                    'CHECKLIST_IMPORTANTE as IMPORTANTE_CHECKLIST',
+                    'CHECKLIST_ACTIVO as ACTIVO_CHECKLIST'
+                    )
+                ->get();
+
+            return $checklist;
+        }
+
+        public function ObtenerChecklistSolicitud($id_solicitud){
+
+            $cat_checklist = SolicitudesController::ObtenerListadoChecklist();
+            // dd($cat_checklist);
+            $checklist = array();
+            $fl = 0;
+            foreach ($cat_checklist as $check) {
+                $relacion = DB::table('REL_SOLICITUDES_CHECKLIST')
+                    ->where([
+                        'FK_SOLICITUD_ID'=>$id_solicitud,
+                        'FK_CHECKLIST_ID'=>$check->ID_CHECKLIST
+                        ])
+                    ->get();
+                    $checklist[$fl]['CONCEPTO']=$check;
+                    // $checklist['RELACION']=$relacion[0];
+                if(count($relacion)>0){
+                    $checklist[$fl]['RELACION']=$relacion[0];
+                }
+                $fl++;
+            }
+            // dd($checklist);
+            return $checklist;
+        }
+
         public function AbrirContratacion($id_solicitud){
             $categoria = \Session::get('categoria')[0];
             $id_solicitud = str_replace('_','/',$id_solicitud);
+            $checklist = SolicitudesController::ObtenerChecklistSolicitud($id_solicitud);
+            // dd($checklist);
             if(in_array($categoria, ['ANALISTA_CGA','ADMINISTRADOR_CGA'])){
                 $val = DB::table('SOLICITUDES_SOLICITUD')
                     ->where('SOLICITUD_ID',$id_solicitud)
@@ -1633,7 +1733,7 @@
                         $solicitud->FUENTE_RECURSOS_SOLICITUD = 'RECURSOS PROPIOS';
                     }
                     //dd($solicitud);
-                    return view('edicion_contratacion')->with("solicitud",$solicitud);
+                    return view('edicion_contratacion')->with(["solicitud"=>$solicitud]);
                 }else{
                     return view('errors.404');
                 }

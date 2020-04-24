@@ -339,6 +339,46 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal Checklist -->
+    <div class="modal fade" id="ModalChecklist" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title" id="TituloModalChecklist" align="center">Checklist</h2>
+          </div>
+          <div class="modal-body">
+            <h3  id="CuerpoModalFechas" align="center"> </h3>
+            <table class="table table-bordered">
+              <thead id="HeadTablaMovimientos">
+                <tr>
+                  <th scope="col">Concepto</th>
+                  @if(strcmp(\Session::get('categoria')[0],'ADMINISTRADOR_CGA')==0)
+                    <th scope="col">Validación del analista</th>
+                    <th scope="col">Validación del administrador</th>
+                  @else
+                    <th scope="col">Validación del analista</th>
+                  @endif
+                  <!-- <th scope="col">Validación Jefe</th> -->
+                </tr>
+              </thead>
+              <tbody id="CuerpoTablaChecklist">
+                
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <!-- <button type="button" class="btn btn-primary" data-dismiss="modal">Validar</button> -->
+            @if(isset($solicitud->ID_SOLICITUD))
+              <button type="button" class="btn btn-primary" onclick="guardarDatos('{{$solicitud->ID_SOLICITUD}}')">Guardar</button>
+            @endif
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <!-- Modal mensaje -->
     <div class="modal fade" id="ModalMensaje" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -393,6 +433,85 @@
       //la variable success es el json que recibe del servidor el método AJAX
       MensajeModal("¡EXITO!","El mensaje se ha guardado correctamente");
     });//*/
+  }
+
+
+  function ObtenerChecklist(){
+    // alert(gl_solicitud);
+    var success;
+    var url = "/solicitud/obtener_checklist";
+    var dataForm = new FormData();
+    dataForm.append('gl_solicitud',gl_solicitud['ID_SOLICITUD']);
+     //lamando al metodo ajax
+    metodoAjax(url,dataForm,function(success){
+      //aquí se escribe todas las operaciones que se harían en el succes
+      //la variable success es el json que recibe del servidor el método AJAX
+      // MensajeModal("¡EXITO!","El mensaje se ha guardado correctamente");
+      ModalChecklist(success['checklist']);
+    });//*/
+  }
+
+  function ModalChecklist(checklist){
+
+    $("#CuerpoTablaChecklist").html('');
+    for(var i = 0; i < checklist.length; i++){
+      var checked = '';
+      var tmp_cat = ((gl_categoria=='ADMINISTRADOR_CGA')?'REL_CHECK_ADMINISTRADOR':'REL_CHECK_ANALISTA');
+      if(checklist[i]['RELACION']){
+        // console.log('Existe una relacion');
+        if(checklist[i]['RELACION'][tmp_cat]==1){
+          // console.log(checklist[i]['RELACION'][tmp_cat]);
+          checked = 'checked';
+        }
+      }
+      var td_extra = '';
+      if(gl_categoria=='ADMINISTRADOR_CGA'){
+        if(checklist[i]['RELACION']){
+          td_extra = ((gl_categoria=='ADMINISTRADOR_CGA')?'<td>'+((checklist[i]['RELACION']['REL_CHECK_ANALISTA']==1)?'✔':'✖')+'</td>':'');
+        }else{
+          td_extra = '<td>✖</td>';
+        }
+      }
+      // var td_extra = ((gl_categoria=='ADMINISTRADOR_CGA')?'<td>'+((checklist[i]['RELACION']['REL_CHECK_ANALISTA'])?'✔':'✖')+'</td>':'');
+      $("#CuerpoTablaChecklist").append(
+          '<tr>'+
+            '<td>'+checklist[i]['CONCEPTO']['CONCEPTO_CHECKLIST']+'</td>'+
+            td_extra+
+            '<td>'+
+              '<input type="checkbox" class="form-check-input" value="'+checklist[i]['CONCEPTO']['ID_CHECKLIST']+'" onchange="CheckUsuario(this)" '+checked+'>'+
+              // '<label class="form-check-label" for="exampleCheck1">Check me out</label>'+
+            '</td>'+
+          '</tr>'
+        );
+    }
+    $("#ModalChecklist").modal();
+  }
+
+  function CheckUsuario(elemento){
+    // alert('checado');
+    var fl_check = false;
+    if( $(elemento).prop('checked') ) {
+      // alert('Si');
+      fl_check = 1;
+    }else{
+      // alert('No');
+      fl_check = 0;
+    }
+
+    var success;
+    var url = "/solicitud/marcar_check";
+    var dataForm = new FormData();
+    dataForm.append('gl_solicitud',gl_solicitud['ID_SOLICITUD']);
+    dataForm.append('fl_check',fl_check);
+    dataForm.append('id_check',$(elemento).val());
+    //lamando al metodo ajax
+    metodoAjax(url,dataForm,function(success){
+      //aquí se escribe todas las operaciones que se harían en el succes
+      //la variable success es el json que recibe del servidor el método AJAX
+
+
+
+    });
   }
 
   function modalArchivos(id_solicitud){

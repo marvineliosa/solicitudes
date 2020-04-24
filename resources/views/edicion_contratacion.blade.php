@@ -174,7 +174,7 @@
               <button type="button" class="btn btn-success" onclick="verCuadro('{{$solicitud->ID_ESCAPE}}')">Ver Cuadro</button>
             </div>
             <div class="col-sm-2">
-              <button type="button" class="btn btn-primary" onclick="guardarDatos('{{$solicitud->ID_SOLICITUD}}')">Guardar</button>
+              <button type="button" class="btn btn-primary" onclick="ObtenerChecklist()">Validar y guardar</button>
             </div>
           </div>
         </form>
@@ -191,14 +191,15 @@
     //console.log(gl_solicitud);
     var categoria = <?php echo json_encode(\Session::get('categoria')[0]) ?>;
     //console.log(categoria);
+    // $("#ModalChecklist").modal();
 
     
 
-    function verCuadro(id_solicitud){
-      //location.href='/cuadro/contratacion/'+id_solicitud;
-      window.open('/cuadro/contratacion/'+id_solicitud,'_blank');
+    // function verCuadro(id_solicitud){
+    //   //location.href='/cuadro/contratacion/'+id_solicitud;
+    //   window.open('/cuadro/contratacion/'+id_solicitud,'_blank');
 
-    }
+    // }
 
     function regresar(){
       if(categoria == 'ADMINISTRADOR_CGA'){
