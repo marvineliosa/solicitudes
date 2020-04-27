@@ -155,11 +155,16 @@
 					metodoAjax(url,dataForm,function(success){
 						//aquí se escribe todas las operaciones que se harían en el succes
 						//la variable success es el json que recibe del servidor el método AJAX
-						gl_solicitudes[id_sol]['ESTATUS_SOLICITUD'] = estatus;
+						if(success['fl_update']==true){
+							gl_solicitudes[id_sol]['ESTATUS_SOLICITUD'] = estatus;
+							MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente.");
+						}else{
+							MensajeModal("¡ATENCIÓN!",success['mensaje']);
+						}
+						
 						//$("#td_estatus_"+gl_solicitudes[id_sol]['ID_ESCAPE']).html(estatus);
 						//console.log(gl_solicitudes);
 						recargarTablaAjax('/refrescar/listado_completo');
-						MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente.");
 					});//*/
 				}else if(gl_categoria=='ADMINISTRADOR_CGA'){
 					metodoAjax(url,dataForm,function(success){
@@ -169,7 +174,13 @@
 						//$("#td_estatus_"+gl_solicitudes[id_sol]['ID_ESCAPE']).html(estatus);
 						//console.log(gl_solicitudes);
 						recargarTablaAjax('/refrescar/listado_completo');
-						MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente.");
+						if(success['fl_update']==true){
+							gl_solicitudes[id_sol]['ESTATUS_SOLICITUD'] = estatus;
+							MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente.");
+						}else{
+							MensajeModal("¡ATENCIÓN!",success['mensaje']);
+						}
+						// MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente.");
 						if(estatus == 'FIRMAS'){
 							if(success['fl_usr']){
 								MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente. Se ha notificado al titular")

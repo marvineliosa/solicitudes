@@ -162,7 +162,13 @@
 				//$("#td_estatus_"+gl_solicitudes[id_sol]['ID_ESCAPE']).html(estatus);
 				//console.log(gl_solicitudes);
 				recargarTablaAjax('/refrescar/listado_general/'+gl_modulo);
-				MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente.");
+				// MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente.");
+				if(success['fl_update']==true){
+					gl_solicitudes[id_sol]['ESTATUS_SOLICITUD'] = estatus;
+					MensajeModal("¡EXITO!","El estatus se ha cambiado correctamente.");
+				}else{
+					MensajeModal("¡ATENCIÓN!",success['mensaje']);
+				}
 			});//*/
     	}
 

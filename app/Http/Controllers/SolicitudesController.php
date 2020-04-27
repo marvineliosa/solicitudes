@@ -1677,6 +1677,39 @@
 
         }
 
+        public function RevisarChecklistLleno($id_solicitud){
+            $ChecklistCompleto = true;
+            $CountAnalista = 0;
+            $CountAdministrador = 0;
+            $FlAdministrador = false;
+            $FlAnalista = false;
+            $checklist = SolicitudesController::ObtenerChecklistSolicitud($id_solicitud);
+            foreach ($checklist as $check) {
+                if(isset($check['RELACION'])){
+                    if($check['RELACION']->REL_CHECK_ADMINISTRADOR == 1)
+                        $CountAdministrador++;
+                    if($check['RELACION']->REL_CHECK_ANALISTA == 1)
+                        $CountAnalista++;
+                }else{
+                    // $ChecklistCompleto = false;
+                    break;
+                }
+            }
+            //if()
+            $FlAnalista = ((count($checklist)==$CountAnalista)?true:false);
+            $FlAdministrador = ((count($checklist)==$CountAdministrador)?true:false);
+            $ReturnChecklist = array(
+                    'CountAdministrador' => $CountAdministrador,
+                    'CountAnalista' => $CountAnalista,
+                    'analista' => $FlAnalista, 
+                    'administrador' => $FlAdministrador, 
+                    'completo' => (($FlAdministrador&&$FlAnalista)?true:false)
+                );
+            // dd($ReturnChecklist);
+            // dd($checklist);
+            return $ReturnChecklist;
+        }
+
         public function ObtenerListadoChecklist(){
             $checklist = DB::table('SOLICITUDES_CHECKLIST')
                 ->select(
@@ -2496,88 +2529,112 @@
         public function CambiarEstadoCGA(Request $request){
             date_default_timezone_set('America/Mexico_City');
             //dd($request['estatus']);
-            $update = DB::table('SOLICITUDES_DATOS_CGA')
-                ->where('FK_SOLICITUD_ID', $request['id_sol'])
-                ->update(['DATOS_CGA_ESTATUS' => $request['estatus']]);
-            //dd($update);
+            $update = null;
+            $HacerUpdate = false;
             $mail = null;
-
-            if(strcmp($request['estatus'],'TURNADO A SPR')==0){
-                $update_turnadospr = DB::table('SOLICITUDES_FECHAS')
-                    ->where('FK_SOLICITUD_ID', $request['id_sol'])
-                    ->update(['FECHAS_TURNADO_SPR' => date('Y-m-d H:i:s')]);
-            }//*/
-
-            if(strcmp($request['estatus'],'REVISIÓN')==0){
-                $update_revision = DB::table('SOLICITUDES_FECHAS')
-                    ->where('FK_SOLICITUD_ID', $request['id_sol'])
-                    ->update(['FECHAS_PUESTO_REVISION' => date('Y-m-d H:i:s')]);//*/
-                    //reseteando las firmas
-
-                //SolicitudesController::EliminarFirmas($request['id_sol']);
-            }//*/
             $fl_usr = null;
             $fl_coor = null;
-            if(strcmp($request['estatus'],'FIRMAS')==0){
-                $update_firmas = DB::table('SOLICITUDES_FECHAS')
-                    ->where('FK_SOLICITUD_ID', $request['id_sol'])
-                    ->update(['FECHAS_PUESTO_FIRMAS' => date('Y-m-d H:i:s')]);//*
-                $fl_usr = SolicitudesController::NotificarFirmasTitular($request['id_sol']);
-                $fl_coor = SolicitudesController::NotificarFirmasCoordinador($request['id_sol']);
-                //SolicitudesController::EliminarFirmas($request['id_sol']);
-                //enviar coorreo electrónico
-            }//*/
+            $mensaje = null;
 
-            if(in_array($request['estatus'], ['RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN','CANCELADO POR TITULAR','CANCELADO','OTRO'])){
-                SolicitudesController::EliminarFirmas($request['id_sol']);
+            //esta seccion es para ver si se tiene que hacer alguna revisión antes de hacer update
+            if(strcmp($request['estatus'],'REVISIÓN')==0){
+                //dd("REVISION DE CHECKLIST");
+                $ChecklistLleno = SolicitudesController::RevisarChecklistLleno($request['id_sol']);
+                // dd($ChecklistLleno['analista']);
+                if(!$ChecklistLleno['analista']){
+                    $mensaje = "El checklist del analista se encuentra incompleto.";
+                }else{
+                    $HacerUpdate = true;
+                }
+            }else{
+                $HacerUpdate = true;
             }
 
-            if($update==1){
-                //dd('Hubo Cambio');
-                if(strcmp($request['estatus'], 'VALIDACIÓN DE INFORMACIÓN')==0){
-                    $responsable = \Session::get('responsable')[0];
-                    $movimiento = $responsable.' ha turnado la solicitud a CGA';
-                    $id_mov = SolicitudesController::InsertaMovimientoSPR($responsable,$movimiento,$request['id_sol']);
+            //aqui hacemos el update
+            if($HacerUpdate){
+                $update = DB::table('SOLICITUDES_DATOS_CGA')
+                    ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                    ->update(['DATOS_CGA_ESTATUS' => $request['estatus']]);
+          
+                //dd($update);
+
+                //en esta seccion actualizamos la tabla de fechas
+                if(strcmp($request['estatus'],'TURNADO A SPR')==0){
+                    $update_turnadospr = DB::table('SOLICITUDES_FECHAS')
+                        ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                        ->update(['FECHAS_TURNADO_SPR' => date('Y-m-d H:i:s')]);
+                }//*/
+
+                if(strcmp($request['estatus'],'REVISIÓN')==0){
+                    $update_revision = DB::table('SOLICITUDES_FECHAS')
+                        ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                        ->update(['FECHAS_PUESTO_REVISION' => date('Y-m-d H:i:s')]);//*/
+                        //reseteando las firmas
+                    //SolicitudesController::EliminarFirmas($request['id_sol']);
+                }//*/
+                if(strcmp($request['estatus'],'FIRMAS')==0){
+                    $update_firmas = DB::table('SOLICITUDES_FECHAS')
+                        ->where('FK_SOLICITUD_ID', $request['id_sol'])
+                        ->update(['FECHAS_PUESTO_FIRMAS' => date('Y-m-d H:i:s')]);//*
+                    $fl_usr = SolicitudesController::NotificarFirmasTitular($request['id_sol']);
+                    $fl_coor = SolicitudesController::NotificarFirmasCoordinador($request['id_sol']);
+                    //SolicitudesController::EliminarFirmas($request['id_sol']);
+                    //enviar coorreo electrónico
+                }//*/
+
+                if(in_array($request['estatus'], ['RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN','CANCELADO POR TITULAR','CANCELADO','OTRO'])){
+                    SolicitudesController::EliminarFirmas($request['id_sol']);
                 }
 
-                //verificar si informacion correcta se marca o es en recibido directamente
-                if(in_array($request['estatus'], ['INFORMACIÓN CORRECTA','RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN','FIRMAS','CANCELADO','OTRO'])){
-                    $responsable = \Session::get('responsable')[0];
-                    $categoria = \Session::get('categoria')[0];
-                    $movimiento = $responsable.' ha cambiado el estatus a '.$request['estatus'];
-                    if(in_array($categoria, ['TRABAJADOR_SPR']) && strcmp($request['estatus'], 'REVISIÓN')){
-                        $movimiento = $responsable.' ha regresado la solicitud a CGA para su revisión';
-                        SolicitudesController::InsertaMovimientoGeneral($responsable,$movimiento,$request['id_sol']);
-
-                    }else{
-                        SolicitudesController::InsertaMovimientoCGA($responsable,$movimiento,$request['id_sol']);
+                if($update==1){
+                    //dd('Hubo Cambio');
+                    if(strcmp($request['estatus'], 'VALIDACIÓN DE INFORMACIÓN')==0){
+                        $responsable = \Session::get('responsable')[0];
+                        $movimiento = $responsable.' ha turnado la solicitud a CGA';
+                        $id_mov = SolicitudesController::InsertaMovimientoSPR($responsable,$movimiento,$request['id_sol']);
                     }
-                }
 
-                if(strcmp($request['estatus'], 'CANCELADO POR TITULAR')==0){
-                    $responsable = \Session::get('responsable')[0];
-                    $movimiento = 'Titular '.$responsable.' ha cambiado el estatus a '.$request['estatus'];
-                    SolicitudesController::InsertaMovimientoCGA($responsable,$movimiento,$request['id_sol']);
-                    SolicitudesController::NotificarOpinionDeclinada($request['id_sol']);
-                }
+                    //verificar si informacion correcta se marca o es en recibido directamente
+                    if(in_array($request['estatus'], ['INFORMACIÓN CORRECTA','RECIBIDO','LEVANTAMIENTO','ANÁLISIS','REVISIÓN','FIRMAS','CANCELADO','OTRO'])){
+                        $responsable = \Session::get('responsable')[0];
+                        $categoria = \Session::get('categoria')[0];
+                        $movimiento = $responsable.' ha cambiado el estatus a '.$request['estatus'];
+                        if(in_array($categoria, ['TRABAJADOR_SPR']) && strcmp($request['estatus'], 'REVISIÓN')){
+                            $movimiento = $responsable.' ha regresado la solicitud a CGA para su revisión';
+                            SolicitudesController::InsertaMovimientoGeneral($responsable,$movimiento,$request['id_sol']);
 
-                if(strcmp($request['estatus'], 'COMPLETADO POR SPR')==0){
-                    $responsable = \Session::get('responsable')[0];
-                    $movimiento = $responsable.' ha marcado la solicitud como válida';
-                    SolicitudesController::InsertaMovimientoSPR($responsable,$movimiento,$request['id_sol']);
-                }
+                        }else{
+                            SolicitudesController::InsertaMovimientoCGA($responsable,$movimiento,$request['id_sol']);
+                        }
+                    }
 
-                if(strcmp($request['estatus'], 'COMPLETADO POR RECTOR')==0){
-                    $responsable = \Session::get('responsable')[0];
-                    $movimiento = $responsable.' ha marcado la solicitud como entregada al rector';
-                    SolicitudesController::InsertaMovimientoSPR($responsable,$movimiento,$request['id_sol']);
+                    if(strcmp($request['estatus'], 'CANCELADO POR TITULAR')==0){
+                        $responsable = \Session::get('responsable')[0];
+                        $movimiento = 'Titular '.$responsable.' ha cambiado el estatus a '.$request['estatus'];
+                        SolicitudesController::InsertaMovimientoCGA($responsable,$movimiento,$request['id_sol']);
+                        SolicitudesController::NotificarOpinionDeclinada($request['id_sol']);
+                    }
+
+                    if(strcmp($request['estatus'], 'COMPLETADO POR SPR')==0){
+                        $responsable = \Session::get('responsable')[0];
+                        $movimiento = $responsable.' ha marcado la solicitud como válida';
+                        SolicitudesController::InsertaMovimientoSPR($responsable,$movimiento,$request['id_sol']);
+                    }
+
+                    if(strcmp($request['estatus'], 'COMPLETADO POR RECTOR')==0){
+                        $responsable = \Session::get('responsable')[0];
+                        $movimiento = $responsable.' ha marcado la solicitud como entregada al rector';
+                        SolicitudesController::InsertaMovimientoSPR($responsable,$movimiento,$request['id_sol']);
+                    }
                 }
             }
 
             $data = array(
+                "fl_update"=>$HacerUpdate,
                 "update"=>$update,
                 "fl_usr"=>$fl_usr,
                 "fl_coor"=>$fl_coor,
+                "mensaje"=>$mensaje,
                 "mail"=>$mail
             );
 
@@ -3857,15 +3914,16 @@
         }
 
         public function RefrescarListadoGeneralEstatus($modulo){
-            //dd($modulo);
+            // dd($modulo);
             $analista = \Session::get('usuario')[0];
             $categoria = \Session::get('categoria')[0];
             if(strcmp($categoria, 'ADMINISTRADOR_CGA')==0){
                 $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus(strtoupper($modulo));
             }else{
                 $solicitudes = SolicitudesController::ObtenerSolicitudesEstatusAnalista($analista,$modulo);
-                if(in_array($estatus, ['LIMPIEZA Y VIGILANCIA'])){
-                    $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus(strtoupper($estatus));
+                // dd($solicitudes);
+                if(in_array($modulo, ['LIMPIEZA Y VIGILANCIA'])){
+                    $solicitudes = SolicitudesController::ObtenerSolicitudesEstatus(strtoupper($modulo));
                 }//*/
             }
             //dd($solicitudes);
